@@ -1118,13 +1118,18 @@ function pollMatch() {
 
 async function startMatch() {
   const f = S.matchFile;
-  if (!f || !S.cur) return;
-  const q = new URLSearchParams({ max: $("mMax").value, start: $("mStart").value });
+  const prev = S.match && S.match.image === S.cur?.id ? S.match : null;
+  if ((!f && !prev) || !S.cur) return;
+  const start = $("mStart").value === "__sweep" ? "" : $("mStart").value;
+  const q = new URLSearchParams({ max: $("mMax").value, start });
+  if (!f) q.set("reference", prev.id);
   const go = $("mGo");
   go.disabled = true;
   go.textContent = "Uploading…";
   try {
-    const m = await api(`/api/images/${S.cur.id}/match?${q}`, { method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f });
+    const m = await api(`/api/images/${S.cur.id}/match?${q}`, f
+      ? { method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f }
+      : { method: "POST" });
     S.match = m;
     S.matchFile = null;
     S.matchNew = false;
@@ -1172,14 +1177,21 @@ function renderMatchDetail(box) {
     const f = S.matchFile;
     const sel = S.bySlug[S.selected];
     const camOk = S.camera;
+    // A previous run on this image: its scan can be reused, its result continued.
+    const prev = m && m.image === S.cur.id && m.best ? m : null;
+    const useOld = !f && prev;
+    const contKey = prev ? `match:${prev.id}` : null;
     box.innerHTML = `${head}<div class="dbody mpanel">
       <p class="lead">Give it a picture of the same scene with the look you're after, e.g. a scan of the same shot on Kodak Gold 200. fxraw re-renders <b>${esc(S.cur.name)}</b> on the camera again and again, measures the colour difference (ΔE) each time, and keeps whatever gets closer.</p>
       <label class="drop2 ${f ? "has" : ""}" id="mDrop">
         <input type="file" id="mFile" accept=".jpg,.jpeg,.png,.tif,.tiff,image/jpeg,image/png,image/tiff" hidden>
-        ${f ? `<strong>${esc(f.name)}</strong><br>${(f.size / 1048576).toFixed(1)} MB · click to change` : `<strong>Drop the reference image</strong><br>JPEG, PNG or TIFF · or click to browse`}
+        ${f ? `<strong>${esc(f.name)}</strong><br>${(f.size / 1048576).toFixed(1)} MB · click to change`
+          : useOld ? `<strong>${esc(prev.reference)}</strong><br>same reference as last time · click to change`
+          : `<strong>Drop the reference image</strong><br>JPEG, PNG or TIFF · or click to browse`}
       </label>
       <div class="opt"><span>Start from</span><select id="mStart">
-        <option value="">Every film simulation</option>
+        ${prev ? `<option value="${contKey}" ${S.matchOpts.mStart === contKey || S.matchOpts.mStart === "" ? "selected" : ""}>Last result (ΔE ${prev.best.loss.toFixed(1)})</option>` : ""}
+        <option value="__sweep" ${S.matchOpts.mStart === "__sweep" || (!prev && S.matchOpts.mStart === "") ? "selected" : ""}>Every film simulation</option>
         ${sel ? `<option value="${esc(sel.slug)}" ${S.matchOpts.mStart === sel.slug ? "selected" : ""}>${esc(sel.name)}</option>` : ""}
       </select></div>
       <div class="opt"><span>Max renders</span><select id="mMax">
@@ -1187,7 +1199,7 @@ function renderMatchDetail(box) {
           `<option value="${v}" ${S.matchOpts.mMax === v ? "selected" : ""}>${v} · ${t}</option>`).join("")}
       </select></div>
       <div class="mbtns">
-        <button class="btn primary" id="mGo" ${f && camOk ? "" : "disabled"}>Start matching</button>
+        <button class="btn primary" id="mGo" ${(f || useOld) && camOk ? "" : "disabled"}>Start matching</button>
         ${m ? `<button class="btn" id="mBack">Last result</button>` : ""}
       </div>
       ${!camOk ? `<div class="note">Connect the camera (USB RAW CONV mode) to start.</div>` : ""}

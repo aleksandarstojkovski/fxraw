@@ -34,7 +34,16 @@ fn main() {
     for r in renders {
         let img = image::open(r).expect("render").to_rgb8();
         let (g, l) = (global.measure(&img), local.measure(&img));
-        println!("{:<40} global {:6.2}   local {:6.2}   (local stats {:?})", r.rsplit('/').next().unwrap(), g.loss, l.loss, l.stats);
+        println!(
+            "{:<14} global {:6.2}  local {:6.2}  patch {:5.2}  tone {:5.2}  mean {:5.2}  {:?}",
+            r.rsplit('/').next().unwrap(),
+            g.loss,
+            l.loss,
+            l.patch_de,
+            l.tone_err,
+            l.mean_de,
+            l.stats
+        );
         last = Some(img);
     }
     if let Some(img) = last {

@@ -64,6 +64,7 @@ struct MatchStatus {
     /// (render number, loss) of the best render so far.
     best: Option<(usize, f32)>,
     best_recipe: Option<Value>,
+    best_params: Option<matcher::Params>,
     best_label: String,
     max_renders: usize,
     started: Instant,
@@ -460,8 +461,7 @@ const MAX_REFERENCE_BYTES: u64 = 400 * 1024 * 1024;
 const MATCH_VIEW_W: u32 = 1600;
 
 fn with_match(state: &State, job: &str, f: impl FnOnce(Arc<MatchJob>) -> Resp) -> Resp {
-    let job = job.parse::<usize>().ok().and_then(|i| state.matches.lock().unwrap().get(i).cloned());
-    match job {
+    match find_match(state, job) {
         Some(j) => f(j),
         None => json_err(404, "unknown match job"),
     }
@@ -476,12 +476,20 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
             .map(|(_, v)| percent_decode(v))
     };
     let max_renders = param("max").and_then(|v| v.parse::<usize>().ok()).unwrap_or(60).clamp(12, 200);
-    let start = param("start").filter(|s| !s.is_empty());
-    if let Some(slug) = &start
-        && !is_known_slug(slug)
-    {
-        return json_err(404, "unknown start recipe");
-    }
+    // Start from a recipe slug, or "match:<job>" to continue from that run's best.
+    let start = match param("start").filter(|s| !s.is_empty()) {
+        None => None,
+        Some(s) => match s.strip_prefix("match:") {
+            Some(job) => match find_match(state, job).and_then(|j| j.status.lock().unwrap().best_params.clone()) {
+                Some(p) => Some(Start::Params(p)),
+                None => return json_err(404, "that match has no result to continue from"),
+            },
+            None if is_known_slug(&s) => Some(Start::Recipe(s)),
+            None => return json_err(404, "unknown start recipe"),
+        },
+    };
+    // The reference: uploaded in the body, or reused from an earlier run.
+    let reuse = param("reference").and_then(|j| find_match(state, &j));
     let name = req
         .headers()
         .iter()
@@ -497,11 +505,20 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
     if data.len() as u64 > MAX_REFERENCE_BYTES {
         return json_err(413, "file too large");
     }
+    let name = match &reuse {
+        Some(prev) if data.is_empty() => {
+            data = match std::fs::read(prev.dir.join("source")) {
+                Ok(d) => d,
+                Err(e) => return json_err(410, &format!("the earlier reference is gone: {e}")),
+            };
+            prev.reference.clone()
+        }
+        _ => name,
+    };
     let reference = match image::load_from_memory(&data) {
         Ok(img) => img.to_rgb8(),
         Err(e) => return json_err(400, &format!("cannot read {name} as an image (JPEG, PNG or TIFF): {e}")),
     };
-    drop(data);
 
     let job = {
         let mut jobs = state.matches.lock().unwrap();
@@ -510,8 +527,8 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
         }
         let jid = jobs.len();
         let dir = state.cache.join("matches").join(jid.to_string());
-        if let Err(e) = std::fs::create_dir_all(&dir) {
-            return json_err(500, &format!("cannot create {}: {e}", dir.display()));
+        if let Err(e) = std::fs::create_dir_all(&dir).and_then(|_| std::fs::write(dir.join("source"), &data)) {
+            return json_err(500, &format!("cannot write to {}: {e}", dir.display()));
         }
         let job = Arc::new(MatchJob {
             id: jid,
@@ -530,6 +547,7 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
                 steps: Vec::new(),
                 best: None,
                 best_recipe: None,
+                best_params: None,
                 best_label: String::new(),
                 max_renders,
                 started: Instant::now(),
@@ -547,7 +565,16 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
     json_ok(match_json(&job))
 }
 
-fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: Option<String>) {
+enum Start {
+    Recipe(String),
+    Params(matcher::Params),
+}
+
+fn find_match(state: &State, job: &str) -> Option<Arc<MatchJob>> {
+    job.parse::<usize>().ok().and_then(|i| state.matches.lock().unwrap().get(i).cloned())
+}
+
+fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: Option<Start>) {
     let fail = |msg: String| {
         println!("  match failed: {msg}");
         let mut st = job.status.lock().unwrap();
@@ -607,8 +634,15 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
         }
     }
     let default_dr = fuji::clamp_dr(meta.dynamic_range.unwrap_or(100), meta.iso, meta.dynamic_range).dr;
-    let start = start.and_then(|slug| recipes::all().iter().find(|r| r.slug == slug)).map(|r| {
-        let mut p = matcher::Params::from_settings(&r.to_settings(), default_dr);
+    let start = match start {
+        Some(Start::Params(p)) => Some(p),
+        Some(Start::Recipe(slug)) => recipes::all()
+            .iter()
+            .find(|r| r.slug == slug)
+            .map(|r| matcher::Params::from_settings(&r.to_settings(), default_dr)),
+        None => None,
+    }
+    .map(|mut p| {
         p.dr = fuji::clamp_dr(p.dr, meta.iso, meta.dynamic_range).dr;
         p
     });
@@ -714,6 +748,7 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
             if is_best {
                 st.best = Some((eval.n, eval.m.loss));
                 st.best_recipe = Some(recipe_json(&eval.params));
+                st.best_params = Some(eval.params.clone());
                 st.best_label = eval.label.clone();
             }
         }

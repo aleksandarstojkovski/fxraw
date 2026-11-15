@@ -624,8 +624,16 @@ pub struct Stats {
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Measurement {
-    /// Robust mean ΔE2000 — what the search minimises.
+    /// What the search minimises: `patch_de + TONE_WEIGHT × tone_err`.
     pub loss: f32,
+    /// Robust mean ΔE2000 over the patches (worst 5% ignored).
+    pub patch_de: f32,
+    /// Mean lightness difference between the two tone curves (L* quantiles
+    /// 5%…95% of the same patches): contrast, crushed shadows, highlight
+    /// roll-off. ΔE2000 down-weights dark tones and the trim drops the
+    /// patches that differ most, so without this a much flatter or much
+    /// punchier render could still score well.
+    pub tone_err: f32,
     /// Plain weighted mean ΔE2000.
     pub mean_de: f32,
     /// Loss once the global lightness/colour offset is removed — how good
@@ -660,6 +668,8 @@ pub struct Reference {
 }
 
 const WORK_W: usize = 400;
+/// Weight of the tone-curve error in the loss (see [`Measurement::tone_err`]).
+const TONE_WEIGHT: f32 = 0.5;
 const GRID_X: usize = 40;
 
 impl Reference {
@@ -739,9 +749,8 @@ impl Reference {
         let (fwf, fhf) = (frame_l.w as f32, frame_l.h as f32);
         let max_d = (0.08 * fwf).round() as isize;
 
-        // Per patch: best (ncc, dx, dy) in frame pixels and the window's
-        // lightness variance, or None when flat.
-        let search = |c: &Cell| -> Option<(f32, f32, f32, f32)> {
+        // The window around a patch: frame position (pixels) and reference value.
+        let window = |c: &Cell| -> Vec<(f32, f32, f32)> {
             let (cx, cy) = (c.u * ref_l.w as f32, c.v * ref_l.h as f32);
             let mut pts: Vec<(f32, f32, f32)> = Vec::new();
             for wy in (-R..=R).step_by(STEP) {
@@ -755,14 +764,30 @@ impl Reference {
                     pts.push((x * fwf - 0.5, y * fhf - 0.5, val));
                 }
             }
+            pts
+        };
+        let variance = |v: &mut dyn Iterator<Item = f32>| -> f32 {
+            let v: Vec<f32> = v.collect();
+            let n = v.len().max(1) as f32;
+            let m = v.iter().sum::<f32>() / n;
+            v.iter().map(|x| (x - m).powi(2)).sum::<f32>() / n
+        };
+        // Lightness variance of the photo under a patch's window at an offset.
+        let frame_var = |c: &Cell, dx: f32, dy: f32| -> f32 {
+            variance(&mut window(c).iter().filter_map(|&(x, y, _)| frame_l.sample_px(x + dx, y + dy)))
+        };
+        // Per patch: the window's variance on the reference, and the best
+        // (ncc, dx, dy) in frame pixels when it has texture to lock onto.
+        let search = |c: &Cell| -> (f32, Option<(f32, f32, f32)>) {
+            let pts = window(c);
             let n = pts.len() as f32;
             if n < 20.0 {
-                return None;
+                return (0.0, None);
             }
             let mean = pts.iter().map(|p| p.2).sum::<f32>() / n;
             let var = pts.iter().map(|p| (p.2 - mean).powi(2)).sum::<f32>() / n;
             if var < 6.0 {
-                return None; // flat: nothing to lock onto
+                return (var, None); // flat: nothing to lock onto
             }
             let ncc_at = |dx: f32, dy: f32| -> f32 {
                 let (mut sb, mut sbb, mut sab, mut k) = (0f32, 0f32, 0f32, 0f32);
@@ -795,12 +820,12 @@ impl Reference {
                     }
                 }
             }
-            Some((best.0, best.1, best.2, var))
+            (var, Some(best))
         };
 
         let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(4);
         let chunk = self.cells.len().div_ceil(threads).max(1);
-        let found: Vec<Option<(f32, f32, f32, f32)>> = std::thread::scope(|sc| {
+        let found: Vec<(f32, Option<(f32, f32, f32)>)> = std::thread::scope(|sc| {
             let handles: Vec<_> = self.cells.chunks(chunk).map(|cs| sc.spawn(move || cs.iter().map(search).collect::<Vec<_>>())).collect();
             handles.into_iter().flat_map(|h| h.join().unwrap()).collect()
         });
@@ -808,7 +833,7 @@ impl Reference {
         let good: Vec<(usize, f32, f32)> = found
             .iter()
             .enumerate()
-            .filter_map(|(i, f)| f.filter(|b| b.0 >= MIN_NCC).map(|b| (i, b.1, b.2)))
+            .filter_map(|(i, f)| f.1.filter(|b| b.0 >= MIN_NCC).map(|b| (i, b.1, b.2)))
             .collect();
         let median = |mut v: Vec<f32>| -> f32 {
             if v.is_empty() {
@@ -830,22 +855,23 @@ impl Reference {
                 .unzip();
             (xs.len() >= 3).then(|| (median(xs), median(ys)))
         };
-        let global = (median(good.iter().map(|g| g.1).collect()), median(good.iter().map(|g| g.2).collect()));
 
         let mut keep = Vec::with_capacity(self.cells.len());
         let mut dropped = 0;
-        for (i, f) in found.iter().enumerate() {
-            let offset = match f {
+        for (i, (var, m)) in found.iter().enumerate() {
+            let offset = match m {
                 // Textured and locked: trust it unless it disagrees with its
                 // neighbourhood (a repeated pattern matched the wrong copy).
-                Some((s, dx, dy, _)) if *s >= MIN_NCC => match near(i, 4.0) {
+                Some((s, dx, dy)) if *s >= MIN_NCC => match near(i, 4.0) {
                     Some((mx, my)) if (dx - mx).hypot(dy - my) > 0.03 * fwf => None,
                     _ => Some((*dx, *dy)),
                 },
                 // Strongly textured but nothing like it in the photo.
-                Some((_, _, _, var)) if *var > 40.0 => None,
-                // Flat, or just grain and gentle gradients: follow the neighbours.
-                _ => Some(near(i, 6.0).unwrap_or(global)),
+                _ if *var > 40.0 => None,
+                // Flat, or just grain and gentle gradients: follow locked
+                // neighbours, and only if the photo is flat there too (not a
+                // shadow edge or someone standing in the other shot).
+                _ => near(i, 6.0).filter(|&(dx, dy)| frame_var(&self.cells[i], dx, dy) <= (4.0 * var).max(40.0)),
             };
             match offset {
                 Some((dx, dy)) => {
@@ -893,13 +919,26 @@ impl Reference {
     fn score(&self, labs: &[[f32; 3]]) -> Measurement {
         let cells = &self.cells;
         let wsum: f32 = cells.iter().map(|c| c.w).sum::<f32>().max(1e-6);
+        // Robust signed differences: weighted mean of the middle 60%, so
+        // patches where the scene itself changed (a shadow that moved,
+        // someone walking by) don't drag the knobs around.
         let wmean = |f: &dyn Fn(&Cell, &[f32; 3]) -> Option<f32>| -> Option<f32> {
-            let (mut s, mut n) = (0.0, 0.0);
-            for (c, l) in cells.iter().zip(labs) {
-                if let Some(v) = f(c, l) {
-                    s += v * c.w;
-                    n += c.w;
+            let mut v: Vec<(f32, f32)> =
+                cells.iter().zip(labs).filter_map(|(c, l)| f(c, l).map(|x| (x, c.w))).collect();
+            let total: f32 = v.iter().map(|x| x.1).sum();
+            if total <= 0.0 {
+                return None;
+            }
+            v.sort_by(|a, b| a.0.total_cmp(&b.0));
+            let (lo, hi) = (0.2 * total, 0.8 * total);
+            let (mut acc, mut s, mut n) = (0.0f32, 0.0f32, 0.0f32);
+            for (x, w) in v {
+                let take = (acc + w).min(hi) - acc.max(lo);
+                if take > 0.0 {
+                    s += x * take;
+                    n += take;
                 }
+                acc += w;
             }
             (n > 0.0).then(|| s / n)
         };
@@ -932,11 +971,18 @@ impl Reference {
 
         let des: Vec<(f32, f32)> = cells.iter().zip(labs).map(|(c, l)| (delta_e2000(*l, c.lab), c.w)).collect();
         let mean_de = des.iter().map(|(d, w)| d * w).sum::<f32>() / wsum;
-        let loss = trimmed_mean(des, 0.10);
+        let patch_de = trimmed_mean(des, 0.05);
+        let mut lr: Vec<f32> = labs.iter().map(|l| l[0]).collect();
+        lr.sort_by(f32::total_cmp);
+        let qr = |p: f32| lr.get(((lr.len() as f32 - 1.0) * p) as usize).copied().unwrap_or(50.0);
+        let tone_err = (1..=19).map(|i| (qr(i as f32 * 0.05) - q(i as f32 * 0.05)).abs()).sum::<f32>() / 19.0;
+        let loss = patch_de + TONE_WEIGHT * tone_err;
         let shape_loss = self.shape_loss(labs, da_all, db_all);
 
         Measurement {
             loss,
+            patch_de,
+            tone_err,
             mean_de,
             shape_loss,
             stats: Stats { dl, da, db, dl_hi, dl_lo, dc },
