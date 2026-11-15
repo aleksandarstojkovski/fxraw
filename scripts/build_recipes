@@ -26,6 +26,10 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 OUT_PATH = DATA_DIR / "recipes.json"
 EXTRA_PATH = DATA_DIR / "extra_recipes.json"
 
+# Every recipe from the spreadsheet comes from Fuji X Weekly. Extra recipes
+# carry their own "source" in extra_recipes.json.
+FXW_SOURCE = {"name": "Fuji X Weekly", "url": "https://fujixweekly.com/recipes/"}
+
 # ── Mapping tables ──────────────────────────────────────────────────────────
 
 FILM_SIM_MAP = {
@@ -242,6 +246,7 @@ def build(xlsx_path: str, sensor_filter: set[str]) -> list[dict]:
         if exposure:
             rec["exposure_comp"] = exposure
 
+        rec["source"] = dict(FXW_SOURCE)
         recipes.append(rec)
 
     recipes.sort(key=lambda r: r["slug"])

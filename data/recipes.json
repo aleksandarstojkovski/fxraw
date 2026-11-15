@@ -18,7 +18,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1960 Chrome",
@@ -38,7 +42,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1960 Chrome (X-Trans IV)",
@@ -59,7 +67,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1970's Summer",
@@ -81,7 +93,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1971 Kodak",
@@ -103,7 +119,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1976 Kodak",
@@ -123,7 +143,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "1981 Kodak",
@@ -143,7 +167,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Acros",
@@ -158,7 +186,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1"
+    "exposure_comp": "+1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Acros Negative (Universal Negative)",
@@ -179,7 +211,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Acros Push Process",
@@ -196,7 +232,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1"
+    "exposure_comp": "+1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Aerochrome v1",
@@ -217,7 +257,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Aerochrome v2",
@@ -238,7 +282,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": 6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Aerochrome v2 (X-T3/X-T30)",
@@ -258,7 +306,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Aerochrome v3",
@@ -279,7 +331,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": 8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Aged Color",
@@ -297,7 +353,11 @@
     "wb_shift_r": 5,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3"
+    "exposure_comp": "+1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa 400S",
@@ -316,7 +376,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -2,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa APX 400",
@@ -334,7 +398,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Optima 200",
@@ -352,7 +420,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Scala",
@@ -369,7 +441,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Scala",
@@ -387,7 +463,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Ultra 100",
@@ -408,7 +488,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Ultra 100 v2",
@@ -430,7 +514,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Agfa Vista 100",
@@ -452,7 +540,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "AgfaChrome RS 100",
@@ -473,7 +565,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Amanda's Classic Negative",
@@ -494,7 +590,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Americana Film (Universal Negative)",
@@ -516,7 +616,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Analog Color",
@@ -535,7 +639,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Analog Gold",
@@ -555,7 +663,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Analog Monochrome",
@@ -572,7 +684,11 @@
     "wb_shift_r": -8,
     "wb_shift_b": -8,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Appalachian Negative",
@@ -594,7 +710,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Arizona Analog",
@@ -615,7 +735,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Astia",
@@ -633,7 +757,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1/3"
+    "exposure_comp": "+1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Astia Azure",
@@ -654,7 +782,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Astia Negative",
@@ -676,7 +808,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Astia Summer",
@@ -697,7 +833,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "B&W Negative (Universal Negative)",
@@ -718,7 +858,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "B&W Sepia (Universal Negative)",
@@ -739,7 +883,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "B&W Superia",
@@ -759,7 +907,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "BewareMyVelvia",
@@ -781,7 +933,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Black & White Infrared",
@@ -800,7 +956,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": 9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2"
+    "exposure_comp": "0 to +2",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Bleach Bypass",
@@ -821,7 +981,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Bright Kodak",
@@ -840,7 +1004,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1 to +1 2/3"
+    "exposure_comp": "+1 to +1 2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Bright Summer",
@@ -859,7 +1027,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1 to +2"
+    "exposure_comp": "+1 to +2",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "California Summer",
@@ -881,7 +1053,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Chrome Bypass",
@@ -899,7 +1075,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Chrome City (Universal Negative)",
@@ -921,7 +1101,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Chrome Slide",
@@ -942,7 +1126,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cine Teal",
@@ -964,7 +1152,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cine Teal",
@@ -983,7 +1175,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cinematic Film",
@@ -1004,7 +1200,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cinematic Negative",
@@ -1023,7 +1223,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 400D v1",
@@ -1044,7 +1248,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 400D v2",
@@ -1065,7 +1273,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 50D",
@@ -1086,7 +1298,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 800T",
@@ -1107,7 +1323,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 800T",
@@ -1126,7 +1346,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CineStill 800T",
@@ -1147,7 +1371,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "CitrusChrome",
@@ -1169,7 +1397,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Amber",
@@ -1190,7 +1422,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic B&W",
@@ -1208,7 +1444,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 9,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Chrome",
@@ -1226,7 +1466,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -1,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+2/3"
+    "exposure_comp": "+2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Color",
@@ -1248,7 +1492,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Color (X-Trans IV)",
@@ -1270,7 +1518,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Cuban Neg",
@@ -1290,7 +1542,10 @@
     "white_balance": "auto",
     "wb_shift_r": 4,
     "wb_shift_b": -5,
-    "iso": "Auto, ISO 500 up to ISO 6400"
+    "iso": "Auto, ISO 500 up to ISO 6400",
+    "source": {
+      "name": "Custom"
+    }
   },
   {
     "name": "Classic Kodak",
@@ -1308,7 +1563,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Monochrome",
@@ -1328,7 +1587,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Negative",
@@ -1349,7 +1612,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Negative",
@@ -1368,7 +1635,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Classic Slide",
@@ -1386,7 +1657,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Color Negative",
@@ -1404,7 +1679,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Color Negative 400",
@@ -1425,7 +1704,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cotton Candy Chrome",
@@ -1445,7 +1728,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Creamy Color",
@@ -1467,7 +1754,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": 6,
     "iso": "up to ISO 5000",
-    "exposure_comp": "+1/3"
+    "exposure_comp": "+1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cross Process",
@@ -1486,7 +1777,11 @@
     "wb_shift_r": -8,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -2/3"
+    "exposure_comp": "-1/3 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cross Process (X-Trans III)",
@@ -1504,7 +1799,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3"
+    "exposure_comp": "+2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Cyanotype",
@@ -1522,7 +1821,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Dramatic Classic Chrome",
@@ -1539,7 +1842,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -1,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Dramatic Monochrome",
@@ -1557,7 +1864,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Easy Reala Ace",
@@ -1578,7 +1889,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ektachrome 320T",
@@ -1599,7 +1914,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ektachrome E100",
@@ -1620,7 +1939,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ektachrome E100GX",
@@ -1638,7 +1961,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Elite Chrome 200",
@@ -1659,7 +1986,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Elite Chrome 200 Color Fade",
@@ -1679,7 +2010,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": 8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Elite Chrome (Universal Negative)",
@@ -1701,7 +2036,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Emulsion '86",
@@ -1721,7 +2060,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna",
@@ -1740,7 +2083,11 @@
     "wb_shift_r": 5,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Bleach Bypass",
@@ -1758,7 +2105,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Bleach Bypass",
@@ -1778,7 +2129,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to -1 1/3"
+    "exposure_comp": "-2/3 to -1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Film (Universal Negative)",
@@ -1800,7 +2155,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Low-Contrast",
@@ -1820,7 +2179,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Summer",
@@ -1841,7 +2204,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna Summer",
@@ -1862,7 +2229,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna v2",
@@ -1883,7 +2254,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna v2 (X-Pro3 + X100V)",
@@ -1904,7 +2279,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Eterna v3",
@@ -1923,7 +2302,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Everyday Astia",
@@ -1941,7 +2324,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired ECN-2 100T",
@@ -1963,7 +2350,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired ECN-2 100T (X-Trans V)",
@@ -1985,7 +2376,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Eterna",
@@ -2004,7 +2399,11 @@
     "wb_shift_r": 5,
     "wb_shift_b": 5,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Kodak Vision2 250D",
@@ -2022,7 +2421,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Kodak Vision2 250D",
@@ -2041,7 +2444,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Slide",
@@ -2063,7 +2470,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Slide v2",
@@ -2085,7 +2496,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Expired Velvia",
@@ -2106,7 +2521,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1 to -1/3"
+    "exposure_comp": "-1 to -1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Faux Eterna",
@@ -2124,7 +2543,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ferrania Solaris FG 400",
@@ -2146,7 +2569,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fluorescent Night",
@@ -2167,7 +2594,11 @@
     "wb_shift_r": -8,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "FRGMT B&W",
@@ -2184,7 +2615,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fuji Negative (Universal Negative)",
@@ -2206,7 +2641,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujichrome Provia 100F",
@@ -2227,7 +2666,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujichrome Sensia 100",
@@ -2245,7 +2688,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor 100 Gold",
@@ -2264,7 +2711,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor 100 Industrial",
@@ -2284,7 +2735,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor 100 Industrial",
@@ -2305,7 +2760,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Analog",
@@ -2327,7 +2786,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Blue",
@@ -2348,7 +2811,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor C200",
@@ -2368,7 +2835,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor C200 v2",
@@ -2389,7 +2860,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Film",
@@ -2411,7 +2886,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Natura 1600",
@@ -2433,7 +2912,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Natura 1600",
@@ -2455,7 +2938,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Negative",
@@ -2474,7 +2961,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor NPH",
@@ -2496,7 +2987,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor NPL 160 Tungsten",
@@ -2514,7 +3009,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -3,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor NPS 160 Pulled",
@@ -2535,7 +3034,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro",
@@ -2554,7 +3057,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor PRO 160C Warm",
@@ -2575,7 +3082,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro 160NS",
@@ -2593,7 +3104,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro 400H",
@@ -2611,7 +3126,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro 400H",
@@ -2633,7 +3152,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1 to +1 2/3"
+    "exposure_comp": "+1 to +1 2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro 400H Overexposed",
@@ -2651,7 +3174,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1 2/3 to +2 1/3"
+    "exposure_comp": "+1 2/3 to +2 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Pro 400H (X-T3 & X-T30)",
@@ -2670,7 +3197,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Reala 100",
@@ -2691,7 +3222,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Reala 100",
@@ -2712,7 +3247,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Super HG",
@@ -2733,7 +3272,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Super HG v2",
@@ -2754,7 +3297,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Super HG v2",
@@ -2775,7 +3322,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 100",
@@ -2795,7 +3346,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 100",
@@ -2814,7 +3369,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 1600",
@@ -2835,7 +3394,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 1,
     "iso": "1600 to 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 1600",
@@ -2856,7 +3419,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 1,
     "iso": "1600 to 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 200 (Universal Negative)",
@@ -2878,7 +3445,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 800",
@@ -2899,7 +3470,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujicolor Superia 800",
@@ -2917,7 +3492,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3"
+    "exposure_comp": "+2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Fujifilm Negative",
@@ -2938,7 +3517,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "GAF 500",
@@ -2959,7 +3542,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "12800",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Grizzly Ride",
@@ -2981,7 +3568,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford Delta Push Process",
@@ -2998,7 +3589,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "12800",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford FP4 Plus 125",
@@ -3016,7 +3611,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1 to -1/3"
+    "exposure_comp": "-1 to -1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford HP5 Plus",
@@ -3033,7 +3632,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0"
+    "exposure_comp": "0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford HP5 Plus 400",
@@ -3051,7 +3654,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford HP5 Plus Push Process",
@@ -3068,7 +3675,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "25600 to 51200",
-    "exposure_comp": "+1/3"
+    "exposure_comp": "+1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford Ortho Plus 80",
@@ -3088,7 +3699,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford Pan F 50 Plus",
@@ -3106,7 +3721,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Ilford XP2 Super 400",
@@ -3124,7 +3743,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": 7,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Improved Velvia",
@@ -3142,7 +3765,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Indoor Angouleme",
@@ -3163,7 +3790,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Indoor Angouleme",
@@ -3184,7 +3815,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Indoor Astia (Universal Negative)",
@@ -3206,7 +3841,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Jeff Davenport Night",
@@ -3226,7 +3865,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1 to +2/3"
+    "exposure_comp": "-1 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kentmere Pan 400",
@@ -3243,7 +3886,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": 6,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 1",
@@ -3264,7 +3911,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -1"
+    "exposure_comp": "-1/3 to -1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 25",
@@ -3283,7 +3934,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 1600",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 25",
@@ -3302,7 +3957,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 1600",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 64",
@@ -3323,7 +3982,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 64",
@@ -3343,7 +4006,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome 64 (X-T3 & X-T30)",
@@ -3362,7 +4029,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome Blue",
@@ -3384,7 +4055,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": 9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to 0"
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome II",
@@ -3402,7 +4077,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome II",
@@ -3423,7 +4102,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodachrome II v2",
@@ -3444,7 +4127,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodacolor",
@@ -3463,7 +4150,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodacolor II 126",
@@ -3483,7 +4174,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": 3,
     "iso": "3200 to 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodacolor VR",
@@ -3502,7 +4197,11 @@
     "wb_shift_r": -7,
     "wb_shift_b": 8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodacolor VR 200",
@@ -3524,7 +4223,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Brilliance",
@@ -3545,7 +4248,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1 to 0"
+    "exposure_comp": "-1 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ektachrome 100SW",
@@ -3563,7 +4270,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ektachrome E100VS v1",
@@ -3584,7 +4295,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ektachrome E100VS v2",
@@ -3606,7 +4321,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ektar 100",
@@ -3625,7 +4344,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ektar 100",
@@ -3640,7 +4363,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Emulsion",
@@ -3660,7 +4387,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Farbwelt 200 Expired",
@@ -3682,7 +4413,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -1 1/3"
+    "exposure_comp": "0 to -1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Film",
@@ -3703,7 +4438,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Gold 200",
@@ -3720,7 +4459,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Gold 200",
@@ -3740,7 +4483,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Gold 200 v3",
@@ -3760,7 +4507,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Gold Max 400 Expired",
@@ -3782,7 +4533,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Gold v2",
@@ -3803,7 +4558,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak GT 800-5",
@@ -3822,7 +4581,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak High Definition Plus 200",
@@ -3844,7 +4607,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Max 800",
@@ -3865,7 +4632,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Negative",
@@ -3884,7 +4655,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Plus-X 125",
@@ -3903,7 +4678,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": 9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -2/3"
+    "exposure_comp": "-1/3 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 160",
@@ -3920,7 +4699,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 160",
@@ -3942,7 +4725,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 160 v2",
@@ -3960,7 +4747,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400",
@@ -3980,7 +4771,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400 v2",
@@ -4002,7 +4797,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400 v2",
@@ -4023,7 +4822,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400 v2 (X-T3 & X-T30)",
@@ -4041,7 +4844,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400 Warm",
@@ -4062,7 +4869,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 400 (X-T3 & X-T30)",
@@ -4080,7 +4891,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 800",
@@ -4102,7 +4917,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 800 v2",
@@ -4123,7 +4942,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +1"
+    "exposure_comp": "-2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 800 v3",
@@ -4144,7 +4967,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1 1/3"
+    "exposure_comp": "+1/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra 800 v3 (X-Trans IV)",
@@ -4166,7 +4993,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1 1/3"
+    "exposure_comp": "+1/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Portra do Sol",
@@ -4184,7 +5015,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1 1/3"
+    "exposure_comp": "+1/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Pro 400",
@@ -4205,7 +5040,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Royal Gold 400",
@@ -4226,7 +5065,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Royal Gold 400",
@@ -4247,7 +5090,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak T-Max 100 Hard Tone",
@@ -4265,7 +5112,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak T-Max 100 Soft Tone",
@@ -4283,7 +5134,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak T-Max 400",
@@ -4302,7 +5157,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak T-Max 400  (X-T3 + X-T30)",
@@ -4320,7 +5179,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak T-Max P3200",
@@ -4339,7 +5202,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": 7,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Tri-X 400",
@@ -4358,7 +5225,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "1600 to 12800",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Tri-X 400  (X-T3 + X-T30)",
@@ -4376,7 +5247,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "1600 to 12800",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Tri-X Push Process",
@@ -4391,7 +5266,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "3200 to 12800",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ultramax",
@@ -4409,7 +5288,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ultramax 400",
@@ -4429,7 +5312,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Ultramax 400",
@@ -4448,7 +5335,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vericolor III 160",
@@ -4469,7 +5360,11 @@
     "wb_shift_r": 7,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vericolor VPS",
@@ -4491,7 +5386,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vericolor Warm",
@@ -4513,7 +5412,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vision3 250D",
@@ -4532,7 +5435,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vision3 250D",
@@ -4552,7 +5459,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Kodak Vision3 250D v2",
@@ -4572,7 +5483,11 @@
     "wb_shift_r": -5,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "KodaNeg NC",
@@ -4592,7 +5507,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "KodaNeg NC (w/Diffusion Filter)",
@@ -4612,7 +5531,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "KodaNeg VC",
@@ -4632,7 +5555,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "KodaNeg VC (w/Diffusion Filter)",
@@ -4652,7 +5579,32 @@
     "wb_shift_r": 6,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
+  },
+  {
+    "name": "Leica X",
+    "slug": "leica-x",
+    "film_sim": "classic-chrome",
+    "highlight": -1,
+    "shadow": 0,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": 0,
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto",
+    "wb_shift_r": 1,
+    "wb_shift_b": -2,
+    "source": {
+      "name": "carlcruzsnaps.com",
+      "url": "https://carlcruzsnaps.com/leica-x.html",
+      "author": "carlcruzsnaps"
+    }
   },
   {
     "name": "LomoChrome Metropolis",
@@ -4673,7 +5625,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Lomography Color 100",
@@ -4692,7 +5648,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Low Key",
@@ -4713,7 +5673,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to -1 1/3"
+    "exposure_comp": "-2/3 to -1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Magenta Negative",
@@ -4735,7 +5699,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "McCurry Kodachrome",
@@ -4756,7 +5724,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 4,
     "iso": "up to ISO 1600",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "McCurry Kodachrome (X-T3 & X-T30)",
@@ -4776,7 +5748,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 4,
     "iso": "up to ISO 1600",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Melancholy Blue",
@@ -4794,7 +5770,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -1"
+    "exposure_comp": "-1/3 to -1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Monochrome Kodachrome",
@@ -4811,7 +5791,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 9,
     "iso": "3200 to 12800",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Monochrome Negative",
@@ -4829,7 +5813,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Monochrome Negative (X-Trans III)",
@@ -4846,7 +5834,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 12800",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Moody Monochrome",
@@ -4864,7 +5856,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -9,
     "iso": "3200",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Muted Color",
@@ -4885,7 +5881,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Mystery Chrome",
@@ -4903,7 +5903,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Negative Print",
@@ -4921,7 +5925,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Neon Nature",
@@ -4942,7 +5950,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Neopan Negative",
@@ -4963,7 +5975,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Noir",
@@ -4981,7 +5997,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": 9,
     "iso": "3200",
-    "exposure_comp": "-2/3 to +2/3"
+    "exposure_comp": "-2/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgia Color",
@@ -5003,7 +6023,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgia Negative",
@@ -5024,7 +6048,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgic Americana",
@@ -5045,7 +6073,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgic Emulsion",
@@ -5063,7 +6095,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgic Film",
@@ -5084,7 +6120,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgic Negative",
@@ -5105,7 +6145,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Nostalgic Print",
@@ -5127,7 +6171,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Old Ektachrome",
@@ -5148,7 +6196,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Old Kodak",
@@ -5169,7 +6221,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pacific Blues",
@@ -5191,7 +6247,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pacific Blues",
@@ -5213,7 +6273,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Polaroid",
@@ -5231,7 +6295,11 @@
     "wb_shift_r": 5,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +1"
+    "exposure_comp": "-2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Polaroid II",
@@ -5250,7 +6318,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": 6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -1"
+    "exposure_comp": "0 to -1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Porto 200",
@@ -5268,7 +6340,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Portra-Style",
@@ -5287,7 +6363,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Positive Film",
@@ -5309,7 +6389,36 @@
     "wb_shift_r": 7,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
+  },
+  {
+    "name": "Positive Film",
+    "slug": "positive-film-reddit",
+    "film_sim": "classic-chrome",
+    "dynamic_range": 100,
+    "highlight": 1,
+    "shadow": 1,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 2,
+    "clarity": 0,
+    "grain": "weak",
+    "grain_size": "small",
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto",
+    "wb_shift_r": 1,
+    "wb_shift_b": 1,
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Reddit r/fujifilm",
+      "url": "https://www.reddit.com/r/fujifilm/comments/1f4zx7a/recipe_positive_film_ricoh_gr_iii_xt5_23mm_f2/",
+      "author": "u/indigo1917"
+    }
   },
   {
     "name": "Pro Neg",
@@ -5328,7 +6437,11 @@
     "wb_shift_r": -7,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "PRO Neg. Hi",
@@ -5346,7 +6459,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "PRO Negative 160C",
@@ -5366,7 +6483,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "PRO Negative 160C (PRO Neg. Hi)",
@@ -5387,7 +6508,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Provia Slide",
@@ -5405,7 +6530,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Provia Summer",
@@ -5427,7 +6556,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1 1/3"
+    "exposure_comp": "+1/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pulled Fujicolor Superia",
@@ -5445,7 +6578,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pulled Negative (Universal Negative)",
@@ -5467,7 +6604,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pure Negative",
@@ -5487,7 +6628,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "PurpleChrome",
@@ -5509,7 +6654,11 @@
     "wb_shift_r": -7,
     "wb_shift_b": 9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pushed Analog",
@@ -5530,7 +6679,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pushed CineStill 800T",
@@ -5552,7 +6705,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pushed CineStill 800T",
@@ -5574,7 +6731,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Pushed CineStill 800T (X100V + X-Pro3)",
@@ -5596,7 +6757,11 @@
     "wb_shift_r": -9,
     "wb_shift_b": 7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Reala Ace",
@@ -5617,7 +6782,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1"
+    "exposure_comp": "-1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Redscale",
@@ -5637,7 +6806,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "RedScale",
@@ -5658,7 +6831,11 @@
     "wb_shift_r": 9,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Reggie's Portra",
@@ -5678,7 +6855,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Reggie's Superia",
@@ -5698,7 +6879,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Retro Color",
@@ -5719,7 +6904,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Retro Gold",
@@ -5740,7 +6929,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Retro Gold Low Contrast",
@@ -5761,7 +6954,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to -2/3"
+    "exposure_comp": "0 to -2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Retro Negative (Universal Negative)",
@@ -5783,7 +6980,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "SantaColor",
@@ -5804,7 +7005,11 @@
     "wb_shift_r": 5,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Scanned Superia",
@@ -5822,7 +7027,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Sepia",
@@ -5840,7 +7049,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Sepia",
@@ -5857,7 +7070,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "September Summer",
@@ -5878,7 +7095,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -7,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Serr's 500T",
@@ -5899,7 +7120,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Silver Summer",
@@ -5921,7 +7146,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Standard Film",
@@ -5942,7 +7171,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Standard Provia",
@@ -5963,7 +7196,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Stephen Shore Kodacolor",
@@ -5982,7 +7219,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1 to +1 /1/3"
+    "exposure_comp": "+1 to +1 /1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Summer of 1960",
@@ -6003,7 +7244,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Summer of '59",
@@ -6024,7 +7269,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +1/3"
+    "exposure_comp": "-2/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Summer Sun",
@@ -6046,7 +7295,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": 2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +2/3"
+    "exposure_comp": "0 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Super HG Astia",
@@ -6067,7 +7320,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Superia Negative",
@@ -6088,7 +7345,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Superia Premium 400",
@@ -6110,7 +7371,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Superia Summer",
@@ -6131,7 +7396,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Superia Xtra 400",
@@ -6151,7 +7420,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Superia Xtra 400",
@@ -6171,7 +7444,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Texas Sun",
@@ -6193,7 +7470,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "The Rockwell",
@@ -6214,7 +7495,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Thommy's Ektachrome",
@@ -6235,7 +7520,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Timeless Negative",
@@ -6255,7 +7544,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +1/3"
+    "exposure_comp": "-2/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Timeless Negative",
@@ -6276,7 +7569,11 @@
     "wb_shift_r": 4,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Universal Provia (Universal Negative)",
@@ -6298,7 +7595,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Urban Dreams",
@@ -6317,7 +7618,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -2,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Urban Vintage Chrome",
@@ -6336,7 +7641,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia",
@@ -6354,7 +7663,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia 100F (Universal Negative)",
@@ -6376,7 +7689,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia",
@@ -6394,7 +7711,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -1,
     "iso": "up to ISO 12800",
-    "exposure_comp": "+2/3"
+    "exposure_comp": "+2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia Film",
@@ -6415,7 +7736,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia Slide",
@@ -6435,7 +7760,11 @@
     "wb_shift_r": 8,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Velvia v2",
@@ -6454,7 +7783,11 @@
     "wb_shift_r": 0,
     "wb_shift_b": 0,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Verano Tostado",
@@ -6473,7 +7806,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vibrant Arizona",
@@ -6491,7 +7828,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vibrant Arizona",
@@ -6509,7 +7850,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vibrant Velvia",
@@ -6530,7 +7875,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": 1,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1"
+    "exposure_comp": "+2/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Agfacolor",
@@ -6547,7 +7896,11 @@
     "wb_shift_r": -3,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +2/3"
+    "exposure_comp": "-1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Analog",
@@ -6568,7 +7921,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": 4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Bronze",
@@ -6587,7 +7944,11 @@
     "wb_shift_r": 6,
     "wb_shift_b": -8,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to 0"
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Cinema",
@@ -6608,7 +7969,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": 3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -2"
+    "exposure_comp": "-1/3 to -2",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Color",
@@ -6630,7 +7995,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Color v2",
@@ -6652,7 +8021,11 @@
     "wb_shift_r": -1,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1"
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Eterna",
@@ -6672,7 +8045,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to 0"
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Eterna (X-T3, X-T30, X-H1)",
@@ -6690,7 +8067,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to 0"
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Eterna (X-Trans V)",
@@ -6710,7 +8091,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to 0"
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Kodachrome",
@@ -6728,7 +8113,11 @@
     "wb_shift_r": 2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-1/3 to -1"
+    "exposure_comp": "-1/3 to -1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Kodacolor",
@@ -6747,7 +8136,11 @@
     "wb_shift_r": -4,
     "wb_shift_b": 4,
     "iso": "up to ISO 12800",
-    "exposure_comp": "-1/3 to +1/3"
+    "exposure_comp": "-1/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Negative",
@@ -6769,7 +8162,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -5,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +2/3"
+    "exposure_comp": "+1/3 to +2/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Print",
@@ -6790,7 +8187,11 @@
     "wb_shift_r": 3,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "-2/3 to +1/3"
+    "exposure_comp": "-2/3 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vintage Vibes",
@@ -6812,7 +8213,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -6,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Vivid Velvia",
@@ -6833,7 +8238,11 @@
     "wb_shift_r": 1,
     "wb_shift_b": -3,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Warm Contrast",
@@ -6851,7 +8260,11 @@
     "wb_shift_r": -2,
     "wb_shift_b": -4,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+1/3 to +1"
+    "exposure_comp": "+1/3 to +1",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Xpro",
@@ -6870,7 +8283,11 @@
     "wb_shift_r": -6,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "+2/3 to +1 1/3"
+    "exposure_comp": "+2/3 to +1 1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   },
   {
     "name": "Xpro '62",
@@ -6891,6 +8308,10 @@
     "wb_shift_r": -3,
     "wb_shift_b": -9,
     "iso": "up to ISO 6400",
-    "exposure_comp": "0 to +1/3"
+    "exposure_comp": "0 to +1/3",
+    "source": {
+      "name": "Fuji X Weekly",
+      "url": "https://fujixweekly.com/recipes/"
+    }
   }
 ]

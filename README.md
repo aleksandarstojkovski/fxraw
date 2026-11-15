@@ -10,6 +10,8 @@ RAW Studio's features, plus more.
 - **Convert to multiple recipes in bulk:** using [Project Mode](#project-mode)
   and a `fxraw.toml` file.
 - **Override individual settings** like film simulation, grain, and more.
+- **Web UI:** browse recipes and preview conversions side by side with
+  [`fxraw serve`](#fxraw-serve).
 
 ![Same beach photograph in different Fujifilm recipes](./screenshots/recipe-sample.gif)
 
@@ -141,6 +143,30 @@ off, weak, strong
 
 Without any recipe or override flags the camera's current settings are used
 (same as X RAW Studio's default behaviour).
+
+### `fxraw serve`
+
+Start a local web UI (on `127.0.0.1` only) to browse every recipe and quickly
+re-render a RAF with any of them on the camera, with a before/after preview.
+
+```sh
+sudo fxraw serve                 # list RAFs in the current folder (and ./_RAF)
+sudo fxraw serve ~/Photos/trip   # another folder
+fxraw serve --port 8080 --no-open
+```
+
+- **Images:** RAFs in the folder are listed automatically; drag & drop others
+  into the page. The JPEG embedded in the RAF is shown instantly as "As shot".
+- **Recipes:** search, filter by film simulation, star favorites. If `exiftool`
+  is installed, the closest matching recipes for the original shot are shown,
+  and the settings that differ from it are highlighted.
+- **Convert & preview:** <kbd>Enter</kbd> (or →) renders the selected recipe
+  on the camera. Conversions are queued and cached, so you can line up several
+  and flip between them with <kbd>←</kbd>/<kbd>→</kbd>. Compare with the slider,
+  hold <kbd>Space</kbd> to peek at the original, double-click or scroll to zoom 1:1.
+- **Download** a render, or **Save to folder** as `<stem>-<recipe>.jpg`.
+
+Like `convert`, it needs `sudo` unless you ran `sudo fxraw setup`.
 
 ### `fxraw detect`
 

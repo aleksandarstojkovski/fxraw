@@ -346,11 +346,18 @@ pub fn convert(
         let raf_size_mb = raf_data.len() as f64 / (1024.0 * 1024.0);
         ui.file_start(idx, input, output, raf_size_mb);
 
-        match convert_one(camera, raf_data, raf_size_mb, output, file_recipe, ui) {
-            Ok(jpeg_size_mb) => {
-                succeeded += 1;
-                ui.file_done(output, jpeg_size_mb);
-            }
+        match develop(camera, raf_data, raf_size_mb, file_recipe, ui) {
+            Ok(jpeg) => match fs::write(output, &jpeg) {
+                Ok(()) => {
+                    chown_to_sudo_user(output);
+                    succeeded += 1;
+                    ui.file_done(output, jpeg.len() as f64 / (1024.0 * 1024.0));
+                }
+                Err(e) => {
+                    failed += 1;
+                    ui.file_failed(input, &format!("could not write {output}: {e}"));
+                }
+            },
             Err(e) => {
                 failed += 1;
                 ui.file_failed(input, &e);
@@ -368,16 +375,50 @@ pub fn convert(
     }
 }
 
-/// Process a single RAF through the camera. Returns the JPEG size in MB on
-/// success, or an error message so the caller can continue with the next file.
-fn convert_one(
+/// Convert a single RAF file to JPEG bytes, managing the PTP session itself.
+///
+/// Unlike [`convert`], this never exits the process: every failure is returned
+/// as an error, which makes it suitable for long-running callers (the web UI).
+/// On success returns the JPEG bytes plus any warnings (e.g. DR clamping).
+pub fn convert_raf_to_jpeg(
+    camera: &mut dyn ptp::FujiCamera,
+    input: &str,
+    recipe: &RecipeSettings,
+    ui: &ConvertProgress,
+) -> Result<(Vec<u8>, Vec<String>), String> {
+    let raf_data = fs::read(input).map_err(|e| format!("Error reading {input}: {e}"))?;
+    if raf_data.len() < 16 || &raf_data[..15] != b"FUJIFILMCCD-RAW" {
+        return Err(format!("{input} does not appear to be a valid Fujifilm RAF file."));
+    }
+
+    let meta = read_raf_meta(input);
+    let mut file_recipe = recipe.clone();
+    let mut warnings = Vec::new();
+    if let Some(recipe_dr) = file_recipe.dynamic_range {
+        let result = clamp_dr(recipe_dr, meta.iso, meta.dynamic_range);
+        file_recipe.dynamic_range = Some(result.dr);
+        warnings = result.warnings;
+    }
+
+    camera
+        .open_session()
+        .map_err(|e| format!("Failed to open session: {e}"))?;
+    let raf_size_mb = raf_data.len() as f64 / (1024.0 * 1024.0);
+    let result = develop(camera, &raf_data, raf_size_mb, &file_recipe, ui);
+    let _ = camera.close_session();
+    result.map(|jpeg| (jpeg, warnings))
+}
+
+/// Process a single RAF through the camera (session must be open). Returns the
+/// JPEG bytes on success, or an error message so the caller can continue with
+/// the next file.
+fn develop(
     camera: &mut dyn ptp::FujiCamera,
     raf_data: &[u8],
     raf_size_mb: f64,
-    output_path: &str,
     recipe: &RecipeSettings,
     ui: &ConvertProgress,
-) -> Result<f64, String> {
+) -> Result<Vec<u8>, String> {
     // Step A: Send ObjectInfo via 0x900C
     ui.step(1, "sending object info…");
     let obj_info = ptp::build_object_info(
@@ -489,13 +530,7 @@ fn convert_one(
                             );
                         }
 
-                        fs::write(output_path, &data).unwrap_or_else(|e| {
-                            eprintln!("  Error writing {output_path}: {e}");
-                            std::process::exit(1);
-                        });
-                        chown_to_sudo_user(output_path);
-
-                        ui.step_detail(&format!("Cleaning up (DeleteObject)..."));
+                        ui.step_detail("Cleaning up (DeleteObject)...");
                         match camera.delete_object(handle) {
                             Ok(_) => ui.step_detail("Object deleted."),
                             Err(e) => {
@@ -503,7 +538,7 @@ fn convert_one(
                             }
                         }
 
-                        return Ok(size_mb);
+                        return Ok(data);
                     }
                     Err(e) => {
                         ui.poll_result(&format!("GetObject failed: {e}"));
@@ -630,11 +665,7 @@ pub fn chown_to_sudo_user(_path: &str) {}
 /// Open the camera (real USB or stub when FXRAW_STUB_CAMERA=1). Caller must pass
 /// the returned box to `convert()`.
 pub fn open_camera() -> Box<dyn ptp::FujiCamera> {
-    if std::env::var("FXRAW_STUB_CAMERA").is_ok() {
-        return Box::new(StubCamera);
-    }
-    Box::new(
-        PtpCamera::open(FUJIFILM_VENDOR_ID, DEFAULT_PRODUCT_ID).unwrap_or_else(|e| {
+    try_open_camera().unwrap_or_else(|e| {
             eprintln!("Error: {e}");
             eprintln!();
             eprintln!("Make sure:");
@@ -643,8 +674,28 @@ pub fn open_camera() -> Box<dyn ptp::FujiCamera> {
             eprintln!("  - USB mode is set correctly on the camera");
             eprintln!("  - You have run `sudo fxraw setup` (one-time macOS PTP daemon fix)");
             std::process::exit(1);
-        }),
-    )
+    })
+}
+
+/// Like [`open_camera`] but returns the error instead of exiting.
+pub fn try_open_camera() -> Result<Box<dyn ptp::FujiCamera>, String> {
+    if std::env::var("FXRAW_STUB_CAMERA").is_ok() {
+        return Ok(Box::new(StubCamera));
+    }
+    PtpCamera::open(FUJIFILM_VENDOR_ID, DEFAULT_PRODUCT_ID)
+        .map(|c| Box::new(c) as Box<dyn ptp::FujiCamera>)
+}
+
+/// Extract the full-size JPEG preview embedded in a RAF file (the camera's
+/// own rendering at capture time). Returns None if the header looks wrong.
+pub fn embedded_jpeg(raf: &[u8]) -> Option<&[u8]> {
+    if raf.len() < 92 || &raf[..15] != b"FUJIFILMCCD-RAW" {
+        return None;
+    }
+    let off = u32::from_be_bytes(raf[84..88].try_into().ok()?) as usize;
+    let len = u32::from_be_bytes(raf[88..92].try_into().ok()?) as usize;
+    let jpeg = raf.get(off..off.checked_add(len)?)?;
+    (jpeg.len() >= 2 && jpeg[0] == 0xFF && jpeg[1] == 0xD8).then_some(jpeg)
 }
 
 fn print_device_info(info: &ptp::DeviceInfo) {

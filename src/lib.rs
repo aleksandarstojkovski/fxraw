@@ -8,3 +8,4 @@ pub mod profile;
 pub mod ptp;
 pub mod recipes;
 pub mod ui;
+pub mod web;

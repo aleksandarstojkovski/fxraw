@@ -207,7 +207,15 @@ impl PtpCamera {
 
             let _ = handle.set_auto_detach_kernel_driver(true);
 
-            match handle.claim_interface(iface_num) {
+            let mut claimed = handle.claim_interface(iface_num);
+            if matches!(claimed, Err(rusb::Error::Access | rusb::Error::Busy))
+                && cfg!(target_os = "macos")
+                && ptp_daemon_disabled_for_user()
+            {
+                claimed = claim_racing_ptp_daemon(&handle, iface_num);
+            }
+
+            match claimed {
                 Ok(()) => {
                     return Ok(PtpCamera {
                         handle,
@@ -598,6 +606,55 @@ fn claim_interface_error(iface: u8, e: rusb::Error) -> String {
     }
 }
 
+/// On recent macOS, `ptpcamerad` is a SIP-protected per-user LaunchAgent:
+/// even when disabled, launchd relaunches it on demand and it grabs the camera
+/// again. If the user opted out with `fxraw setup`, stop it (it runs as the
+/// same user, so no root is needed) and claim the interface before it reattaches.
+fn claim_racing_ptp_daemon(handle: &DeviceHandle<Context>, iface: u8) -> rusb::Result<()> {
+    let uid = current_uid();
+    let deadline = std::time::Instant::now() + Duration::from_secs(5);
+    let mut last = Err(rusb::Error::Access);
+    while std::time::Instant::now() < deadline {
+        for name in PTP_DAEMONS {
+            let mut cmd = Command::new("pkill");
+            cmd.args(["-9", "-x"]);
+            if let Some(ref uid) = uid {
+                cmd.args(["-U", uid]);
+            }
+            let _ = cmd.arg(name).output();
+        }
+        for _ in 0..20 {
+            last = handle.claim_interface(iface);
+            if last.is_ok() {
+                return last;
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        }
+    }
+    last
+}
+
+fn current_uid() -> Option<String> {
+    let out = Command::new("id").arg("-u").output().ok()?;
+    let uid = String::from_utf8(out.stdout).ok()?.trim().to_string();
+    (!uid.is_empty()).then_some(uid)
+}
+
+/// True when `fxraw setup` disabled `ptpcamerad` in this user's launchd domain,
+/// i.e. the user opted in to fxraw taking the camera away from it.
+fn ptp_daemon_disabled_for_user() -> bool {
+    let Some(uid) = current_uid() else { return false };
+    let Ok(out) = Command::new("launchctl")
+        .args(["print-disabled", &format!("gui/{uid}")])
+        .output()
+    else {
+        return false;
+    };
+    String::from_utf8_lossy(&out.stdout).lines().any(|l| {
+        l.contains("\"com.apple.ptpcamerad\"") && (l.contains("=> disabled") || l.contains("=> true"))
+    })
+}
+
 fn is_ptp_daemon_running() -> bool {
     for name in PTP_DAEMONS {
         if let Ok(output) = Command::new("pgrep").arg("-x").arg(name).output() {
@@ -609,12 +666,31 @@ fn is_ptp_daemon_running() -> bool {
     false
 }
 
+/// launchd services for the PTP daemons: the system domain, plus the invoking
+/// user's GUI domain (on recent macOS `ptpcamerad` is a per-user LaunchAgent).
+fn ptp_daemon_services() -> Vec<String> {
+    let user_uid = std::env::var("SUDO_UID").ok().or_else(current_uid);
+    let mut services = Vec::new();
+    for name in PTP_DAEMONS {
+        services.push(format!("system/com.apple.{name}"));
+        if let Some(ref uid) = user_uid {
+            if uid != "0" {
+                services.push(format!("gui/{uid}/com.apple.{name}"));
+            }
+        }
+    }
+    services
+}
+
 /// Disable macOS PTP daemons so they stop auto-claiming cameras.
 /// Returns Ok(message) on success. Requires root.
+///
+/// The per-user agent is SIP-protected and launchd may still relaunch it on
+/// demand; fxraw then stops it itself before claiming the camera (see
+/// `claim_racing_ptp_daemon`), which only happens once it is disabled here.
 pub fn disable_ptp_daemons() -> Result<String, String> {
     let mut disabled = Vec::new();
-    for name in PTP_DAEMONS {
-        let service = format!("system/com.apple.{name}");
+    for service in ptp_daemon_services() {
         let status = Command::new("launchctl")
             .args(["disable", &service])
             .status()
@@ -624,7 +700,9 @@ pub fn disable_ptp_daemons() -> Result<String, String> {
         }
         let _ = Command::new("launchctl")
             .args(["bootout", &service])
-            .status();
+            .output();
+    }
+    for name in PTP_DAEMONS {
         let _ = Command::new("killall").arg(name).output();
     }
     if disabled.is_empty() {
@@ -641,8 +719,7 @@ pub fn disable_ptp_daemons() -> Result<String, String> {
 /// Re-enable macOS PTP daemons. Requires root.
 pub fn enable_ptp_daemons() -> Result<String, String> {
     let mut enabled = Vec::new();
-    for name in PTP_DAEMONS {
-        let service = format!("system/com.apple.{name}");
+    for service in ptp_daemon_services() {
         let status = Command::new("launchctl")
             .args(["enable", &service])
             .status()

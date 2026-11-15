@@ -17,6 +17,55 @@
     "white_balance": "auto",
     "wb_shift_r": 4,
     "wb_shift_b": -5,
-    "iso": "Auto, ISO 500 up to ISO 6400"
+    "iso": "Auto, ISO 500 up to ISO 6400",
+    "source": {
+      "name": "Custom"
+    }
+  },
+  {
+    "name": "Leica X",
+    "slug": "leica-x",
+    "film_sim": "classic-chrome",
+    "highlight": -1,
+    "shadow": 0,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": 0,
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto",
+    "wb_shift_r": 1,
+    "wb_shift_b": -2,
+    "source": {
+      "name": "carlcruzsnaps.com",
+      "url": "https://carlcruzsnaps.com/leica-x.html",
+      "author": "carlcruzsnaps"
+    }
+  },
+  {
+    "name": "Positive Film",
+    "slug": "positive-film-reddit",
+    "film_sim": "classic-chrome",
+    "dynamic_range": 100,
+    "highlight": 1,
+    "shadow": 1,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 2,
+    "clarity": 0,
+    "grain": "weak",
+    "grain_size": "small",
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto",
+    "wb_shift_r": 1,
+    "wb_shift_b": 1,
+    "exposure_comp": "-2/3 to 0",
+    "source": {
+      "name": "Reddit r/fujifilm",
+      "url": "https://www.reddit.com/r/fujifilm/comments/1f4zx7a/recipe_positive_film_ricoh_gr_iii_xt5_23mm_f2/",
+      "author": "u/indigo1917"
+    }
   }
 ]
