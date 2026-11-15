@@ -4,6 +4,7 @@ pub mod analyse;
 pub mod config;
 pub mod detect;
 pub mod fuji;
+pub mod matcher;
 pub mod profile;
 pub mod ptp;
 pub mod recipes;

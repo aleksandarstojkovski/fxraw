@@ -4,10 +4,11 @@
 //! Everything runs on 127.0.0.1. Uploaded RAFs and rendered JPEGs live in a
 //! temporary cache directory; "Save" copies a render next to the served folder.
 
-use crate::{analyse, fuji, recipes, ui};
+use crate::{analyse, fuji, matcher, recipes, ui};
 use serde_json::{json, Value};
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use tiny_http::{Header, Method, Request, Response, Server};
@@ -34,6 +35,41 @@ struct State {
     camera: Mutex<()>,
     /// Description of the conversion currently running, if any.
     busy: Mutex<Option<String>>,
+    /// Reference-matching jobs; the id is the index.
+    matches: Mutex<Vec<Arc<MatchJob>>>,
+}
+
+/// A "match this reference" search running (or finished) in the background.
+struct MatchJob {
+    id: usize,
+    image: usize,
+    /// File name of the reference picture (e.g. the film scan).
+    reference: String,
+    /// Where the aligned reference and the step previews are written.
+    dir: PathBuf,
+    stop: AtomicBool,
+    status: Mutex<MatchStatus>,
+}
+
+struct MatchStatus {
+    /// "aligning" | "running" | "done" | "stopped" | "error"
+    state: &'static str,
+    phase: String,
+    error: Option<String>,
+    alignment: Option<Value>,
+    cells: usize,
+    monochrome: bool,
+    steps: Vec<Value>,
+    /// (render number, loss) of the best render so far.
+    best: Option<(usize, f32)>,
+    best_recipe: Option<Value>,
+    best_label: String,
+    max_renders: usize,
+    started: Instant,
+    finished: Option<f64>,
+    /// Wall time of each camera render, for the ETA.
+    render_secs: Vec<f64>,
+    budget_exhausted: bool,
 }
 
 type Resp = Response<std::io::Cursor<Vec<u8>>>;
@@ -50,7 +86,7 @@ pub fn serve(root: &Path, port: u16, open_browser: bool) {
         // Left behind by another user (e.g. a previous `sudo fxraw serve`).
         cache = std::env::temp_dir().join(format!("fxraw-web-{port}-{}", std::process::id()));
     }
-    for sub in ["uploads", "previews", "renders"] {
+    for sub in ["uploads", "previews", "renders", "matches"] {
         if let Err(e) = std::fs::create_dir_all(cache.join(sub)) {
             eprintln!("Error: cannot create cache dir '{}': {e}", cache.display());
             std::process::exit(1);
@@ -78,6 +114,7 @@ pub fn serve(root: &Path, port: u16, open_browser: bool) {
         images: Mutex::new(Vec::new()),
         camera: Mutex::new(()),
         busy: Mutex::new(None),
+        matches: Mutex::new(Vec::new()),
     });
 
     for req in server.incoming_requests() {
@@ -112,7 +149,7 @@ fn open_url(url: &str) {
 // Routing
 // ---------------------------------------------------------------------------
 
-fn handle(state: &State, mut req: Request) {
+fn handle(state: &Arc<State>, mut req: Request) {
     let method = req.method().clone();
     let full_url = req.url().to_string();
     let (path, query) = full_url.split_once('?').unwrap_or((&full_url, ""));
@@ -146,6 +183,23 @@ fn handle(state: &State, mut req: Request) {
         (Method::Post, ["api", "images", id, "renders", slug, "save"]) => {
             with_image_resp(state, id, |id| save_render(state, id, slug))
         }
+        (Method::Post, ["api", "images", id, "match"]) => {
+            with_image_resp(state, id, |id| start_match(state, id, &mut req, query))
+        }
+        (Method::Get, ["api", "images", id, "match"]) => with_image(state, id, |id| {
+            let jobs = state.matches.lock().unwrap();
+            jobs.iter().rev().find(|j| j.image == id).map(|j| match_json(j)).unwrap_or(Value::Null)
+        }),
+        (Method::Get, ["api", "match", job]) => with_match(state, job, |j| json_ok(match_json(&j))),
+        (Method::Get, ["api", "match", job, file]) => {
+            let download = query.split('&').any(|kv| kv == "download=1");
+            with_match(state, job, |j| match_file(state, &j, file, download))
+        }
+        (Method::Post, ["api", "match", job, "stop"]) => with_match(state, job, |j| {
+            j.stop.store(true, Ordering::Relaxed);
+            json_ok(json!({ "ok": true }))
+        }),
+        (Method::Post, ["api", "match", job, "save"]) => with_match(state, job, |j| save_match(state, &j)),
         _ => json_err(404, "not found"),
     };
     let _ = req.respond(resp);
@@ -388,6 +442,336 @@ fn save_render(state: &State, id: usize, slug: &str) -> Resp {
             fuji::chown_to_sudo_user(&dest.to_string_lossy());
             println!("saved {}", dest.display());
             json_ok(json!({ "path": dest.display().to_string() }))
+        }
+        Err(e) => json_err(500, &format!("could not save: {e}")),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Matching a reference (film scan) — see `matcher`
+// ---------------------------------------------------------------------------
+
+/// Reference pictures larger than this are rejected (16-bit TIFF scans are big).
+const MAX_REFERENCE_BYTES: u64 = 400 * 1024 * 1024;
+/// Width of the aligned reference and the step previews shown in the viewer.
+const MATCH_VIEW_W: u32 = 1600;
+
+fn with_match(state: &State, job: &str, f: impl FnOnce(Arc<MatchJob>) -> Resp) -> Resp {
+    let job = job.parse::<usize>().ok().and_then(|i| state.matches.lock().unwrap().get(i).cloned());
+    match job {
+        Some(j) => f(j),
+        None => json_err(404, "unknown match job"),
+    }
+}
+
+fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) -> Resp {
+    let param = |k: &str| {
+        query
+            .split('&')
+            .filter_map(|kv| kv.split_once('='))
+            .find(|(key, _)| *key == k)
+            .map(|(_, v)| percent_decode(v))
+    };
+    let max_renders = param("max").and_then(|v| v.parse::<usize>().ok()).unwrap_or(60).clamp(12, 200);
+    let start = param("start").filter(|s| !s.is_empty());
+    if let Some(slug) = &start
+        && !is_known_slug(slug)
+    {
+        return json_err(404, "unknown start recipe");
+    }
+    let name = req
+        .headers()
+        .iter()
+        .find(|h| h.field.equiv("X-Filename"))
+        .map(|h| percent_decode(h.value.as_str()))
+        .and_then(|n| Path::new(&n).file_name().map(|f| f.to_string_lossy().into_owned()))
+        .unwrap_or_else(|| "reference".into());
+
+    let mut data = Vec::new();
+    if let Err(e) = req.as_reader().take(MAX_REFERENCE_BYTES + 1).read_to_end(&mut data) {
+        return json_err(400, &format!("upload failed: {e}"));
+    }
+    if data.len() as u64 > MAX_REFERENCE_BYTES {
+        return json_err(413, "file too large");
+    }
+    let reference = match image::load_from_memory(&data) {
+        Ok(img) => img.to_rgb8(),
+        Err(e) => return json_err(400, &format!("cannot read {name} as an image (JPEG, PNG or TIFF): {e}")),
+    };
+    drop(data);
+
+    let job = {
+        let mut jobs = state.matches.lock().unwrap();
+        if jobs.iter().any(|j| matches!(j.status.lock().unwrap().state, "aligning" | "running")) {
+            return json_err(409, "a match is already running — stop it first");
+        }
+        let jid = jobs.len();
+        let dir = state.cache.join("matches").join(jid.to_string());
+        if let Err(e) = std::fs::create_dir_all(&dir) {
+            return json_err(500, &format!("cannot create {}: {e}", dir.display()));
+        }
+        let job = Arc::new(MatchJob {
+            id: jid,
+            image: id,
+            reference: name,
+            dir,
+            stop: AtomicBool::new(false),
+            status: Mutex::new(MatchStatus {
+                state: "aligning",
+                phase: "Aligning the reference".into(),
+                error: None,
+                alignment: None,
+                cells: 0,
+                monochrome: false,
+                steps: Vec::new(),
+                best: None,
+                best_recipe: None,
+                best_label: String::new(),
+                max_renders,
+                started: Instant::now(),
+                finished: None,
+                render_secs: Vec::new(),
+                budget_exhausted: false,
+            }),
+        });
+        jobs.push(Arc::clone(&job));
+        job
+    };
+    let (st, j) = (Arc::clone(state), Arc::clone(&job));
+    std::thread::spawn(move || run_match(&st, &j, reference, start));
+    json_ok(match_json(&job))
+}
+
+fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: Option<String>) {
+    let fail = |msg: String| {
+        println!("  match failed: {msg}");
+        let mut st = job.status.lock().unwrap();
+        st.state = "error";
+        st.error = Some(msg);
+        st.finished = Some(st.started.elapsed().as_secs_f64());
+    };
+    let (name, path) = {
+        let images = state.images.lock().unwrap();
+        (images[job.image].name.clone(), images[job.image].path.clone())
+    };
+    let path_str = path.to_string_lossy().into_owned();
+    println!("matching {name} against {} …", job.reference);
+
+    // Every render shares the RAF's geometry, so align on the embedded preview.
+    let frame = std::fs::read(&path)
+        .ok()
+        .and_then(|raf| fuji::embedded_jpeg(&raf).and_then(|j| image::load_from_memory(j).ok()))
+        .map(|i| i.to_rgb8());
+    let Some(frame) = frame else {
+        return fail("this RAF has no embedded preview to align the reference against".into());
+    };
+    let prepared = matcher::Reference::new(&reference, &frame);
+    let a = prepared.alignment;
+    println!(
+        "  aligned: rot {}°, scale {:.2}, angle {:.1}°, score {:.2}, {} patches{}",
+        a.rot90 as u32 * 90,
+        a.scale,
+        a.angle,
+        a.score,
+        prepared.cell_count(),
+        if a.confident { "" } else { " (not confident)" }
+    );
+    let warped = matcher::warp_reference(&reference, &a, MATCH_VIEW_W);
+    drop(reference);
+    if let Err(e) = std::fs::write(job.dir.join("reference.jpg"), matcher::encode_jpeg(&warped, 88)) {
+        return fail(format!("cannot write preview: {e}"));
+    }
+    {
+        let mut st = job.status.lock().unwrap();
+        st.alignment = Some(json!(a));
+        st.cells = prepared.cell_count();
+        st.monochrome = prepared.monochrome;
+    }
+    if prepared.cell_count() < 60 {
+        return fail("the reference barely overlaps this photo — is it the same scene?".into());
+    }
+
+    let meta = fuji::read_raf_meta(&path_str);
+    let mut dr_options: Vec<u32> = Vec::new();
+    for dr in [100, 200, 400] {
+        let d = fuji::clamp_dr(dr, meta.iso, meta.dynamic_range).dr;
+        if !dr_options.contains(&d) {
+            dr_options.push(d);
+        }
+    }
+    let default_dr = fuji::clamp_dr(meta.dynamic_range.unwrap_or(100), meta.iso, meta.dynamic_range).dr;
+    let start = start.and_then(|slug| recipes::all().iter().find(|r| r.slug == slug)).map(|r| {
+        let mut p = matcher::Params::from_settings(&r.to_settings(), default_dr);
+        p.dr = fuji::clamp_dr(p.dr, meta.iso, meta.dynamic_range).dr;
+        p
+    });
+    let max_renders = job.status.lock().unwrap().max_renders;
+    let opts = matcher::SearchOptions { max_renders, start, dr_options, default_dr, good_enough: 1.0 };
+    {
+        let mut st = job.status.lock().unwrap();
+        st.state = "running";
+        st.phase = "Starting".into();
+    }
+
+    let stub_frame = std::env::var("FXRAW_STUB_CAMERA").is_ok().then(|| matcher::thumbnail(&frame, MATCH_VIEW_W));
+    let mut count = 0usize;
+    let mut render = |settings: &crate::profile::RecipeSettings| -> Result<matcher::Rendered, String> {
+        count += 1;
+        let started = Instant::now();
+        let out = if let Some(f) = &stub_frame {
+            std::thread::sleep(std::time::Duration::from_millis(350));
+            let image = matcher::simulate(f, settings);
+            let jpeg = matcher::encode_jpeg(&image, 90);
+            matcher::Rendered { image, jpeg }
+        } else {
+            let _guard = state.camera.lock().unwrap();
+            *state.busy.lock().unwrap() = Some(format!("Matching {name} · render {count}/{max_renders}"));
+            let result = fuji::try_open_camera().and_then(|mut camera| {
+                fuji::convert_raf_to_jpeg(&mut *camera, &path_str, settings, &ui::ConvertProgress::quiet())
+            });
+            *state.busy.lock().unwrap() = None;
+            let (jpeg, _) = result?;
+            let image = image::load_from_memory(&jpeg).map_err(|e| format!("camera JPEG unreadable: {e}"))?.to_rgb8();
+            matcher::Rendered { image, jpeg }
+        };
+        job.status.lock().unwrap().render_secs.push(started.elapsed().as_secs_f64());
+        Ok(out)
+    };
+    let ref_stem = Path::new(&job.reference).file_stem().unwrap_or_default().to_string_lossy().into_owned();
+    let recipe_name = format!("Match · {ref_stem}");
+    let recipe_slug = format!(
+        "match-{}",
+        ref_stem
+            .to_lowercase()
+            .chars()
+            .map(|c| if c.is_ascii_alphanumeric() { c } else { '-' })
+            .collect::<String>()
+    );
+    let recipe_json = |p: &matcher::Params| {
+        let mut v = p.to_recipe_json(&recipe_name, &recipe_slug);
+        v["source"] = json!({ "name": "fxraw match", "author": job.reference });
+        v
+    };
+    let mut on_event = |e: matcher::Event| match e {
+        matcher::Event::Phase(p) => job.status.lock().unwrap().phase = p.to_string(),
+        matcher::Event::Evaluated { eval, rendered, is_best } => {
+            let view = matcher::thumbnail(&rendered.image, MATCH_VIEW_W);
+            let _ = std::fs::write(job.dir.join(format!("step-{}.jpg", eval.n)), matcher::encode_jpeg(&view, 85));
+            if is_best {
+                let _ = std::fs::write(job.dir.join("best-full.jpg"), &rendered.jpeg);
+            }
+            println!("  #{:<3} {:<16} {:<34} ΔE {:.2}{}", eval.n, eval.phase, eval.label, eval.m.loss, if is_best { "  ★" } else { "" });
+            let mut st = job.status.lock().unwrap();
+            st.steps.push(json!({
+                "n": eval.n,
+                "phase": eval.phase,
+                "label": eval.label,
+                "loss": round2(eval.m.loss),
+                "mean_de": round2(eval.m.mean_de),
+                "best": is_best,
+                "stats": eval.m.stats,
+                "recipe": recipe_json(&eval.params),
+            }));
+            if is_best {
+                st.best = Some((eval.n, eval.m.loss));
+                st.best_recipe = Some(recipe_json(&eval.params));
+                st.best_label = eval.label.clone();
+            }
+        }
+    };
+    let result = matcher::search(&prepared, &opts, &job.stop, &mut render, &mut on_event);
+
+    let mut st = job.status.lock().unwrap();
+    st.finished = Some(st.started.elapsed().as_secs_f64());
+    match result {
+        Ok(r) => {
+            st.state = if r.stopped { "stopped" } else { "done" };
+            st.budget_exhausted = r.budget_exhausted;
+            st.error = r.error;
+            st.phase = if r.stopped { "Stopped".into() } else { "Done".into() };
+            println!("  match done: best ΔE {:.2} after {} renders", r.best.m.loss, r.renders);
+        }
+        Err(e) => {
+            drop(st);
+            fail(e);
+        }
+    }
+}
+
+fn round2(v: f32) -> f64 {
+    (v as f64 * 100.0).round() / 100.0
+}
+
+fn match_json(job: &MatchJob) -> Value {
+    let st = job.status.lock().unwrap();
+    let elapsed = st.finished.unwrap_or_else(|| st.started.elapsed().as_secs_f64());
+    let renders = st.steps.len();
+    // ETA from the median render time and the renders left in the budget
+    // (the search usually stops before using all of them).
+    let eta = if matches!(st.state, "running") && !st.render_secs.is_empty() {
+        let mut t = st.render_secs.clone();
+        t.sort_by(f64::total_cmp);
+        Some((t[t.len() / 2] * st.max_renders.saturating_sub(renders) as f64).round())
+    } else {
+        None
+    };
+    json!({
+        "id": job.id,
+        "image": job.image,
+        "reference": job.reference,
+        "state": st.state,
+        "phase": st.phase,
+        "error": st.error,
+        "alignment": st.alignment,
+        "cells": st.cells,
+        "monochrome": st.monochrome,
+        "renders": renders,
+        "max_renders": st.max_renders,
+        "budget_exhausted": st.budget_exhausted,
+        "elapsed": elapsed.round(),
+        "eta": eta,
+        "start_loss": st.steps.first().map(|s| s["loss"].clone()),
+        "best": st.best.map(|(n, loss)| json!({
+            "n": n,
+            "loss": round2(loss),
+            "label": st.best_label,
+            "recipe": st.best_recipe,
+        })),
+        "steps": st.steps,
+    })
+}
+
+fn match_file(state: &State, job: &MatchJob, file: &str, download: bool) -> Resp {
+    let path = match file {
+        "reference.jpg" => job.dir.join("reference.jpg"),
+        "best.jpg" => job.dir.join("best-full.jpg"),
+        f => match f.strip_prefix("step-").and_then(|r| r.strip_suffix(".jpg")).and_then(|n| n.parse::<usize>().ok()) {
+            Some(n) => job.dir.join(format!("step-{n}.jpg")),
+            None => return json_err(404, "not found"),
+        },
+    };
+    let disposition =
+        download.then(|| format!("attachment; filename=\"{}-match.jpg\"", image_stem(state, job.image)));
+    file_response(&path, "image/jpeg", disposition)
+}
+
+fn save_match(state: &State, job: &MatchJob) -> Resp {
+    let recipe = job.status.lock().unwrap().best_recipe.clone();
+    let Some(recipe) = recipe else {
+        return json_err(404, "no render yet");
+    };
+    let stem = image_stem(state, job.image);
+    let jpg = state.root.join(format!("{stem}-match.jpg"));
+    let json_path = state.root.join(format!("{stem}-match.json"));
+    let written = std::fs::copy(job.dir.join("best-full.jpg"), &jpg)
+        .and_then(|_| std::fs::write(&json_path, serde_json::to_string_pretty(&recipe).unwrap_or_default() + "\n"));
+    match written {
+        Ok(()) => {
+            for p in [&jpg, &json_path] {
+                fuji::chown_to_sudo_user(&p.to_string_lossy());
+            }
+            println!("saved {} and {}", jpg.display(), json_path.display());
+            json_ok(json!({ "jpg": jpg.display().to_string(), "json": json_path.display().to_string() }))
         }
         Err(e) => json_err(500, &format!("could not save: {e}")),
     }
