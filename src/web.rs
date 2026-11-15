@@ -58,6 +58,7 @@ struct MatchStatus {
     error: Option<String>,
     alignment: Option<Value>,
     cells: usize,
+    dropped: usize,
     monochrome: bool,
     steps: Vec<Value>,
     /// (render number, loss) of the best render so far.
@@ -70,6 +71,8 @@ struct MatchStatus {
     /// Wall time of each camera render, for the ETA.
     render_secs: Vec<f64>,
     budget_exhausted: bool,
+    /// Set while the camera stopped answering and we wait for it to return.
+    waiting_camera: Option<String>,
 }
 
 type Resp = Response<std::io::Cursor<Vec<u8>>>;
@@ -522,6 +525,7 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
                 error: None,
                 alignment: None,
                 cells: 0,
+                dropped: 0,
                 monochrome: false,
                 steps: Vec::new(),
                 best: None,
@@ -532,6 +536,7 @@ fn start_match(state: &Arc<State>, id: usize, req: &mut Request, query: &str) ->
                 finished: None,
                 render_secs: Vec::new(),
                 budget_exhausted: false,
+                waiting_camera: None,
             }),
         });
         jobs.push(Arc::clone(&job));
@@ -568,12 +573,13 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
     let prepared = matcher::Reference::new(&reference, &frame);
     let a = prepared.alignment;
     println!(
-        "  aligned: rot {}°, scale {:.2}, angle {:.1}°, score {:.2}, {} patches{}",
+        "  aligned: rot {}°, scale {:.2}, angle {:.1}°, score {:.2}, {} patches ({} dropped){}",
         a.rot90 as u32 * 90,
         a.scale,
         a.angle,
         a.score,
         prepared.cell_count(),
+        prepared.dropped,
         if a.confident { "" } else { " (not confident)" }
     );
     let warped = matcher::warp_reference(&reference, &a, MATCH_VIEW_W);
@@ -585,6 +591,7 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
         let mut st = job.status.lock().unwrap();
         st.alignment = Some(json!(a));
         st.cells = prepared.cell_count();
+        st.dropped = prepared.dropped;
         st.monochrome = prepared.monochrome;
     }
     if prepared.cell_count() < 60 {
@@ -624,15 +631,47 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
             let jpeg = matcher::encode_jpeg(&image, 90);
             matcher::Rendered { image, jpeg }
         } else {
-            let _guard = state.camera.lock().unwrap();
-            *state.busy.lock().unwrap() = Some(format!("Matching {name} · render {count}/{max_renders}"));
-            let result = fuji::try_open_camera().and_then(|mut camera| {
-                fuji::convert_raf_to_jpeg(&mut *camera, &path_str, settings, &ui::ConvertProgress::quiet())
-            });
-            *state.busy.lock().unwrap() = None;
-            let (jpeg, _) = result?;
-            let image = image::load_from_memory(&jpeg).map_err(|e| format!("camera JPEG unreadable: {e}"))?.to_rgb8();
-            matcher::Rendered { image, jpeg }
+            // A long run can outlast the camera (battery, overheating, auto
+            // power-off, a hung conversion): wait for it and retry the same
+            // render instead of throwing the run away.
+            let mut failures = 0;
+            loop {
+                let result = {
+                    let _guard = state.camera.lock().unwrap();
+                    *state.busy.lock().unwrap() = Some(format!("Matching {name} · render {count}/{max_renders}"));
+                    let r = fuji::try_open_camera().and_then(|mut camera| {
+                        fuji::convert_raf_to_jpeg(&mut *camera, &path_str, settings, &ui::ConvertProgress::quiet())
+                    });
+                    *state.busy.lock().unwrap() = None;
+                    r
+                };
+                match result {
+                    Ok((jpeg, _)) => {
+                        job.status.lock().unwrap().waiting_camera = None;
+                        let image = image::load_from_memory(&jpeg)
+                            .map_err(|e| format!("camera JPEG unreadable: {e}"))?
+                            .to_rgb8();
+                        break matcher::Rendered { image, jpeg };
+                    }
+                    Err(e) => {
+                        failures += 1;
+                        println!("  render {count} failed ({e}); waiting for the camera…");
+                        if failures > 3 {
+                            job.status.lock().unwrap().waiting_camera = None;
+                            return Err(format!("the camera keeps failing: {e}"));
+                        }
+                        job.status.lock().unwrap().waiting_camera = Some(e.clone());
+                        if !wait_for_camera(&job.stop, std::time::Duration::from_secs(600)) {
+                            job.status.lock().unwrap().waiting_camera = None;
+                            return Err(if job.stop.load(Ordering::Relaxed) {
+                                "stopped while waiting for the camera".into()
+                            } else {
+                                format!("the camera didn't come back within 10 minutes ({e})")
+                            });
+                        }
+                    }
+                }
+            }
         };
         job.status.lock().unwrap().render_secs.push(started.elapsed().as_secs_f64());
         Ok(out)
@@ -698,6 +737,28 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
     }
 }
 
+/// Wait until the camera is (back) on USB and has settled. False when
+/// stopped or timed out.
+fn wait_for_camera(stop: &AtomicBool, timeout: std::time::Duration) -> bool {
+    let started = Instant::now();
+    let mut seen_since: Option<Instant> = None;
+    while started.elapsed() < timeout {
+        if stop.load(Ordering::Relaxed) {
+            return false;
+        }
+        if camera_connected() {
+            let since = *seen_since.get_or_insert_with(Instant::now);
+            if since.elapsed() >= std::time::Duration::from_secs(4) {
+                return true;
+            }
+        } else {
+            seen_since = None;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(1000));
+    }
+    false
+}
+
 fn round2(v: f32) -> f64 {
     (v as f64 * 100.0).round() / 100.0
 }
@@ -724,6 +785,8 @@ fn match_json(job: &MatchJob) -> Value {
         "error": st.error,
         "alignment": st.alignment,
         "cells": st.cells,
+        "dropped": st.dropped,
+        "waiting_camera": st.waiting_camera,
         "monochrome": st.monochrome,
         "renders": renders,
         "max_renders": st.max_renders,

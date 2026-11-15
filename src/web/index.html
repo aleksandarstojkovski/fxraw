@@ -1199,14 +1199,16 @@ function renderMatchDetail(box) {
   const running = matchRunning(m);
   const a = m.alignment;
   const alignLine = !a ? `<div class="align">Locating the reference in the photo…</div>`
-    : a.confident ? `<div class="align">Aligned${a.rot90 ? `, turned ${a.rot90 * 90}°` : ""} · ${Math.round(a.scale * 100)}% of the frame · ${m.cells} patches compared${m.monochrome ? " · black & white" : ""}</div>`
+    : a.confident ? `<div class="align">Aligned${a.rot90 ? `, turned ${a.rot90 * 90}°` : ""} · ${Math.round(a.scale * 100)}% of the frame · ${m.cells} patches compared${m.dropped ? `, ${m.dropped} skipped (different in the two shots)` : ""}${m.monochrome ? " · black & white" : ""}</div>`
     : `<div class="align warn">Couldn't line the two pictures up with confidence — comparing them frame to frame. Results may be off if the framing differs a lot.</div>`;
   const pct = Math.min(100, (m.renders / m.max_renders) * 100);
   const b = m.best;
   const status = running
     ? `<div class="mstat"><span>${esc(m.phase)}</span><span>${m.renders}/${m.max_renders}${m.eta != null ? ` · ≤ ${fmtTime(m.eta)}` : ""}</span></div><div class="progress"><i style="width:${pct}%"></i></div>`
     : `<div class="mstat"><span>${m.state === "done" ? (m.budget_exhausted ? "Used every render allowed" : "Finished") : m.state === "stopped" ? "Stopped" : "Failed"}</span><span>${m.renders} renders · ${fmtTime(m.elapsed)}</span></div><div class="progress"><i style="width:100%"></i></div>`;
-  const err = m.error ? `<div class="merr">${esc(m.error)}</div>` : "";
+  const err = m.waiting_camera
+    ? `<div class="align warn">The camera stopped answering (${esc(m.waiting_camera)}). Waiting for it to come back: check it's on, the battery, and the USB cable. The run resumes on its own.</div>`
+    : m.error ? `<div class="merr">${esc(m.error)}</div>` : "";
   const score = b ? `
     <div class="mstat"><span>Best difference (ΔE2000)</span><span>${m.start_loss != null ? `first ${Number(m.start_loss).toFixed(1)}` : ""}</span></div>
     <div class="de"><b>${b.loss.toFixed(2)}</b><span>${deQuality(b.loss)}</span></div>

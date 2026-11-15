@@ -634,12 +634,16 @@ pub struct Measurement {
     pub stats: Stats,
 }
 
+#[derive(Clone, Copy)]
 struct Cell {
     /// Position on the render (normalised).
     x: f32,
     y: f32,
     lab: [f32; 3],
     w: f32,
+    /// Patch centre on the (rotated) reference, normalised.
+    u: f32,
+    v: f32,
 }
 
 /// A reference prepared for fast comparison against renders.
@@ -650,6 +654,9 @@ pub struct Reference {
     blur_frac: f32,
     /// True when the reference is (nearly) black and white.
     pub monochrome: bool,
+    /// Patches dropped because their content isn't in the photo (someone
+    /// moved, a different foreground).
+    pub dropped: usize,
 }
 
 const WORK_W: usize = 400;
@@ -658,7 +665,9 @@ const GRID_X: usize = 40;
 impl Reference {
     pub fn new(reference: &RgbImage, frame: &RgbImage) -> Reference {
         let alignment = align(reference, frame);
-        Self::with_alignment(reference, alignment)
+        let mut r = Self::with_alignment(reference, alignment);
+        r.refine_locally(reference, frame);
+        r
     }
 
     pub fn with_alignment(reference: &RgbImage, alignment: Alignment) -> Reference {
@@ -699,7 +708,7 @@ impl Reference {
                 // Busy patches (edges, texture) suffer most from misalignment.
                 let w = 1.0 / (1.0 + var / 36.0);
                 chroma_sum += chroma(&lab) * w;
-                cells.push(Cell { x, y, lab, w });
+                cells.push(Cell { x, y, lab, w, u, v });
             }
         }
         let wsum: f32 = cells.iter().map(|c| c.w).sum();
@@ -709,7 +718,160 @@ impl Reference {
             alignment,
             cells,
             monochrome,
+            dropped: 0,
         }
+    }
+
+    /// The two pictures are rarely taken from exactly the same spot, at the
+    /// same instant, with the same lens: one global transform leaves
+    /// parallax and movement. Give every patch its own small offset by block
+    /// matching (normalised cross-correlation of lightness, so tone and
+    /// colour differences don't matter), fill flat patches (sky, snow) from
+    /// their neighbours, and drop textured patches that match nothing.
+    pub fn refine_locally(&mut self, reference: &RgbImage, frame: &RgbImage) {
+        const R: isize = 12; // window half-size, reference pixels at WORK_W
+        const STEP: usize = 2; // window subsampling
+        const MIN_NCC: f32 = 0.55;
+        let a = self.alignment;
+        let ref_l = Img::from_rgb(reference, WORK_W).rotate(a.rot90).lightness();
+        let fw = ((WORK_W as f32 / a.scale.max(0.2)).round() as usize).clamp(160, 1400);
+        let frame_l = Img::from_rgb(frame, fw).lightness();
+        let (fwf, fhf) = (frame_l.w as f32, frame_l.h as f32);
+        let max_d = (0.08 * fwf).round() as isize;
+
+        // Per patch: best (ncc, dx, dy) in frame pixels and the window's
+        // lightness variance, or None when flat.
+        let search = |c: &Cell| -> Option<(f32, f32, f32, f32)> {
+            let (cx, cy) = (c.u * ref_l.w as f32, c.v * ref_l.h as f32);
+            let mut pts: Vec<(f32, f32, f32)> = Vec::new();
+            for wy in (-R..=R).step_by(STEP) {
+                for wx in (-R..=R).step_by(STEP) {
+                    let (rx, ry) = (cx + wx as f32, cy + wy as f32);
+                    if rx < 0.0 || ry < 0.0 || rx >= ref_l.w as f32 || ry >= ref_l.h as f32 {
+                        continue;
+                    }
+                    let val = ref_l.v[ry as usize * ref_l.w + rx as usize];
+                    let (x, y) = a.map(rx / ref_l.w as f32, ry / ref_l.h as f32);
+                    pts.push((x * fwf - 0.5, y * fhf - 0.5, val));
+                }
+            }
+            let n = pts.len() as f32;
+            if n < 20.0 {
+                return None;
+            }
+            let mean = pts.iter().map(|p| p.2).sum::<f32>() / n;
+            let var = pts.iter().map(|p| (p.2 - mean).powi(2)).sum::<f32>() / n;
+            if var < 6.0 {
+                return None; // flat: nothing to lock onto
+            }
+            let ncc_at = |dx: f32, dy: f32| -> f32 {
+                let (mut sb, mut sbb, mut sab, mut k) = (0f32, 0f32, 0f32, 0f32);
+                for &(x, y, av) in &pts {
+                    let Some(bv) = frame_l.sample_px(x + dx, y + dy) else { return -1.0 };
+                    let av = av - mean;
+                    sb += bv;
+                    sbb += bv * bv;
+                    sab += av * bv;
+                    k += 1.0;
+                }
+                let vb = sbb - sb * sb / k;
+                if vb <= 1e-3 { -1.0 } else { sab / (var * n * vb).sqrt() }
+            };
+            let mut best = (-1.0f32, 0.0f32, 0.0f32);
+            for dy in (-max_d..=max_d).step_by(2) {
+                for dx in (-max_d..=max_d).step_by(2) {
+                    let s = ncc_at(dx as f32, dy as f32);
+                    if s > best.0 {
+                        best = (s, dx as f32, dy as f32);
+                    }
+                }
+            }
+            let (_, bx, by) = best;
+            for dy in [-1.0f32, 0.0, 1.0] {
+                for dx in [-1.0f32, 0.0, 1.0] {
+                    let s = ncc_at(bx + dx, by + dy);
+                    if s > best.0 {
+                        best = (s, bx + dx, by + dy);
+                    }
+                }
+            }
+            Some((best.0, best.1, best.2, var))
+        };
+
+        let threads = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(4);
+        let chunk = self.cells.len().div_ceil(threads).max(1);
+        let found: Vec<Option<(f32, f32, f32, f32)>> = std::thread::scope(|sc| {
+            let handles: Vec<_> = self.cells.chunks(chunk).map(|cs| sc.spawn(move || cs.iter().map(search).collect::<Vec<_>>())).collect();
+            handles.into_iter().flat_map(|h| h.join().unwrap()).collect()
+        });
+
+        let good: Vec<(usize, f32, f32)> = found
+            .iter()
+            .enumerate()
+            .filter_map(|(i, f)| f.filter(|b| b.0 >= MIN_NCC).map(|b| (i, b.1, b.2)))
+            .collect();
+        let median = |mut v: Vec<f32>| -> f32 {
+            if v.is_empty() {
+                return 0.0;
+            }
+            v.sort_by(f32::total_cmp);
+            v[v.len() / 2]
+        };
+        // Offset field at a patch: median of the locked patches nearby.
+        let near = |i: usize, radius: f32| -> Option<(f32, f32)> {
+            let c = &self.cells[i];
+            let (xs, ys): (Vec<f32>, Vec<f32>) = good
+                .iter()
+                .filter(|(j, _, _)| {
+                    let o = &self.cells[*j];
+                    ((o.u - c.u) * 40.0).hypot((o.v - c.v) * 40.0 * a.ref_aspect) <= radius
+                })
+                .map(|&(_, dx, dy)| (dx, dy))
+                .unzip();
+            (xs.len() >= 3).then(|| (median(xs), median(ys)))
+        };
+        let global = (median(good.iter().map(|g| g.1).collect()), median(good.iter().map(|g| g.2).collect()));
+
+        let mut keep = Vec::with_capacity(self.cells.len());
+        let mut dropped = 0;
+        for (i, f) in found.iter().enumerate() {
+            let offset = match f {
+                // Textured and locked: trust it unless it disagrees with its
+                // neighbourhood (a repeated pattern matched the wrong copy).
+                Some((s, dx, dy, _)) if *s >= MIN_NCC => match near(i, 4.0) {
+                    Some((mx, my)) if (dx - mx).hypot(dy - my) > 0.03 * fwf => None,
+                    _ => Some((*dx, *dy)),
+                },
+                // Strongly textured but nothing like it in the photo.
+                Some((_, _, _, var)) if *var > 40.0 => None,
+                // Flat, or just grain and gentle gradients: follow the neighbours.
+                _ => Some(near(i, 6.0).unwrap_or(global)),
+            };
+            match offset {
+                Some((dx, dy)) => {
+                    let c = &self.cells[i];
+                    keep.push(Cell { x: c.x + dx / fwf, y: c.y + dy / fhf, ..*c });
+                }
+                None => dropped += 1,
+            }
+        }
+        // Too little left means the lock-on failed; keep the global mapping.
+        if keep.len() >= self.cells.len() / 3 && keep.len() >= 60 {
+            keep.retain(|c| (0.0..1.0).contains(&c.x) && (0.0..1.0).contains(&c.y));
+            self.cells = keep;
+            self.dropped = dropped;
+        }
+    }
+
+    /// Per-patch errors for a render: (x, y on the render, ΔE, weight).
+    pub fn patch_errors(&self, render: &RgbImage) -> Vec<(f32, f32, f32, f32)> {
+        let img = Img::from_rgb(render, WORK_W);
+        let r = (self.blur_frac * img.w as f32).round().max(1.0) as usize;
+        let blurred = img.blur(r);
+        self.cells
+            .iter()
+            .map(|c| (c.x, c.y, delta_e2000(linear_to_lab(blurred.sample(c.x, c.y)), c.lab), c.w))
+            .collect()
     }
 
     pub fn cell_count(&self) -> usize {
