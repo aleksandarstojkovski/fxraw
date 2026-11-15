@@ -18,6 +18,16 @@ impl ConvertProgress {
         Self::new_with_display_prefix(verbose, total, None)
     }
 
+    /// No terminal output at all (used by the web UI, which logs on its own).
+    pub fn quiet() -> Self {
+        Self {
+            verbose: false,
+            total: 1,
+            bar: ProgressBar::hidden(),
+            display_prefix: None,
+        }
+    }
+
     /// Like `new`, but paths printed for input/output are shown relative to `display_prefix` when given.
     pub fn new_with_display_prefix(
         verbose: bool,

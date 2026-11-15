@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fxraw</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #121212;
+  --panel: #1a1a1a;
+  --panel-2: #222;
+  --line: #2c2c2c;
+  --line-2: #3a3a3a;
+  --text: #e8e6e3;
+  --muted: #9a9894;
+  --faint: #6b6966;
+  --accent: #f0b43c;
+  --accent-ink: #1a1302;
+  --ok: #6cc788;
+  --err: #ef6b5e;
+  --stage: #0b0b0b;
+  --radius: 8px;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font: 13px/1.45 var(--sans); overflow: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+input { font: inherit; color: inherit; }
+kbd { font: 11px var(--mono); color: var(--muted); border: 1px solid var(--line-2); border-radius: 4px; padding: 0 4px; }
+
+.app { display: grid; grid-template-rows: 44px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); height: 100vh; }
+header { display: flex; align-items: center; gap: 14px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.logo { font-weight: 700; letter-spacing: .02em; }
+.logo span { color: var(--accent); }
+.folder { color: var(--faint); font-family: var(--mono); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+#busyPill { min-width: 0; flex-shrink: 1; }
+#busyText { overflow: hidden; text-overflow: ellipsis; }
+.pill { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line-2); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; }
+.dot.ok { background: var(--ok); box-shadow: 0 0 0 3px rgba(108,199,136,.15); }
+.dot.err { background: var(--err); }
+.dot.busy { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+.main { display: grid; grid-template-columns: 240px minmax(0,1fr) 360px; min-height: 0; }
+aside, .center { min-height: 0; min-width: 0; display: flex; flex-direction: column; }
+aside { background: var(--panel); }
+aside.left { border-right: 1px solid var(--line); }
+aside.right { border-left: 1px solid var(--line); }
+aside.right > *:not(.recipes):not(.detail) { flex: none; }
+.toolbar > *:not(.title):not(.spacer) { flex: none; }
+.section-title { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); padding: 14px 14px 8px; display: flex; justify-content: space-between; align-items: center; }
+
+/* Images */
+.drop { margin: 0 12px 10px; border: 1px dashed var(--line-2); border-radius: var(--radius); padding: 14px 10px; text-align: center; color: var(--muted); cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: rgba(240,180,60,.06); color: var(--text); }
+.drop strong { color: var(--text); font-weight: 600; }
+.images { overflow-y: auto; padding: 0 8px 12px; flex: 1; }
+.img-item { display: flex; gap: 10px; align-items: center; width: 100%; padding: 6px; border-radius: 6px; text-align: left; }
+.img-item:hover { background: var(--panel-2); }
+.img-item.active { background: var(--panel-2); box-shadow: inset 2px 0 0 var(--accent); }
+.img-item img, .img-item .ph { width: 54px; height: 36px; object-fit: cover; border-radius: 3px; background: #000; flex: none; }
+.img-item .meta { min-width: 0; }
+.img-item .name { font-family: var(--mono); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.img-item .sub { font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.empty { color: var(--faint); padding: 8px 14px; font-size: 12px; }
+
+/* Center */
+.center { background: var(--bg); }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 14px; border-bottom: 1px solid var(--line); min-height: 48px; }
+.toolbar .title { flex: 1 1 160px; font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.toolbar .title b { color: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 600; margin-right: 6px; }
+.spacer { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
+.seg button { padding: 4px 10px; color: var(--muted); font-size: 12px; }
+.seg button.on { background: var(--panel-2); color: var(--text); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 6px; border: 1px solid var(--line-2); font-size: 12px; white-space: nowrap; }
+.btn:hover:not(:disabled) { border-color: var(--muted); }
+.btn:disabled { opacity: .4; cursor: default; }
+#saveBtn { gap: 0; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.08); }
+
+body.dragging, body.dragging * { user-select: none !important; -webkit-user-select: none !important; }
+body.dragging.split, body.dragging.split * { cursor: ew-resize !important; }
+.stage { -webkit-user-select: none; position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--stage); user-select: none; touch-action: none; }
+.stage.zoomed { cursor: grab; }
+.stage.panning { cursor: grabbing; }
+.layer { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.layer img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.label { position: absolute; top: 12px; padding: 3px 8px; border-radius: 4px; background: rgba(0,0,0,.6); font-size: 11px; color: #ddd; pointer-events: none; backdrop-filter: blur(4px); max-width: 45%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.label.l { left: 12px; } .label.r { right: 12px; }
+.handle { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: rgba(255,255,255,.85); cursor: ew-resize; }
+.handle::before { content: ""; position: absolute; inset: 0 -12px; }
+.handle::after { content: "⟷"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #111; display: grid; place-items: center; font-size: 15px; box-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 24px; pointer-events: none; }
+.overlay .big { font-size: 15px; color: var(--text); margin-bottom: 6px; }
+.working { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; background: rgba(20,20,20,.88); border: 1px solid var(--line-2); padding: 8px 14px; border-radius: 99px; font-size: 12px; backdrop-filter: blur(6px); }
+.spinner { width: 14px; height: 14px; border: 2px solid var(--line-2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.zoomhint { position: absolute; right: 12px; bottom: 12px; font-size: 11px; color: #bbb; background: rgba(0,0,0,.55); padding: 2px 8px; border-radius: 4px; pointer-events: none; }
+
+.strip { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); overflow-x: auto; min-height: 92px; background: var(--panel); }
+.ver { flex: none; width: 104px; text-align: left; border-radius: 6px; padding: 4px; border: 1px solid transparent; }
+.ver:hover { background: var(--panel-2); }
+.ver.active { border-color: var(--accent); background: var(--panel-2); }
+.ver .th { position: relative; height: 56px; border-radius: 3px; background: #000; overflow: hidden; display: grid; place-items: center; }
+.ver .th img { width: 100%; height: 100%; object-fit: cover; }
+.ver .nm { font-size: 11px; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+.ver.active .nm { color: var(--text); }
+.ver .err { color: var(--err); font-size: 18px; }
+.ver .q { color: var(--faint); font-size: 11px; }
+
+/* Recipes */
+.search { margin: 0 12px; display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 6px; padding: 0 10px; }
+.search:focus-within { border-color: var(--accent); }
+.search input { flex: 1; background: none; border: 0; outline: 0; padding: 7px 0; }
+.chips { display: flex; gap: 5px; padding: 10px 12px 6px; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 85%, transparent); }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; white-space: nowrap; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line-2); font-size: 11px; color: var(--muted); }
+.chip:hover { color: var(--text); }
+.chip.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+.count { color: var(--faint); font-size: 11px; padding: 2px 14px 6px; }
+.recipes { flex: 1 1 0; overflow-y: auto; min-height: 88px; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 7px 8px 7px 14px; border-bottom: 1px solid #1f1f1f; cursor: pointer; }
+.row:hover { background: var(--panel-2); }
+.row.sel { background: #2a2620; box-shadow: inset 2px 0 0 var(--accent); }
+.row .rn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .rn .done { color: var(--ok); margin-right: 5px; font-size: 10px; }
+.row .rs { font-size: 11px; color: var(--faint); font-family: var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .acts { display: flex; gap: 2px; }
+.icon { width: 26px; height: 26px; border-radius: 5px; display: grid; place-items: center; color: var(--faint); font-size: 14px; }
+.icon:hover { background: var(--line); color: var(--text); }
+.icon.star.on { color: var(--accent); }
+
+.detail { border-top: 1px solid var(--line-2); background: var(--panel); max-height: 56vh; min-height: 0; overflow-y: auto; flex: 0 1 auto; box-shadow: 0 -8px 24px rgba(0,0,0,.35); }
+.dhead { position: sticky; top: 0; z-index: 1; display: flex; align-items: flex-start; gap: 8px; padding: 12px 10px 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.dhead .t { flex: 1; min-width: 0; }
+.dhead .kicker { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); }
+.dhead h3 { margin: 1px 0 0; font-size: 15px; line-height: 1.3; }
+.dhead .slug { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-top: 2px; }
+.dhead .src { font-size: 11.5px; color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dhead .src a { color: var(--accent); text-decoration: none; }
+.dhead .src a:hover { text-decoration: underline; }
+.dhead .src .au { font-family: var(--mono); font-size: 11px; }
+.srcb { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 99px; border: 1px solid var(--line-2); font-size: 10.5px; color: var(--muted); vertical-align: 1px; font-family: var(--mono); }
+.dbody { padding: 10px 14px 14px; }
+.cmp { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; margin-bottom: 10px; }
+.cmp th { text-align: left; font-weight: 500; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); padding: 0 6px 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmp td { padding: 3px 6px 3px 0; border-top: 1px solid #242424; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmp td:first-child { color: var(--muted); }
+.cmp td.v { font-family: var(--mono); }
+.cmp td.v.orig { color: var(--muted); }
+.cmp td.v.diff { color: var(--accent); }
+.cmp tr.sep td { border-top: 1px solid var(--line-2); }
+.legend { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
+.legend b { color: var(--accent); font-weight: 500; }
+.note { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
+.matches { margin: 2px 0 4px; }
+.matches .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin-bottom: 4px; }
+.mrow { display: grid; grid-template-columns: 1fr 64px 38px; align-items: center; gap: 8px; width: 100%; padding: 5px 6px; margin: 0 -6px; border-radius: 5px; text-align: left; }
+.mrow:hover { background: var(--panel-2); }
+.mrow .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mrow .bar { height: 4px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
+.mrow .bar i { display: block; height: 100%; background: var(--accent); }
+.mrow .p { font-family: var(--mono); color: var(--muted); text-align: right; font-size: 11px; }
+.actionbar { flex: none; display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 14px; border-top: 1px solid var(--line-2); background: #1d1d1d; }
+.actionbar .ab-t { flex: 1; min-width: 0; text-align: left; border-radius: 5px; padding: 2px 6px; margin: -2px -6px; }
+.actionbar .ab-t:hover:not(:disabled) { background: var(--panel-2); }
+.actionbar .ab-t:disabled { cursor: default; }
+.actionbar .kicker { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); }
+.actionbar .ab-n { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.actionbar .ab-n.none { color: var(--faint); font-weight: 400; }
+.actionbar .btn.primary { padding: 8px 16px; font-size: 13px; }
+.icon.close { font-size: 13px; flex: none; }
+.btn.on { border-color: var(--accent); color: var(--accent); }
+
+.shot { display: block; width: calc(100% - 24px); margin: 4px 12px 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); font-size: 12px; text-align: left; }
+button.shot:hover { border-color: var(--line-2); background: #151515; }
+button.shot.on { border-color: var(--accent); }
+.shot .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.shot .k { color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.shot .sim { font-family: var(--mono); }
+.shot .best { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; color: var(--muted); }
+.shot .best span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shot .more { color: var(--accent); font-size: 11px; white-space: nowrap; }
+
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); opacity: 0; background: #2a2a2a; border: 1px solid var(--line-2); padding: 9px 16px; border-radius: 8px; font-size: 12px; transition: all .2s; pointer-events: none; z-index: 10; max-width: 80vw; }
+.toast.show { opacity: 1; transform: translateX(-50%); }
+.toast.err { border-color: var(--err); }
+
+.help { color: var(--faint); font-size: 11px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 1360px) {
+  .section-title .help { display: none; }
+}
+@media (max-width: 1100px) {
+  .main { grid-template-columns: 180px minmax(0,1fr) 290px; }
+  .long { display: none; }
+}
+@media (max-width: 820px) {
+  body { overflow: auto; }
+  .app { height: auto; }
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .toolbar .title { flex-basis: 100%; }
+  aside.left, aside.right { border: 0; border-bottom: 1px solid var(--line); }
+  .images { max-height: 160px; }
+  .stage { height: 60vh; flex: none; }
+  .recipes { max-height: 50vh; }
+  .folder { display: none; }
+  header { gap: 8px; }
+  #busyPill { flex: 1; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">fx<span>raw</span></div>
+    <div class="folder" id="folder"></div>
+    <div class="pill" id="busyPill" hidden><span class="dot busy"></span><span id="busyText"></span></div>
+    <div class="pill" id="camPill"><span class="dot" id="camDot"></span><span id="camText">Checking camera…</span></div>
+  </header>
+
+  <div class="main">
+    <aside class="left">
+      <div class="section-title">Images</div>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept=".raf,.RAF" multiple hidden>
+        <strong>Drop RAF files</strong><br>or click to browse
+      </label>
+      <div class="images" id="images"></div>
+    </aside>
+
+    <section class="center">
+      <div class="toolbar">
+        <div class="title" id="title">No image selected</div>
+        <div class="seg" id="modeSeg">
+          <button data-mode="compare" class="on" title="Before / after slider (C)">Compare</button>
+          <button data-mode="single" title="Show the selected version only (C)">Single</button>
+        </div>
+        <button class="btn" id="infoBtn" disabled title="Show the settings of what you're viewing (I)">Settings</button>
+        <button class="btn" id="dlBtn" disabled title="Download JPEG">Download</button>
+        <button class="btn" id="saveBtn" disabled title="Save JPEG into the served folder">Save<span class="long">&nbsp;to folder</span></button>
+      </div>
+      <div class="stage" id="stage">
+        <div class="layer" id="layer">
+          <img id="imgBase" alt="">
+          <img id="imgTop" alt="">
+        </div>
+        <div class="label l" id="labelL" hidden></div>
+        <div class="label r" id="labelR" hidden></div>
+        <div class="handle" id="handle" hidden></div>
+        <div class="overlay" id="overlay">
+          <div><div class="big">Pick a RAF on the left</div>Then choose a recipe on the right and press <kbd>Enter</kbd> to render it on the camera.</div>
+        </div>
+        <div class="working" id="working" hidden><span class="spinner"></span><span id="workingText"></span></div>
+        <div class="zoomhint" id="zoomhint" hidden>Double-click to zoom 1:1</div>
+      </div>
+      <div class="strip" id="strip"></div>
+    </section>
+
+    <aside class="right">
+      <div class="section-title"><span>Recipes</span><span class="help"><span><kbd>/</kbd> search</span><span><kbd>↑↓</kbd> pick</span><span><kbd>↵</kbd> convert</span></span></div>
+      <div id="shot"></div>
+      <div class="search"><span style="color:var(--faint)">⌕</span><input id="q" placeholder="Search recipes, film sims…" autocomplete="off" spellcheck="false"></div>
+      <div class="chips" id="chips"></div>
+      <div class="count" id="count"></div>
+      <div class="recipes" id="recipes"></div>
+      <div class="detail" id="detail" hidden></div>
+      <div class="actionbar">
+        <button class="ab-t" id="abInfo" title="Show / hide recipe details"><div class="kicker" id="abKicker">Recipe</div><div class="ab-n none" id="abName">None selected</div></button>
+        <button class="btn primary" id="abConvert" disabled>Convert ↵</button>
+      </div>
+    </aside>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const SIM_LABEL = {
+  "provia": "Provia", "velvia": "Velvia", "astia": "Astia", "classic-chrome": "Classic Chrome",
+  "classic-neg": "Classic Neg", "pro-neg-hi": "Pro Neg Hi", "pro-neg-std": "Pro Neg Std",
+  "eterna": "Eterna", "eterna-bleach-bypass": "Bleach Bypass", "acros": "Acros", "acros-ye": "Acros+Ye",
+  "acros-r": "Acros+R", "acros-g": "Acros+G", "monochrome": "Mono", "monochrome-ye": "Mono+Ye",
+  "monochrome-r": "Mono+R", "monochrome-g": "Mono+G", "sepia": "Sepia", "nostalgic-neg": "Nostalgic Neg",
+  "reala-ace": "Reala Ace",
+};
+const simLabel = (s) => SIM_LABEL[s] || s;
+
+const S = {
+  recipes: [], bySlug: {}, images: [], cur: null, analysis: null,
+  selected: null, panel: null, view: "original", mode: "compare",
+  jobs: {}, queue: [], running: false,
+  q: "", sim: null, favOnly: false, favs: new Set(), visible: [],
+};
+try { S.favs = new Set(JSON.parse(localStorage.getItem("fxraw.favs") || "[]")); } catch {}
+try { S.mode = localStorage.getItem("fxraw.mode") || "compare"; } catch {}
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.error || `HTTP ${r.status}`);
+  return body;
+}
+
+let toastTimer;
+function toast(msg, isErr) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (isErr ? " err" : "");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.className = "toast"), isErr ? 6000 : 2600);
+}
+
+/* ---------------- status ---------------- */
+async function pollStatus() {
+  try {
+    const s = await api("/api/status");
+    $("folder").textContent = s.folder;
+    $("folder").title = s.folder;
+    $("camDot").className = "dot " + (s.camera ? "ok" : "err");
+    $("camText").textContent = s.stub ? "Stub camera" : s.camera ? "Camera connected" : "No camera";
+    $("camPill").title = s.camera ? "Fujifilm camera found on USB" : "Connect the camera via USB, turn it on, set USB RAW CONV mode";
+    $("busyPill").hidden = !s.busy;
+    $("busyText").textContent = s.busy || "";
+    S.exiftool = s.exiftool;
+  } catch {
+    $("camDot").className = "dot err";
+    $("camText").textContent = "Server offline";
+  }
+}
+
+/* ---------------- images ---------------- */
+async function loadFolder() {
+  const list = await api("/api/files");
+  for (const im of list) upsertImage(im);
+  renderImages();
+  if (!S.cur && S.images.length) selectImage(S.images[0].id);
+}
+
+function upsertImage(im) {
+  const i = S.images.findIndex((x) => x.id === im.id);
+  if (i >= 0) S.images[i] = { ...S.images[i], ...im };
+  else S.images.push(im);
+}
+
+function renderImages() {
+  const box = $("images");
+  if (!S.images.length) {
+    box.innerHTML = `<div class="empty">No RAF files in this folder yet. Drop some above.</div>`;
+    return;
+  }
+  box.innerHTML = S.images.map((im) => `
+    <button class="img-item ${S.cur && S.cur.id === im.id ? "active" : ""}" data-id="${im.id}">
+      <img src="/api/images/${im.id}/thumb" loading="lazy" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph'}))">
+      <div class="meta">
+        <div class="name">${esc(im.name)}</div>
+        <div class="sub">${im.uploaded ? "uploaded" : esc(im.path)}${im.renders.length ? ` · ${im.renders.length} render${im.renders.length > 1 ? "s" : ""}` : ""}</div>
+      </div>
+    </button>`).join("");
+}
+$("images").addEventListener("click", (e) => {
+  const b = e.target.closest(".img-item");
+  if (b) selectImage(+b.dataset.id);
+});
+
+async function upload(files) {
+  for (const f of files) {
+    if (!/\.raf$/i.test(f.name)) { toast(`${f.name}: not a RAF file`, true); continue; }
+    toast(`Uploading ${f.name}…`);
+    try {
+      const im = await api("/api/upload", { method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f });
+      upsertImage(im);
+      renderImages();
+      selectImage(im.id);
+      toast(`${f.name} ready`);
+    } catch (err) { toast(`${f.name}: ${err.message}`, true); }
+  }
+}
+$("file").addEventListener("change", (e) => { upload([...e.target.files]); e.target.value = ""; });
+const drop = $("drop");
+for (const el of [drop, document.body]) {
+  el.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  el.addEventListener("dragleave", (e) => { if (e.target === drop || e.target === document.body) drop.classList.remove("over"); });
+  el.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); upload([...e.dataTransfer.files]); });
+}
+
+async function selectImage(id) {
+  const im = S.images.find((x) => x.id === id);
+  if (!im) return;
+  S.cur = im;
+  S.analysis = null;
+  const lastDone = im.renders.includes(S.selected) ? S.selected : "original";
+  setView(lastDone);
+  renderImages();
+  renderShot();
+  renderRecipes();
+  renderDetail();
+  try {
+    const a = await api(`/api/images/${id}/analysis`);
+    if (S.cur && S.cur.id === id) { S.analysis = a; renderShot(); renderDetail(); }
+  } catch (err) {
+    if (S.cur && S.cur.id === id) { S.analysis = { error: err.message }; renderShot(); }
+  }
+}
+
+function renderShot() {
+  const box = $("shot");
+  if (!S.cur) { box.innerHTML = ""; return; }
+  const a = S.analysis;
+  if (!a) { box.innerHTML = `<div class="shot"><span class="k">As shot</span><div style="color:var(--faint)">Reading EXIF…</div></div>`; return; }
+  if (a.error) { box.innerHTML = `<div class="shot"><span class="k">As shot</span><div style="color:var(--faint)">${esc(/exiftool/.test(a.error) ? "Install exiftool to read the original settings" : a.error)}</div></div>`; return; }
+  const p = shotProfile();
+  const best = a.matches[0];
+  box.innerHTML = `<button class="shot ${S.panel === "shot" ? "on" : ""}" id="shotCard" title="Show the original settings (I)">
+    <div class="top"><span class="k">As shot</span><span class="sim">${esc(simLabel(p.film))}</span></div>
+    <div class="best">${best ? `<span>≈ ${esc(best.name)} · ${best.percent.toFixed(0)}%</span>` : "<span></span>"}<span class="more">Original settings ›</span></div>
+  </button>`;
+}
+$("shot").addEventListener("click", (e) => {
+  if (e.target.closest("#shotCard")) togglePanel("shot");
+});
+
+/* ---------------- recipes ---------------- */
+async function loadRecipes() {
+  S.recipes = await api("/api/recipes");
+  S.recipes.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  for (const r of S.recipes) {
+    S.bySlug[r.slug] = r;
+    r._hay = `${r.name} ${r.slug} ${r.film_sim} ${simLabel(r.film_sim)} ${r.source?.name || ""} ${r.source?.author || ""}`.toLowerCase();
+  }
+  renderChips();
+  renderRecipes();
+}
+
+function renderChips() {
+  const counts = {};
+  for (const r of S.recipes) counts[r.film_sim] = (counts[r.film_sim] || 0) + 1;
+  const sims = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  $("chips").innerHTML =
+    `<button class="chip ${S.favOnly ? "on" : ""}" data-fav="1">★ Favorites</button>` +
+    sims.map((s) => `<button class="chip ${S.sim === s ? "on" : ""}" data-sim="${s}">${esc(simLabel(s))} <span style="opacity:.6">${counts[s]}</span></button>`).join("");
+}
+$("chips").addEventListener("click", (e) => {
+  const c = e.target.closest(".chip");
+  if (!c) return;
+  if (c.dataset.fav) S.favOnly = !S.favOnly;
+  else S.sim = S.sim === c.dataset.sim ? null : c.dataset.sim;
+  renderChips();
+  renderRecipes();
+});
+$("q").addEventListener("input", (e) => { S.q = e.target.value.trim().toLowerCase(); renderRecipes(); });
+
+const FXW = "Fuji X Weekly";
+/** Small tag for recipes that don't come from Fuji X Weekly (the bulk of the list). */
+function srcBadge(r) {
+  const src = r.source;
+  if (!src || src.name === FXW) return "";
+  const short = src.author || src.name;
+  return ` <span class="srcb" title="${esc(src.name)}${src.author ? " · " + esc(src.author) : ""}">${esc(short)}</span>`;
+}
+
+function sourceLine(r) {
+  const src = r.source;
+  if (!src) return `<div class="src">Source unknown</div>`;
+  const name = src.url
+    ? `<a href="${esc(src.url)}" target="_blank" rel="noopener noreferrer" title="${esc(src.url)}">${esc(src.name)} ↗</a>`
+    : esc(src.name);
+  return `<div class="src">Source: ${name}${src.author ? ` · <span class="au">${esc(src.author)}</span>` : ""}</div>`;
+}
+
+function summary(r) {
+  const parts = [simLabel(r.film_sim), r.dynamic_range ? `DR${r.dynamic_range}` : "DR auto"];
+  parts.push(r.white_balance === "temperature" && r.wb_temp ? `${r.wb_temp}K` : (r.white_balance || "auto"));
+  if (r.grain) parts.push(`grain ${r.grain}`);
+  return parts.join(" · ");
+}
+
+function renderRecipes() {
+  const terms = S.q.split(/\s+/).filter(Boolean);
+  S.visible = S.recipes.filter((r) =>
+    (!S.sim || r.film_sim === S.sim) &&
+    (!S.favOnly || S.favs.has(r.slug)) &&
+    terms.every((t) => r._hay.includes(t)));
+  const done = new Set(S.cur ? S.cur.renders : []);
+  $("count").textContent = `${S.visible.length} of ${S.recipes.length} recipes`;
+  $("recipes").innerHTML = S.visible.map((r) => {
+    const job = S.cur && S.jobs[`${S.cur.id}:${r.slug}`];
+    const mark = done.has(r.slug) ? `<span class="done" title="Rendered">●</span>`
+      : job && (job.status === "running" || job.status === "queued") ? `<span class="done" style="color:var(--accent)" title="${job.status}">◌</span>` : "";
+    return `<div class="row ${S.selected === r.slug ? "sel" : ""}" data-slug="${esc(r.slug)}">
+      <div style="min-width:0"><div class="rn">${mark}${esc(r.name)}${srcBadge(r)}</div><div class="rs">${esc(summary(r))}</div></div>
+      <div class="acts">
+        <button class="icon star ${S.favs.has(r.slug) ? "on" : ""}" data-act="fav" title="Favorite">${S.favs.has(r.slug) ? "★" : "☆"}</button>
+        <button class="icon" data-act="convert" title="Convert with this recipe">→</button>
+      </div>
+    </div>`;
+  }).join("") || `<div class="empty">No recipes match.</div>`;
+}
+$("recipes").addEventListener("click", (e) => {
+  const row = e.target.closest(".row");
+  if (!row) return;
+  const slug = row.dataset.slug;
+  const act = e.target.closest("[data-act]")?.dataset.act;
+  if (act === "fav") return toggleFav(slug);
+  if (act === "convert") { selectRecipe(slug); return enqueue(slug); }
+  if (S.selected === slug && S.panel === "recipe") return closePanel();
+  selectRecipe(slug);
+});
+$("recipes").addEventListener("dblclick", (e) => {
+  const row = e.target.closest(".row");
+  if (row && !e.target.closest("[data-act]")) enqueue(row.dataset.slug);
+});
+
+function toggleFav(slug) {
+  S.favs.has(slug) ? S.favs.delete(slug) : S.favs.add(slug);
+  try { localStorage.setItem("fxraw.favs", JSON.stringify([...S.favs])); } catch {}
+  renderRecipes();
+  renderDetail();
+}
+
+function selectRecipe(slug, scroll, open = true) {
+  S.selected = slug;
+  if (open) S.panel = "recipe";
+  renderRecipes();
+  renderDetail();
+  if (S.cur && S.cur.renders.includes(slug)) setView(slug);
+  const row = document.querySelector(`.row[data-slug="${CSS.escape(slug)}"]`);
+  if (row) row.scrollIntoView({ block: scroll ? "center" : "nearest" });
+}
+
+function closePanel() {
+  S.panel = null;
+  renderDetail();
+}
+
+/** Open the panel in `mode` ("shot" | "recipe"), or close it if already showing that. */
+function togglePanel(mode) {
+  S.panel = S.panel === mode ? null : mode;
+  renderDetail();
+}
+
+const fmtSigned = (v) => v == null ? "0" : v === 0 ? "0" : (v > 0 ? "+" : "") + v;
+
+/** Rows shown in the settings panel: [key, label]. */
+const FIELDS = [
+  ["film", "Film simulation"], ["dr", "Dynamic range"], ["grain", "Grain"],
+  ["chrome", "Color chrome"], ["blue", "Chrome FX blue"], ["wb", "White balance"], ["wbShift", "WB shift"],
+  ["highlight", "Highlight"], ["shadow", "Shadow"], ["color", "Color"],
+  ["sharpness", "Sharpness"], ["nr", "High ISO NR"], ["clarity", "Clarity"],
+];
+
+function recipeProfile(r) {
+  return {
+    film: simLabel(r.film_sim),
+    dr: r.dynamic_range ? `DR${r.dynamic_range}` : "auto",
+    grain: r.grain ? `${r.grain} / ${r.grain_size || "small"}` : "off",
+    chrome: r.chrome_effect || "off",
+    blue: r.chrome_blue || "off",
+    wb: r.white_balance === "temperature" && r.wb_temp ? `${r.wb_temp}K` : (r.white_balance || "auto"),
+    wbShift: `R ${fmtSigned(r.wb_shift_r)}  B ${fmtSigned(r.wb_shift_b)}`,
+    highlight: fmtSigned(r.highlight), shadow: fmtSigned(r.shadow), color: fmtSigned(r.color),
+    sharpness: fmtSigned(r.sharpness), nr: fmtSigned(r.noise_reduction), clarity: fmtSigned(r.clarity),
+  };
+}
+
+/** The original shot's settings, parsed from the analysis rows (same format as `fxraw analyse`). */
+function shotProfile() {
+  const a = S.analysis;
+  if (!a || !a.settings) return null;
+  const m = Object.fromEntries(a.settings);
+  const ce = /chrome:(\S+)\s+blue:(\S+)/.exec(m["Color Effect"] || "") || [];
+  const wb = /^(\S+)\s+R:(\S+)\s+B:(\S+)/.exec(m["White Balance"] || "") || [];
+  const tone = /highlight:(\S+)\s+shadow:(\S+)/.exec(m["Tone"] || "") || [];
+  return {
+    film: simLabel(m["Film Simulation"]), dr: m["Dynamic Range"], grain: m["Grain"],
+    chrome: ce[1], blue: ce[2], wb: wb[1], wbShift: wb[1] ? `R ${wb[2]}  B ${wb[3]}` : undefined,
+    highlight: tone[1], shadow: tone[2], color: m["Color"], sharpness: m["Sharpness"],
+    nr: m["NR"], clarity: m["Clarity"], iso: m["ISO"], ev: m["Exposure"],
+  };
+}
+
+const norm = (v) => String(v ?? "").replace(/\s+/g, " ").trim().toLowerCase();
+const closeBtn = `<button class="icon close" data-close title="Close (Esc)">✕</button>`;
+
+function renderDetail() {
+  const box = $("detail");
+  renderActionbar();
+  $("infoBtn").classList.toggle("on", !!S.panel);
+  const sc = $("shotCard");
+  if (sc) sc.classList.toggle("on", S.panel === "shot");
+  if (S.panel === "shot" && S.cur) return renderShotDetail(box);
+  const r = S.panel === "recipe" && S.bySlug[S.selected];
+  if (!r) { box.hidden = true; return; }
+  box.hidden = false;
+
+  const rp = recipeProfile(r);
+  const sp = shotProfile();
+  let anyDiff = false;
+  const rows = FIELDS.map(([k, label]) => {
+    const changed = sp && sp[k] !== undefined && norm(sp[k]) !== norm(rp[k]);
+    if (changed) anyDiff = true;
+    return `<tr><td>${label}</td>${sp ? `<td class="v orig" title="${esc(sp[k])}">${esc(sp[k] ?? "–")}</td>` : ""}<td class="v ${changed ? "diff" : ""}" title="${esc(rp[k])}">${esc(rp[k])}</td></tr>`;
+  }).join("");
+  const extra = [r.iso && `ISO ${r.iso}`, r.exposure_comp && `EV ${r.exposure_comp}`].filter(Boolean).join(" · ");
+  box.innerHTML = `
+    <div class="dhead">
+      <div class="t"><div class="kicker">Recipe</div><h3>${esc(r.name)}</h3><div class="slug">${esc(r.slug)}</div>${sourceLine(r)}</div>
+      <button class="icon star ${S.favs.has(r.slug) ? "on" : ""}" data-fav title="Favorite (F)">${S.favs.has(r.slug) ? "★" : "☆"}</button>
+      ${closeBtn}
+    </div>
+    <div class="dbody">
+      <table class="cmp">
+        <colgroup><col style="width:${sp ? 34 : 44}%">${sp ? `<col style="width:33%">` : ""}<col></colgroup>
+        <thead><tr><th></th>${sp ? `<th>As shot</th>` : ""}<th>${sp ? "This recipe" : ""}</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${anyDiff ? `<div class="legend"><b>Highlighted</b> = what this recipe changes vs. the original</div>` : ""}
+      ${extra ? `<div class="note">Suggested when shooting (not applied by conversion): ${esc(extra)}</div>` : ""}
+    </div>
+`;
+}
+
+/** Always-visible footer: the selected recipe and its convert button. */
+function renderActionbar() {
+  const r = S.bySlug[S.selected];
+  const btn = $("abConvert");
+  $("abName").textContent = r ? r.name : "None selected";
+  $("abName").classList.toggle("none", !r);
+  $("abInfo").disabled = !r;
+  $("abKicker").textContent = r ? (S.panel === "recipe" ? "Recipe · hide details" : "Recipe · show details") : "Recipe";
+  if (!r) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Pick a recipe first"; return; }
+  if (!S.cur) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Select or drop a RAF first"; return; }
+  const job = S.jobs[`${S.cur.id}:${r.slug}`];
+  const pending = job && (job.status === "queued" || job.status === "running");
+  const isDone = S.cur.renders.includes(r.slug);
+  btn.disabled = !!pending;
+  btn.textContent = pending ? (job.status === "running" ? "Converting…" : "Queued…") : isDone ? (S.view === r.slug ? "Rendered ✓" : "Show render") : "Convert ↵";
+  btn.title = isDone ? "Already rendered — show it" : `Render ${S.cur.name} with ${r.name} on the camera`;
+}
+$("abConvert").onclick = () => {
+  const r = S.bySlug[S.selected];
+  if (!r || !S.cur) return;
+  if (S.cur.renders.includes(r.slug)) setView(r.slug); else enqueue(r.slug);
+};
+$("abInfo").onclick = () => { if (S.selected) togglePanel("recipe"); };
+
+function renderShotDetail(box) {
+  box.hidden = false;
+  const a = S.analysis;
+  const head = `<div class="dhead"><div class="t"><div class="kicker">As shot · original settings</div><h3>${esc(S.cur.name)}</h3></div>${closeBtn}</div>`;
+  if (!a || a.error) {
+    box.innerHTML = `${head}<div class="dbody"><div class="note">${!a ? "Reading EXIF…" : esc(/exiftool/.test(a.error) ? "Install exiftool (brew install exiftool) to read the original settings." : a.error)}</div></div>`;
+    return;
+  }
+  const p = shotProfile();
+  const rows = [...FIELDS, ["iso", "ISO"], ["ev", "Exposure"]].map(([k, label]) =>
+    `<tr class="${k === "iso" ? "sep" : ""}"><td>${label}</td><td class="v" title="${esc(p[k])}">${esc(p[k] ?? "–")}</td></tr>`).join("");
+  const matches = a.matches.map((m) => `
+    <button class="mrow" data-slug="${esc(m.slug)}" title="Open ${esc(m.name)}">
+      <span class="n">${esc(m.name)}</span><span class="bar"><i style="width:${Math.max(0, Math.min(100, m.percent))}%"></i></span><span class="p">${m.percent.toFixed(0)}%</span>
+    </button>`).join("");
+  box.innerHTML = `${head}
+    <div class="dbody">
+      <table class="cmp"><colgroup><col style="width:44%"><col></colgroup><tbody>${rows}</tbody></table>
+      <div class="matches"><div class="k">Closest recipes</div>${matches}</div>
+    </div>`;
+}
+
+$("detail").addEventListener("click", (e) => {
+  if (e.target.closest("[data-close]")) return closePanel();
+  if (e.target.closest("[data-fav]") && S.selected) return toggleFav(S.selected);
+  const m = e.target.closest(".mrow");
+  if (m) selectRecipe(m.dataset.slug, true);
+});
+
+/* ---------------- conversion queue ---------------- */
+function enqueue(slug) {
+  if (!S.cur) return toast("Select an image first", true);
+  const im = S.cur;
+  if (im.renders.includes(slug)) return setView(slug);
+  const key = `${im.id}:${slug}`;
+  const j = S.jobs[key];
+  if (j && (j.status === "queued" || j.status === "running")) return;
+  S.jobs[key] = { status: "queued", image: im.id, slug };
+  S.queue.push(key);
+  S.wantView = key;
+  refreshJobs();
+  runQueue();
+}
+
+async function runQueue() {
+  if (S.running) return;
+  S.running = true;
+  while (S.queue.length) {
+    const key = S.queue.shift();
+    const job = S.jobs[key];
+    job.status = "running";
+    job.started = Date.now();
+    refreshJobs();
+    try {
+      const res = await api(`/api/images/${job.image}/convert/${encodeURIComponent(job.slug)}`, { method: "POST" });
+      job.status = "done";
+      const im = S.images.find((x) => x.id === job.image);
+      if (im && !im.renders.includes(job.slug)) im.renders.push(job.slug);
+      if (res.warnings && res.warnings.length) toast(res.warnings.join(" "));
+      if (S.cur && S.cur.id === job.image && (S.wantView === key || S.view === "original")) setView(job.slug);
+    } catch (err) {
+      job.status = "error";
+      job.error = err.message;
+      toast(`${S.bySlug[job.slug]?.name || job.slug}: ${err.message}`, true);
+    }
+    refreshJobs();
+  }
+  S.running = false;
+}
+
+function refreshJobs() {
+  renderStrip();
+  renderRecipes();
+  renderDetail();
+  renderImages();
+  updateWorking();
+}
+
+let workingTimer;
+function updateWorking() {
+  clearInterval(workingTimer);
+  const running = Object.values(S.jobs).find((j) => j.status === "running");
+  const queued = Object.values(S.jobs).filter((j) => j.status === "queued").length;
+  if (!running) { $("working").hidden = true; return; }
+  const tick = () => {
+    const secs = Math.round((Date.now() - running.started) / 1000);
+    const im = S.images.find((x) => x.id === running.image);
+    $("workingText").textContent = `Rendering ${S.bySlug[running.slug]?.name || running.slug}${S.cur && S.cur.id !== running.image ? ` (${im?.name})` : ""} on camera · ${secs}s${queued ? ` · ${queued} queued` : ""}`;
+  };
+  tick();
+  $("working").hidden = false;
+  workingTimer = setInterval(tick, 1000);
+}
+
+/* ---------------- versions strip ---------------- */
+function versions() {
+  if (!S.cur) return [];
+  const id = S.cur.id;
+  const slugs = [...S.cur.renders];
+  for (const j of Object.values(S.jobs)) if (j.image === id && !slugs.includes(j.slug)) slugs.push(j.slug);
+  return ["original", ...slugs];
+}
+
+function renderStrip() {
+  const box = $("strip");
+  if (!S.cur) { box.innerHTML = ""; return; }
+  const id = S.cur.id;
+  box.innerHTML = versions().map((v) => {
+    if (v === "original") {
+      return `<button class="ver ${S.view === v ? "active" : ""}" data-v="original"><div class="th"><img src="/api/images/${id}/thumb" alt=""></div><div class="nm">As shot</div></button>`;
+    }
+    const job = S.jobs[`${id}:${v}`];
+    const name = S.bySlug[v]?.name || v;
+    let th;
+    if (S.cur.renders.includes(v)) th = `<img src="${renderUrl(id, v)}" loading="lazy" decoding="async" alt="">`;
+    else if (job?.status === "running") th = `<span class="spinner"></span>`;
+    else if (job?.status === "error") th = `<span class="err" title="${esc(job.error)}">!</span>`;
+    else th = `<span class="q">queued</span>`;
+    return `<button class="ver ${S.view === v ? "active" : ""}" data-v="${esc(v)}" title="${esc(name)}"><div class="th">${th}</div><div class="nm">${esc(name)}</div></button>`;
+  }).join("");
+}
+$("strip").addEventListener("click", (e) => {
+  const b = e.target.closest(".ver");
+  if (!b) return;
+  const v = b.dataset.v;
+  const job = S.cur && S.jobs[`${S.cur.id}:${v}`];
+  if (job && job.status === "error") { delete S.jobs[`${S.cur.id}:${v}`]; selectRecipe(v); return enqueue(v); }
+  if (v !== "original") selectRecipe(v, false, S.panel !== null);
+  else if (S.view === "original" || S.panel) { S.panel = "shot"; renderDetail(); }
+  setView(v);
+});
+
+const renderUrl = (id, slug) => `/api/images/${id}/renders/${encodeURIComponent(slug)}.jpg`;
+
+/* ---------------- viewer ---------------- */
+const V = { natW: 0, natH: 0, s: 1, tx: 0, ty: 0, fit: true, split: 0.5 };
+
+function setView(v) {
+  if (!S.cur) {
+    S.view = "original";
+    $("overlay").hidden = false;
+    $("layer").hidden = true;
+    $("title").textContent = "No image selected";
+    updateButtons();
+    return;
+  }
+  const ready = v === "original" || S.cur.renders.includes(v);
+  S.view = ready ? v : S.view;
+  const id = S.cur.id;
+  const base = $("imgBase"), top = $("imgTop");
+  const origSrc = `/api/images/${id}/preview`;
+  if (base.getAttribute("src") !== origSrc) {
+    base.src = origSrc;
+    V.fit = true;
+  }
+  if (S.view !== "original") {
+    const src = renderUrl(id, S.view);
+    if (top.getAttribute("src") !== src) top.src = src;
+  }
+  $("overlay").hidden = true;
+  $("layer").hidden = false;
+  const r = S.bySlug[S.view];
+  $("title").innerHTML = `<b>${esc(S.cur.name)}</b>${r ? `→ ${esc(r.name)}` : "as shot"}`;
+  renderStrip();
+  applyView();
+  updateButtons();
+}
+
+function updateButtons() {
+  const has = S.cur && S.view !== "original";
+  $("dlBtn").disabled = !has;
+  $("infoBtn").disabled = !S.cur;
+  renderActionbar();
+  $("saveBtn").disabled = !has;
+  for (const b of $("modeSeg").children) b.classList.toggle("on", b.dataset.mode === S.mode);
+}
+
+$("imgBase").addEventListener("load", (e) => {
+  V.natW = e.target.naturalWidth;
+  V.natH = e.target.naturalHeight;
+  if (V.fit) fitView();
+  applyView();
+});
+$("imgBase").addEventListener("error", () => {
+  if (!S.cur) return;
+  $("overlay").hidden = false;
+  $("overlay").innerHTML = `<div><div class="big">No embedded preview</div>Convert with a recipe to see this image.</div>`;
+});
+
+function fitView() {
+  const st = $("stage").getBoundingClientRect();
+  if (!V.natW) return;
+  V.s = Math.min(st.width / V.natW, st.height / V.natH);
+  V.tx = (st.width - V.natW * V.s) / 2;
+  V.ty = (st.height - V.natH * V.s) / 2;
+  V.fit = true;
+}
+
+function clampPan() {
+  const st = $("stage").getBoundingClientRect();
+  const w = V.natW * V.s, h = V.natH * V.s;
+  V.tx = w <= st.width ? (st.width - w) / 2 : Math.min(0, Math.max(st.width - w, V.tx));
+  V.ty = h <= st.height ? (st.height - h) / 2 : Math.min(0, Math.max(st.height - h, V.ty));
+}
+
+function applyView() {
+  const layer = $("layer");
+  layer.style.width = V.natW + "px";
+  layer.style.height = V.natH + "px";
+  layer.style.transform = `translate(${V.tx}px, ${V.ty}px) scale(${V.s})`;
+  const st = $("stage").getBoundingClientRect();
+  const showTop = S.view !== "original";
+  const compare = showTop && S.mode === "compare";
+  const top = $("imgTop");
+  top.hidden = !showTop || S.peek;
+  const handle = $("handle");
+  handle.hidden = !compare || S.peek;
+  const r = S.bySlug[S.view];
+  $("labelL").hidden = !(compare && !S.peek) && !S.peek;
+  $("labelL").textContent = "As shot";
+  $("labelR").hidden = !showTop || S.peek;
+  $("labelR").textContent = r ? r.name : "";
+  if (compare) {
+    const x = V.split * st.width;
+    handle.style.left = x + "px";
+    const local = Math.max(0, (x - V.tx) / V.s);
+    top.style.clipPath = `inset(0 0 0 ${local}px)`;
+  } else {
+    top.style.clipPath = "none";
+  }
+  $("stage").classList.toggle("zoomed", !V.fit);
+  $("zoomhint").hidden = !S.cur || !V.natW;
+  $("zoomhint").textContent = V.fit ? "Double-click to zoom 1:1" : "Drag to pan · double-click to fit";
+}
+
+// Slider + pan
+let drag = null;
+// Never start a text selection from the viewer (drag, double-click zoom).
+$("stage").addEventListener("mousedown", (e) => e.preventDefault());
+document.addEventListener("selectstart", (e) => { if (drag) e.preventDefault(); });
+$("stage").addEventListener("pointerdown", (e) => {
+  if (!S.cur || e.button !== 0) return;
+  e.preventDefault();
+  window.getSelection()?.removeAllRanges();
+  const onHandle = e.target === $("handle");
+  if (onHandle || (S.mode === "compare" && S.view !== "original" && V.fit)) {
+    drag = { kind: "split" };
+    moveSplit(e);
+  } else if (!V.fit) {
+    drag = { kind: "pan", x: e.clientX, y: e.clientY, tx: V.tx, ty: V.ty };
+    $("stage").classList.add("panning");
+  } else return;
+  document.body.classList.add("dragging");
+  document.body.classList.toggle("split", drag.kind === "split");
+  $("stage").setPointerCapture(e.pointerId);
+});
+$("stage").addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  if (drag.kind === "split") moveSplit(e);
+  else {
+    V.tx = drag.tx + e.clientX - drag.x;
+    V.ty = drag.ty + e.clientY - drag.y;
+    clampPan();
+    applyView();
+  }
+});
+const endDrag = () => {
+  drag = null;
+  $("stage").classList.remove("panning");
+  document.body.classList.remove("dragging", "split");
+};
+$("stage").addEventListener("pointerup", endDrag);
+$("stage").addEventListener("pointercancel", endDrag);
+function moveSplit(e) {
+  const st = $("stage").getBoundingClientRect();
+  V.split = Math.min(1, Math.max(0, (e.clientX - st.left) / st.width));
+  applyView();
+}
+$("stage").addEventListener("dblclick", (e) => {
+  if (!S.cur || !V.natW) return;
+  if (V.fit) {
+    const st = $("stage").getBoundingClientRect();
+    const px = (e.clientX - st.left - V.tx) / V.s, py = (e.clientY - st.top - V.ty) / V.s;
+    V.s = 1;
+    V.tx = e.clientX - st.left - px;
+    V.ty = e.clientY - st.top - py;
+    V.fit = false;
+    clampPan();
+  } else fitView();
+  applyView();
+});
+$("stage").addEventListener("wheel", (e) => {
+  if (!S.cur || !V.natW) return;
+  e.preventDefault();
+  const st = $("stage").getBoundingClientRect();
+  const fitS = Math.min(st.width / V.natW, st.height / V.natH);
+  const ns = Math.min(2, Math.max(fitS, V.s * Math.exp(-e.deltaY * 0.0015)));
+  const mx = e.clientX - st.left, my = e.clientY - st.top;
+  V.tx = mx - ((mx - V.tx) / V.s) * ns;
+  V.ty = my - ((my - V.ty) / V.s) * ns;
+  V.s = ns;
+  V.fit = ns <= fitS + 1e-6;
+  if (V.fit) fitView(); else clampPan();
+  applyView();
+}, { passive: false });
+new ResizeObserver(() => { if (V.fit) fitView(); else clampPan(); applyView(); }).observe($("stage"));
+
+$("modeSeg").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  S.mode = b.dataset.mode;
+  try { localStorage.setItem("fxraw.mode", S.mode); } catch {}
+  updateButtons();
+  applyView();
+});
+
+/** Show the settings of what's on screen: the original, or the recipe being viewed. */
+function toggleInfo() {
+  if (!S.cur) return;
+  if (S.view === "original") return togglePanel("shot");
+  if (S.panel === "recipe" && S.selected === S.view) return closePanel();
+  selectRecipe(S.view, true);
+}
+$("infoBtn").onclick = toggleInfo;
+
+$("dlBtn").onclick = () => {
+  if (!S.cur || S.view === "original") return;
+  const a = document.createElement("a");
+  a.href = renderUrl(S.cur.id, S.view) + "?download=1";
+  a.click();
+};
+$("saveBtn").onclick = async () => {
+  if (!S.cur || S.view === "original") return;
+  try {
+    const r = await api(`/api/images/${S.cur.id}/renders/${encodeURIComponent(S.view)}/save`, { method: "POST" });
+    toast(`Saved ${r.path}`);
+  } catch (err) { toast(err.message, true); }
+};
+
+/* ---------------- keyboard ---------------- */
+document.addEventListener("keydown", (e) => {
+  const inInput = e.target.tagName === "INPUT";
+  if (e.key === "/" && !inInput) { e.preventDefault(); $("q").focus(); $("q").select(); return; }
+  if (e.key === "Escape" && inInput) { e.target.blur(); return; }
+  if (e.key === "Escape" && S.panel) { closePanel(); return; }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    if (!S.visible.length) return;
+    e.preventDefault();
+    const i = S.visible.findIndex((r) => r.slug === S.selected);
+    const n = i < 0 ? 0 : Math.min(S.visible.length - 1, Math.max(0, i + (e.key === "ArrowDown" ? 1 : -1)));
+    selectRecipe(S.visible[n].slug, false, S.panel !== null);
+    return;
+  }
+  if (e.key === "Enter" && S.selected) { e.preventDefault(); enqueue(S.selected); return; }
+  if (inInput) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+    const vs = versions().filter((v) => v === "original" || (S.cur && S.cur.renders.includes(v)));
+    const i = vs.indexOf(S.view);
+    const n = vs[(i + (e.key === "ArrowRight" ? 1 : -1) + vs.length) % vs.length];
+    if (n) { if (n !== "original") selectRecipe(n, false, S.panel !== null); else if (S.panel) { S.panel = "shot"; renderDetail(); } setView(n); }
+    e.preventDefault();
+  } else if (e.key.toLowerCase() === "c") {
+    S.mode = S.mode === "compare" ? "single" : "compare";
+    updateButtons(); applyView();
+  } else if (e.key === " " && !S.peek) {
+    e.preventDefault();
+    S.peek = true; applyView();
+  } else if (e.key.toLowerCase() === "i") {
+    toggleInfo();
+  } else if (e.key.toLowerCase() === "f" && S.selected) {
+    toggleFav(S.selected);
+  }
+});
+document.addEventListener("keyup", (e) => {
+  if (e.key === " " && S.peek) { S.peek = false; applyView(); }
+});
+
+/* ---------------- boot ---------------- */
+(async () => {
+  pollStatus();
+  setInterval(pollStatus, 3000);
+  try { await loadRecipes(); } catch (err) { toast("Could not load recipes: " + err.message, true); }
+  try { await loadFolder(); } catch (err) { toast("Could not list folder: " + err.message, true); }
+  if (!S.cur) setView("original");
+})();
+</script>
+</body>
+</html>

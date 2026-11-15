@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use fxraw::profile::{parse_exposure_comp, FilmSimulation, GrainEffect, GrainSize};
-use fxraw::{analyse, config, detect, fuji, ptp, recipes, ui};
+use fxraw::{analyse, config, detect, fuji, ptp, recipes, ui, web};
 
 #[derive(Parser)]
 #[command(name = "fxraw", version)]
@@ -35,6 +35,21 @@ enum Commands {
         /// Re-enable the PTP daemons (undo a previous setup)
         #[arg(long)]
         undo: bool,
+    },
+
+    /// Start a local web UI to browse recipes and convert RAFs with a live preview
+    Serve {
+        /// Folder whose RAF files are listed (also scans its _RAF subfolder); saved JPEGs go here
+        #[arg(default_value = ".")]
+        dir: String,
+
+        /// Port to listen on (127.0.0.1 only)
+        #[arg(short, long, default_value_t = 7878)]
+        port: u16,
+
+        /// Don't open the browser automatically
+        #[arg(long)]
+        no_open: bool,
     },
 
     /// Project config: create, validate, or convert from fxraw.toml
@@ -119,6 +134,9 @@ fn main() {
             }
         }
         Commands::Analyse { file } => analyse::run(&file),
+        Commands::Serve { dir, port, no_open } => {
+            web::serve(std::path::Path::new(&dir), port, !no_open)
+        }
         Commands::Setup { undo } => {
             let result = if undo {
                 ptp::enable_ptp_daemons()

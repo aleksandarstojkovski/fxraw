@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::profile::{ChromeLevel, FilmSimulation, GrainEffect, GrainSize, RecipeSettings};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::sync::LazyLock;
 
 static RECIPES_JSON: &str = include_str!("../data/recipes.json");
@@ -9,7 +9,7 @@ static RECIPES_JSON: &str = include_str!("../data/recipes.json");
 static RECIPES: LazyLock<Vec<Recipe>> =
     LazyLock::new(|| serde_json::from_str(RECIPES_JSON).expect("invalid recipes.json"));
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Recipe {
     pub name: String,
     pub slug: String,
@@ -48,6 +48,28 @@ pub struct Recipe {
     pub iso: Option<String>,
     #[serde(default)]
     pub exposure_comp: Option<String>,
+    /// Where the recipe comes from (site, post, author).
+    #[serde(default)]
+    pub source: Option<RecipeSource>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RecipeSource {
+    pub name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub author: Option<String>,
+}
+
+impl RecipeSource {
+    /// "Reddit r/fujifilm · u/indigo1917"
+    pub fn label(&self) -> String {
+        match &self.author {
+            Some(a) => format!("{} · {a}", self.name),
+            None => self.name.clone(),
+        }
+    }
 }
 
 impl Recipe {
@@ -218,4 +240,10 @@ pub fn show_recipe(r: &Recipe) {
     row("Clarity", r.clarity.map(|v| fmti(v)).unwrap_or("0".into()));
     row("ISO", r.iso.clone().unwrap_or("auto".into()));
     row("Exposure", r.exposure_comp.clone().unwrap_or("0".into()));
+    if let Some(src) = &r.source {
+        row("Source", src.label());
+        if let Some(url) = &src.url {
+            row("", url.clone());
+        }
+    }
 }

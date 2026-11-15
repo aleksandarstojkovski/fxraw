@@ -148,9 +148,14 @@ fn dr_exif_to_value(s: &str) -> Option<u32> {
 }
 
 fn display_settings(exif: &ExifData) {
-    let row = |label: &str, val: &str| {
+    for (label, val) in settings_rows(exif) {
         println!("  {:<18} {}", label, val);
-    };
+    }
+}
+
+fn settings_rows(exif: &ExifData) -> Vec<(&'static str, String)> {
+    let mut rows: Vec<(&'static str, String)> = Vec::new();
+    let mut row = |label: &'static str, val: &str| rows.push((label, val.to_string()));
 
     let film = exif.get("FilmMode").unwrap_or("unknown");
     row("Film Simulation", film_mode_to_slug(film));
@@ -250,6 +255,42 @@ fn display_settings(exif: &ExifData) {
         .unwrap_or("0")
         .to_string();
     row("Exposure", &ev);
+    rows
+}
+
+/// Structured result of analysing a file, for non-terminal callers (web UI).
+pub struct Analysis {
+    /// (label, value) rows describing the in-camera settings, as `analyse` prints them.
+    pub settings: Vec<(&'static str, String)>,
+    /// Best matching recipes, highest score first.
+    pub matches: Vec<RecipeMatch>,
+}
+
+pub struct RecipeMatch {
+    pub recipe: &'static recipes::Recipe,
+    pub percent: f64,
+}
+
+/// Run exiftool on `path` and score every recipe against it.
+pub fn analyse_file(path: &Path, top: usize) -> Result<Analysis, String> {
+    let exif = run_exiftool(path)?;
+    Ok(Analysis {
+        settings: settings_rows(&exif),
+        matches: rank_recipes(&exif).into_iter().take(top).collect(),
+    })
+}
+
+fn rank_recipes(exif: &ExifData) -> Vec<RecipeMatch> {
+    let mut scored: Vec<RecipeMatch> = recipes::all()
+        .iter()
+        .map(|r| {
+            let m = score_recipe(exif, r);
+            let percent = if m.max_score > 0.0 { m.score / m.max_score * 100.0 } else { 0.0 };
+            RecipeMatch { recipe: r, percent }
+        })
+        .collect();
+    scored.sort_by(|a, b| b.percent.partial_cmp(&a.percent).unwrap());
+    scored
 }
 
 struct MatchScore {
