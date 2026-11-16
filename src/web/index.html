@@ -465,7 +465,7 @@ function renderShot() {
   const p = shotProfile();
   const best = a.matches[0];
   box.innerHTML = `<button class="shot ${S.panel === "shot" ? "on" : ""}" id="shotCard" title="Show the original settings (I)">
-    <div class="top"><span class="k">As shot</span><span class="sim">${esc(simLabel(p.film))}</span></div>
+    <div class="top"><span class="k">As shot${a.tele ? ` · <span title="Shot with the digital tele-converter: the camera crops when it develops, so the preview is cropped the same way">tele ${a.tele}×</span>` : ""}</span><span class="sim">${esc(simLabel(p.film))}</span></div>
     <div class="best">${best ? `<span>≈ ${esc(best.name)} · ${best.percent.toFixed(0)}%</span>` : "<span></span>"}<span class="more">Original settings ›</span></div>
   </button>`;
 }

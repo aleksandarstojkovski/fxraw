@@ -37,6 +37,8 @@ struct State {
     busy: Mutex<Option<String>>,
     /// Reference-matching jobs; the id is the index.
     matches: Mutex<Vec<Arc<MatchJob>>>,
+    /// Digital tele-converter crop per RAF (see `tele_crop`), read once.
+    crops: Mutex<std::collections::HashMap<PathBuf, Option<[f32; 4]>>>,
 }
 
 /// A "match this reference" search running (or finished) in the background.
@@ -119,6 +121,7 @@ pub fn serve(root: &Path, port: u16, open_browser: bool) {
         camera: Mutex::new(()),
         busy: Mutex::new(None),
         matches: Mutex::new(Vec::new()),
+        crops: Mutex::new(std::collections::HashMap::new()),
     });
 
     for req in server.incoming_requests() {
@@ -344,18 +347,20 @@ fn preview(state: &State, id: usize, thumb: bool) -> Resp {
         let Some(full) = fuji::embedded_jpeg(&raf) else {
             return json_err(422, "no embedded preview in this RAF");
         };
-        // The EXIF thumbnail has no orientation of its own: turn it like the
-        // full preview (which keeps its tag, so browsers turn it themselves).
-        let rotated;
-        let bytes: &[u8] = match (thumb, exif_thumbnail(full)) {
-            (true, Some(t)) => match exif_orientation(full) {
-                1 => t,
-                o => {
-                    rotated = decode_upright_as(t, o).map(|img| matcher::encode_jpeg(&img, 85));
-                    rotated.as_deref().unwrap_or(t)
-                }
-            },
-            _ => full,
+        // The preview always covers the whole sensor; with the digital
+        // tele-converter the camera crops when it develops, so show the
+        // same framing. Thumbnails are made from the preview because the
+        // EXIF thumbnail is letterboxed 4:3 and has no orientation tag.
+        let crop = tele_crop(state, &path);
+        let bytes: Vec<u8> = if thumb {
+            match upright_preview(full, crop) {
+                Some(img) => matcher::encode_jpeg(&matcher::thumbnail(&img, 320), 82),
+                None => exif_thumbnail(full).unwrap_or(full).to_vec(),
+            }
+        } else if crop.is_some() {
+            upright_preview(full, crop).map(|img| matcher::encode_jpeg(&img, 90)).unwrap_or_else(|| full.to_vec())
+        } else {
+            full.to_vec() // browsers apply its EXIF orientation themselves
         };
         if let Err(e) = std::fs::write(&cached, bytes) {
             return json_err(500, &format!("cache write failed: {e}"));
@@ -366,8 +371,10 @@ fn preview(state: &State, id: usize, thumb: bool) -> Resp {
 
 fn analysis(state: &State, id: usize) -> Resp {
     let path = state.images.lock().unwrap()[id].path.clone();
+    let tele = tele_crop(state, &path).map(|c| (10.0 / c[2] as f64).round() / 10.0);
     match analyse::analyse_file(&path, 5) {
         Ok(a) => json_ok(json!({
+            "tele": tele,
             "settings": a.settings.iter().map(|(k, v)| json!([k, v])).collect::<Vec<_>>(),
             "matches": a.matches.iter().map(|m| json!({
                 "slug": m.recipe.slug,
@@ -602,7 +609,8 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
 
     // Every render shares the RAF's geometry, so align on the embedded preview.
     // Work in viewing orientation, so previews of vertical shots stand up.
-    let frame = std::fs::read(&path).ok().and_then(|raf| fuji::embedded_jpeg(&raf).and_then(|j| decode_upright(j).ok()));
+    let crop = tele_crop(state, &path);
+    let frame = std::fs::read(&path).ok().and_then(|raf| fuji::embedded_jpeg(&raf).and_then(|j| upright_preview(j, crop)));
     let Some(frame) = frame else {
         return fail("this RAF has no embedded preview to align the reference against".into());
     };
@@ -1003,15 +1011,65 @@ pub(crate) fn exif_orientation(jpeg: &[u8]) -> u16 {
     get().unwrap_or(1)
 }
 
-/// Decode `jpeg` and turn it as EXIF `orientation` says.
-fn decode_upright_as(jpeg: &[u8], orientation: u16) -> Option<image::RgbImage> {
-    let img = image::load_from_memory(jpeg).ok()?.to_rgb8();
-    Some(match orientation {
+/// The digital tele-converter crop a RAF was shot with, as a normalised
+/// (x, y, w, h) rectangle of the unrotated sensor frame. The camera applies
+/// it when developing, while the embedded preview shows the whole frame.
+fn tele_crop(state: &State, path: &Path) -> Option<[f32; 4]> {
+    if let Some(c) = state.crops.lock().unwrap().get(path) {
+        return *c;
+    }
+    let c = read_tele_crop(path);
+    state.crops.lock().unwrap().insert(path.to_path_buf(), c);
+    c
+}
+
+fn read_tele_crop(path: &Path) -> Option<[f32; 4]> {
+    let out = std::process::Command::new("exiftool")
+        .args(["-s", "-s", "-s", "-n", "-RAF:RawZoomActive", "-RAF:RawZoomTopLeft", "-RAF:RawZoomSize", "-RAF:RawImageCroppedSize"])
+        .arg(path)
+        .output()
+        .ok()?;
+    let rows: Vec<Vec<f32>> = String::from_utf8_lossy(&out.stdout)
+        .lines()
+        .map(|l| l.split_whitespace().filter_map(|x| x.parse().ok()).collect())
+        .collect();
+    parse_tele_crop(&rows)
+}
+
+/// `rows`: RawZoomActive, RawZoomTopLeft (x y), RawZoomSize (w h),
+/// RawImageCroppedSize (w h), as printed by `exiftool -n`.
+fn parse_tele_crop(rows: &[Vec<f32>]) -> Option<[f32; 4]> {
+    let [active, tl, size, full] = rows else { return None };
+    if active.first() != Some(&1.0) || tl.len() < 2 || size.len() < 2 || full.len() < 2 || full[0] <= 0.0 || full[1] <= 0.0 {
+        return None;
+    }
+    let r = [tl[0] / full[0], tl[1] / full[1], size[0] / full[0], size[1] / full[1]];
+    (r[2] > 0.1 && r[2] < 0.99 && r[3] > 0.1 && r[3] < 0.99 && r[0] + r[2] <= 1.001 && r[1] + r[3] <= 1.001).then_some(r)
+}
+
+/// The RAF's embedded preview as it should be viewed: tele-converter crop
+/// (in sensor coordinates) applied first, then the EXIF orientation.
+fn upright_preview(jpeg: &[u8], crop: Option<[f32; 4]>) -> Option<image::RgbImage> {
+    let mut img = image::load_from_memory(jpeg).ok()?.to_rgb8();
+    if let Some([x, y, w, h]) = crop {
+        let (iw, ih) = (img.width() as f32, img.height() as f32);
+        img = image::imageops::crop_imm(&img, (x * iw) as u32, (y * ih) as u32, (w * iw) as u32, (h * ih) as u32).to_image();
+    }
+    Some(rotate_by_orientation(img, exif_orientation(jpeg)))
+}
+
+fn rotate_by_orientation(img: image::RgbImage, orientation: u16) -> image::RgbImage {
+    match orientation {
         3 => image::imageops::rotate180(&img),
         6 => image::imageops::rotate90(&img),
         8 => image::imageops::rotate270(&img),
         _ => img,
-    })
+    }
+}
+
+/// Decode `jpeg` and turn it as EXIF `orientation` says.
+fn decode_upright_as(jpeg: &[u8], orientation: u16) -> Option<image::RgbImage> {
+    Some(rotate_by_orientation(image::load_from_memory(jpeg).ok()?.to_rgb8(), orientation))
 }
 
 /// Decode a JPEG into pixels the way it's meant to be viewed (EXIF
@@ -1082,6 +1140,19 @@ mod tests {
         assert_eq!(exif_orientation(thumb), 1); // no EXIF of its own
         assert!(thumb.starts_with(&[0xFF, 0xD8]) && thumb.len() < 100_000);
         assert!(fuji::embedded_jpeg(b"not a raf").is_none());
+    }
+
+    #[test]
+    fn reads_tele_converter_crop() {
+        // DSCF1593: digital tele-converter (≈1.4×), centred.
+        let rows = vec![vec![1.0], vec![1128.0, 752.0], vec![5472.0, 3648.0], vec![7728.0, 5152.0]];
+        let c = parse_tele_crop(&rows).unwrap();
+        assert!((c[0] - 0.146).abs() < 0.001 && (c[1] - 0.146).abs() < 0.001);
+        assert!((1.0 / c[2] - 1.41).abs() < 0.01 && (c[2] - c[3]).abs() < 0.001);
+        // Not active, or tags missing (e.g. other cameras).
+        let off = vec![vec![0.0], vec![0.0, 0.0], vec![7728.0, 5152.0], vec![7728.0, 5152.0]];
+        assert!(parse_tele_crop(&off).is_none());
+        assert!(parse_tele_crop(&[]).is_none());
     }
 
     #[test]
