@@ -251,14 +251,13 @@ fn list_folder(state: &State) -> Value {
         }
     }
     found.sort();
-    let ids: Vec<usize> = found
-        .into_iter()
-        .map(|p| {
-            let name = p.file_name().unwrap_or_default().to_string_lossy().into_owned();
-            register(state, name, p, false)
-        })
-        .collect();
-    json!(ids.into_iter().map(|id| image_json(state, id)).collect::<Vec<_>>())
+    for p in found {
+        let name = p.file_name().unwrap_or_default().to_string_lossy().into_owned();
+        register(state, name, p, false);
+    }
+    // Everything known, uploads included, so a page reload finds them again.
+    let n = state.images.lock().unwrap().len();
+    json!((0..n).map(|id| image_json(state, id)).collect::<Vec<_>>())
 }
 
 fn register(state: &State, name: String, path: PathBuf, uploaded: bool) -> usize {
@@ -345,7 +344,19 @@ fn preview(state: &State, id: usize, thumb: bool) -> Resp {
         let Some(full) = fuji::embedded_jpeg(&raf) else {
             return json_err(422, "no embedded preview in this RAF");
         };
-        let bytes = if thumb { exif_thumbnail(full).unwrap_or(full) } else { full };
+        // The EXIF thumbnail has no orientation of its own: turn it like the
+        // full preview (which keeps its tag, so browsers turn it themselves).
+        let rotated;
+        let bytes: &[u8] = match (thumb, exif_thumbnail(full)) {
+            (true, Some(t)) => match exif_orientation(full) {
+                1 => t,
+                o => {
+                    rotated = decode_upright_as(t, o).map(|img| matcher::encode_jpeg(&img, 85));
+                    rotated.as_deref().unwrap_or(t)
+                }
+            },
+            _ => full,
+        };
         if let Err(e) = std::fs::write(&cached, bytes) {
             return json_err(500, &format!("cache write failed: {e}"));
         }
@@ -590,10 +601,8 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
     println!("matching {name} against {} …", job.reference);
 
     // Every render shares the RAF's geometry, so align on the embedded preview.
-    let frame = std::fs::read(&path)
-        .ok()
-        .and_then(|raf| fuji::embedded_jpeg(&raf).and_then(|j| image::load_from_memory(j).ok()))
-        .map(|i| i.to_rgb8());
+    // Work in viewing orientation, so previews of vertical shots stand up.
+    let frame = std::fs::read(&path).ok().and_then(|raf| fuji::embedded_jpeg(&raf).and_then(|j| decode_upright(j).ok()));
     let Some(frame) = frame else {
         return fail("this RAF has no embedded preview to align the reference against".into());
     };
@@ -682,9 +691,7 @@ fn run_match(state: &State, job: &MatchJob, reference: image::RgbImage, start: O
                 match result {
                     Ok((jpeg, _)) => {
                         job.status.lock().unwrap().waiting_camera = None;
-                        let image = image::load_from_memory(&jpeg)
-                            .map_err(|e| format!("camera JPEG unreadable: {e}"))?
-                            .to_rgb8();
+                        let image = decode_upright(&jpeg).map_err(|e| format!("camera JPEG unreadable: {e}"))?;
                         break matcher::Rendered { image, jpeg };
                     }
                     Err(e) => {
@@ -915,8 +922,8 @@ fn which(bin: &str) -> bool {
         .is_ok_and(|o| o.status.success())
 }
 
-/// Locate the EXIF (IFD1) thumbnail inside a JPEG.
-fn exif_thumbnail(jpeg: &[u8]) -> Option<&[u8]> {
+/// The EXIF TIFF block of a JPEG and its byte order (true = little endian).
+fn exif_tiff(jpeg: &[u8]) -> Option<(&[u8], bool)> {
     // Walk JPEG markers to the APP1 "Exif" segment.
     let mut i = 2;
     while i + 4 <= jpeg.len() && jpeg[i] == 0xFF {
@@ -930,31 +937,7 @@ fn exif_thumbnail(jpeg: &[u8]) -> Option<&[u8]> {
                 b"MM" => false,
                 _ => return None,
             };
-            let u16_at = |o: usize| -> Option<usize> {
-                let b: [u8; 2] = tiff.get(o..o + 2)?.try_into().ok()?;
-                Some(if le { u16::from_le_bytes(b) } else { u16::from_be_bytes(b) } as usize)
-            };
-            let u32_at = |o: usize| -> Option<usize> {
-                let b: [u8; 4] = tiff.get(o..o + 4)?.try_into().ok()?;
-                Some(if le { u32::from_le_bytes(b) } else { u32::from_be_bytes(b) } as usize)
-            };
-            let ifd0 = u32_at(4)?;
-            let ifd1 = u32_at(ifd0 + 2 + u16_at(ifd0)? * 12)?;
-            if ifd1 == 0 {
-                return None;
-            }
-            let (mut off, mut size) = (None, None);
-            for n in 0..u16_at(ifd1)? {
-                let e = ifd1 + 2 + n * 12;
-                match u16_at(e)? {
-                    0x0201 => off = u32_at(e + 8),
-                    0x0202 => size = u32_at(e + 8),
-                    _ => {}
-                }
-            }
-            let (off, size) = (off?, size?);
-            let thumb = tiff.get(off..off + size)?;
-            return thumb.starts_with(&[0xFF, 0xD8]).then_some(thumb);
+            return Some((tiff, le));
         }
         if marker == 0xDA {
             break;
@@ -962,6 +945,79 @@ fn exif_thumbnail(jpeg: &[u8]) -> Option<&[u8]> {
         i += 2 + len;
     }
     None
+}
+
+struct Tiff<'a> {
+    data: &'a [u8],
+    le: bool,
+}
+
+impl Tiff<'_> {
+    fn u16_at(&self, o: usize) -> Option<usize> {
+        let b: [u8; 2] = self.data.get(o..o + 2)?.try_into().ok()?;
+        Some(if self.le { u16::from_le_bytes(b) } else { u16::from_be_bytes(b) } as usize)
+    }
+    fn u32_at(&self, o: usize) -> Option<usize> {
+        let b: [u8; 4] = self.data.get(o..o + 4)?.try_into().ok()?;
+        Some(if self.le { u32::from_le_bytes(b) } else { u32::from_be_bytes(b) } as usize)
+    }
+    /// Offsets of the entries of the IFD at `ifd`: (tag, entry offset).
+    fn entries(&self, ifd: usize) -> Option<Vec<(usize, usize)>> {
+        let n = self.u16_at(ifd)?;
+        (0..n).map(|k| Some((self.u16_at(ifd + 2 + k * 12)?, ifd + 2 + k * 12))).collect()
+    }
+}
+
+/// Locate the EXIF (IFD1) thumbnail inside a JPEG.
+fn exif_thumbnail(jpeg: &[u8]) -> Option<&[u8]> {
+    let (data, le) = exif_tiff(jpeg)?;
+    let t = Tiff { data, le };
+    let ifd0 = t.u32_at(4)?;
+    let ifd1 = t.u32_at(ifd0 + 2 + t.u16_at(ifd0)? * 12)?;
+    if ifd1 == 0 {
+        return None;
+    }
+    let (mut off, mut size) = (None, None);
+    for (tag, e) in t.entries(ifd1)? {
+        match tag {
+            0x0201 => off = t.u32_at(e + 8),
+            0x0202 => size = t.u32_at(e + 8),
+            _ => {}
+        }
+    }
+    let (off, size) = (off?, size?);
+    let thumb = data.get(off..off + size)?;
+    thumb.starts_with(&[0xFF, 0xD8]).then_some(thumb)
+}
+
+/// EXIF orientation of a JPEG (1 = upright, 6 = turn 90° clockwise to view,
+/// 8 = 90° counter-clockwise, 3 = 180°).
+pub(crate) fn exif_orientation(jpeg: &[u8]) -> u16 {
+    let get = || -> Option<u16> {
+        let (data, le) = exif_tiff(jpeg)?;
+        let t = Tiff { data, le };
+        let ifd0 = t.u32_at(4)?;
+        let (_, e) = t.entries(ifd0)?.into_iter().find(|(tag, _)| *tag == 0x0112)?;
+        Some(t.u16_at(e + 8)? as u16)
+    };
+    get().unwrap_or(1)
+}
+
+/// Decode `jpeg` and turn it as EXIF `orientation` says.
+fn decode_upright_as(jpeg: &[u8], orientation: u16) -> Option<image::RgbImage> {
+    let img = image::load_from_memory(jpeg).ok()?.to_rgb8();
+    Some(match orientation {
+        3 => image::imageops::rotate180(&img),
+        6 => image::imageops::rotate90(&img),
+        8 => image::imageops::rotate270(&img),
+        _ => img,
+    })
+}
+
+/// Decode a JPEG into pixels the way it's meant to be viewed (EXIF
+/// orientation applied; the `image` crate leaves that to the caller).
+pub(crate) fn decode_upright(jpeg: &[u8]) -> Result<image::RgbImage, String> {
+    decode_upright_as(jpeg, exif_orientation(jpeg)).ok_or_else(|| "not a readable JPEG".to_string())
 }
 
 fn percent_decode(s: &str) -> String {
@@ -1022,6 +1078,8 @@ mod tests {
         let full = fuji::embedded_jpeg(&raf).expect("embedded JPEG");
         assert!(full.len() > 1_000_000);
         let thumb = exif_thumbnail(full).expect("EXIF thumbnail");
+        assert_eq!(exif_orientation(full), 1);
+        assert_eq!(exif_orientation(thumb), 1); // no EXIF of its own
         assert!(thumb.starts_with(&[0xFF, 0xD8]) && thumb.len() < 100_000);
         assert!(fuji::embedded_jpeg(b"not a raf").is_none());
     }
