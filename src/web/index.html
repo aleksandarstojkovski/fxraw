@@ -82,7 +82,7 @@ aside.right > *:not(.recipes):not(.detail) { flex: none; }
 .btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 6px; border: 1px solid var(--line-2); font-size: 12px; white-space: nowrap; }
 .btn:hover:not(:disabled) { border-color: var(--muted); }
 .btn:disabled { opacity: .4; cursor: default; }
-#saveBtn { gap: 0; }
+#saveBtn, #matchBtn { gap: 0; }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 .btn.primary:hover:not(:disabled) { filter: brightness(1.08); }
 
@@ -158,6 +158,26 @@ body.dragging.split, body.dragging.split * { cursor: ew-resize !important; }
 .cmp td.v.orig { color: var(--muted); }
 .cmp td.v.diff { color: var(--accent); }
 .cmp tr.sep td { border-top: 1px solid var(--line-2); }
+.cmp td.ctl { padding: 2px 0; overflow: visible; }
+.cmp select, .cmp input[type=number] { width: 100%; min-width: 0; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 4px; padding: 1px 3px; font: 11.5px var(--mono); }
+.cmp select:hover:not(:disabled), .cmp input[type=number]:hover { border-color: var(--muted); }
+.cmp select:disabled { opacity: .35; }
+.cmp .pair { display: flex; gap: 4px; }
+.cmp .pair > * { flex: 1 1 0; }
+.stp { display: inline-flex; align-items: center; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+.stp button { width: 22px; height: 20px; color: var(--muted); font-size: 13px; line-height: 1; }
+.stp button:hover:not(:disabled) { background: var(--line); color: var(--text); }
+.stp button:disabled { opacity: .3; cursor: default; }
+.stp output { min-width: 36px; text-align: center; font: 11.5px var(--mono); }
+.cmp td.diff select, .cmp td.diff output, .cmp td.diff input { color: var(--accent); }
+.cmp tr.edited td:first-child { color: var(--accent); }
+.cmp tr.edited td:first-child::before { content: "●"; font-size: 8px; margin-right: 4px; vertical-align: 2px; }
+.cmp td .rst { float: right; color: var(--faint); font-size: 12px; line-height: 1; padding: 2px 4px; margin-right: 2px; border-radius: 4px; }
+.cmp td .rst:hover { color: var(--accent); background: var(--line); }
+.icon.reset { color: var(--accent); font-size: 15px; }
+.ebtns { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 12px; }
+.btn.danger:hover:not(:disabled) { border-color: var(--err); color: var(--err); }
+.srcb.mine { border-color: rgba(240,180,60,.5); color: var(--accent); }
 .legend { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
 .legend b { color: var(--accent); font-weight: 500; }
 .note { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
@@ -195,6 +215,39 @@ button.shot.on { border-color: var(--accent); }
 .toast.err { border-color: var(--err); }
 
 .help { color: var(--faint); font-size: 11px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Match a reference */
+.mpanel .lead { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+.drop2 { display: block; border: 1px dashed var(--line-2); border-radius: var(--radius); padding: 16px 10px; text-align: center; color: var(--muted); cursor: pointer; margin-bottom: 10px; overflow-wrap: anywhere; }
+.drop2:hover, .drop2.over { border-color: var(--accent); background: rgba(240,180,60,.06); color: var(--text); }
+.drop2 strong { color: var(--text); font-weight: 600; }
+.drop2.has { border-style: solid; }
+.opt { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 8px; font-size: 12px; color: var(--muted); }
+.opt select { min-width: 0; max-width: 64%; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 5px; padding: 4px 6px; font: inherit; }
+.mbtns { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.mbtns .btn.primary { padding: 6px 14px; }
+.mstat { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
+.mstat span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mstat span:last-child { flex: none; font-family: var(--mono); font-size: 11.5px; }
+.progress { height: 4px; background: var(--line-2); border-radius: 2px; overflow: hidden; margin: 7px 0 12px; }
+.progress i { display: block; height: 100%; background: var(--accent); transition: width .4s; }
+.de { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 2px; }
+.de b { font-family: var(--mono); font-size: 24px; font-weight: 500; }
+.de span { color: var(--muted); font-size: 12px; }
+.spark { width: 100%; height: 44px; display: block; margin: 6px 0 2px; }
+.align { font-size: 11.5px; color: var(--faint); margin: 0 0 10px; }
+.align.warn { color: var(--accent); }
+.merr { color: var(--err); font-size: 12px; margin: 8px 0; overflow-wrap: anywhere; }
+.steps { margin-top: 12px; }
+.steps .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin-bottom: 4px; }
+.step { display: grid; grid-template-columns: 26px minmax(0,1fr) 40px; gap: 8px; align-items: center; width: calc(100% + 12px); padding: 3px 6px; margin: 0 -6px; border-radius: 4px; text-align: left; font-size: 12px; }
+.step:hover { background: var(--panel-2); }
+.step.on { background: #2a2620; }
+.step .sn { color: var(--faint); font-family: var(--mono); font-size: 11px; }
+.step .sl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step .sl i { font-style: normal; color: var(--faint); }
+.step .sd { font-family: var(--mono); text-align: right; color: var(--muted); font-size: 11.5px; }
+.step.best .sd { color: var(--ok); }
 
 @media (max-width: 1360px) {
   .section-title .help { display: none; }
@@ -244,6 +297,7 @@ button.shot.on { border-color: var(--accent); }
           <button data-mode="compare" class="on" title="Before / after slider (C)">Compare</button>
           <button data-mode="single" title="Show the selected version only (C)">Single</button>
         </div>
+        <button class="btn" id="matchBtn" disabled title="Find the settings that best reproduce a reference picture of this scene, e.g. a film scan (M)">Match<span class="long">&nbsp;film</span></button>
         <button class="btn" id="infoBtn" disabled title="Show the settings of what you're viewing (I)">Settings</button>
         <button class="btn" id="dlBtn" disabled title="Download JPEG">Download</button>
         <button class="btn" id="saveBtn" disabled title="Save JPEG into the served folder">Save<span class="long">&nbsp;to folder</span></button>
@@ -302,6 +356,9 @@ const S = {
   selected: null, panel: null, view: "original", mode: "compare",
   jobs: {}, queue: [], running: false,
   q: "", sim: null, favOnly: false, favs: new Set(), visible: [],
+  match: null, matchFile: null, matchNew: false, matchStep: null, camera: false,
+  edits: {}, editSeq: 0, mineOnly: false,
+  matchOpts: { mStart: "", mMax: "60" },
 };
 try { S.favs = new Set(JSON.parse(localStorage.getItem("fxraw.favs") || "[]")); } catch {}
 try { S.mode = localStorage.getItem("fxraw.mode") || "compare"; } catch {}
@@ -331,6 +388,7 @@ async function pollStatus() {
     $("camDot").className = "dot " + (s.camera ? "ok" : "err");
     $("camText").textContent = s.stub ? "Stub camera" : s.camera ? "Camera connected" : "No camera";
     $("camPill").title = s.camera ? "Fujifilm camera found on USB" : "Connect the camera via USB, turn it on, set USB RAW CONV mode";
+    S.camera = s.camera;
     $("busyPill").hidden = !s.busy;
     $("busyText").textContent = s.busy || "";
     S.exiftool = s.exiftool;
@@ -376,6 +434,7 @@ $("images").addEventListener("click", (e) => {
 
 async function upload(files) {
   for (const f of files) {
+    if (IMAGE_RE.test(f.name) && S.cur) { setMatchFile(f); continue; }
     if (!/\.raf$/i.test(f.name)) { toast(`${f.name}: not a RAF file`, true); continue; }
     toast(`Uploading ${f.name}…`);
     try {
@@ -400,6 +459,10 @@ async function selectImage(id) {
   if (!im) return;
   S.cur = im;
   S.analysis = null;
+  S.match = null;
+  S.matchStep = null;
+  S.matchNew = false;
+  loadMatch(id);
   const lastDone = im.renders.includes(S.selected) ? S.selected : "original";
   setView(lastDone);
   renderImages();
@@ -423,7 +486,7 @@ function renderShot() {
   const p = shotProfile();
   const best = a.matches[0];
   box.innerHTML = `<button class="shot ${S.panel === "shot" ? "on" : ""}" id="shotCard" title="Show the original settings (I)">
-    <div class="top"><span class="k">As shot</span><span class="sim">${esc(simLabel(p.film))}</span></div>
+    <div class="top"><span class="k">As shot${a.tele ? ` · <span title="Shot with the digital tele-converter: the camera crops when it develops, so the preview is cropped the same way">tele ${a.tele}×</span>` : ""}</span><span class="sim">${esc(simLabel(p.film))}</span></div>
     <div class="best">${best ? `<span>≈ ${esc(best.name)} · ${best.percent.toFixed(0)}%</span>` : "<span></span>"}<span class="more">Original settings ›</span></div>
   </button>`;
 }
@@ -434,27 +497,43 @@ $("shot").addEventListener("click", (e) => {
 /* ---------------- recipes ---------------- */
 async function loadRecipes() {
   S.recipes = await api("/api/recipes");
-  S.recipes.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-  for (const r of S.recipes) {
-    S.bySlug[r.slug] = r;
-    r._hay = `${r.name} ${r.slug} ${r.film_sim} ${simLabel(r.film_sim)} ${r.source?.name || ""} ${r.source?.author || ""}`.toLowerCase();
-  }
+  sortRecipes();
+  for (const r of S.recipes) indexRecipe(r);
   renderChips();
   renderRecipes();
+}
+
+function indexRecipe(r) {
+  S.bySlug[r.slug] = r;
+  r._hay = `${r.name} ${r.slug} ${r.film_sim} ${simLabel(r.film_sim)} ${r.source?.name || ""} ${r.source?.author || ""}${r.mine ? " mine" : ""}`.toLowerCase();
+}
+const sortRecipes = () => S.recipes.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+/** Add or replace a recipe in the list (after saving one of your own). */
+function addRecipe(r) {
+  S.recipes = S.recipes.filter((x) => x.slug !== r.slug);
+  S.recipes.push(r);
+  sortRecipes();
+  indexRecipe(r);
+  renderChips();
 }
 
 function renderChips() {
   const counts = {};
   for (const r of S.recipes) counts[r.film_sim] = (counts[r.film_sim] || 0) + 1;
   const sims = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  const mine = S.recipes.filter((r) => r.mine).length;
+  if (!mine) S.mineOnly = false;
   $("chips").innerHTML =
     `<button class="chip ${S.favOnly ? "on" : ""}" data-fav="1">★ Favorites</button>` +
+    (mine ? `<button class="chip ${S.mineOnly ? "on" : ""}" data-mine="1" title="Recipes you saved">✎ Mine <span style="opacity:.6">${mine}</span></button>` : "") +
     sims.map((s) => `<button class="chip ${S.sim === s ? "on" : ""}" data-sim="${s}">${esc(simLabel(s))} <span style="opacity:.6">${counts[s]}</span></button>`).join("");
 }
 $("chips").addEventListener("click", (e) => {
   const c = e.target.closest(".chip");
   if (!c) return;
   if (c.dataset.fav) S.favOnly = !S.favOnly;
+  else if (c.dataset.mine) S.mineOnly = !S.mineOnly;
   else S.sim = S.sim === c.dataset.sim ? null : c.dataset.sim;
   renderChips();
   renderRecipes();
@@ -464,6 +543,7 @@ $("q").addEventListener("input", (e) => { S.q = e.target.value.trim().toLowerCas
 const FXW = "Fuji X Weekly";
 /** Small tag for recipes that don't come from Fuji X Weekly (the bulk of the list). */
 function srcBadge(r) {
+  if (r.mine) return ` <span class="srcb mine" title="Your recipe${r.source?.author ? " · " + esc(r.source.author) : ""}">mine</span>`;
   const src = r.source;
   if (!src || src.name === FXW) return "";
   const short = src.author || src.name;
@@ -471,6 +551,7 @@ function srcBadge(r) {
 }
 
 function sourceLine(r) {
+  if (r.mine) return `<div class="src">Your recipe${r.source?.author ? ` · ${esc(r.source.author)}` : ""}</div>`;
   const src = r.source;
   if (!src) return `<div class="src">Source unknown</div>`;
   const name = src.url
@@ -491,12 +572,14 @@ function renderRecipes() {
   S.visible = S.recipes.filter((r) =>
     (!S.sim || r.film_sim === S.sim) &&
     (!S.favOnly || S.favs.has(r.slug)) &&
+    (!S.mineOnly || r.mine) &&
     terms.every((t) => r._hay.includes(t)));
   const done = new Set(S.cur ? S.cur.renders : []);
   $("count").textContent = `${S.visible.length} of ${S.recipes.length} recipes`;
   $("recipes").innerHTML = S.visible.map((r) => {
     const job = S.cur && S.jobs[`${S.cur.id}:${r.slug}`];
-    const mark = done.has(r.slug) ? `<span class="done" title="Rendered">●</span>`
+    const mark = S.edits[r.slug] ? `<span class="done" style="color:var(--accent)" title="Edited, not saved">✎</span>`
+      : done.has(r.slug) ? `<span class="done" title="Rendered">●</span>`
       : job && (job.status === "running" || job.status === "queued") ? `<span class="done" style="color:var(--accent)" title="${job.status}">◌</span>` : "";
     return `<div class="row ${S.selected === r.slug ? "sel" : ""}" data-slug="${esc(r.slug)}">
       <div style="min-width:0"><div class="rn">${mark}${esc(r.name)}${srcBadge(r)}</div><div class="rs">${esc(summary(r))}</div></div>
@@ -569,6 +652,7 @@ function recipeProfile(r) {
     blue: r.chrome_blue || "off",
     wb: r.white_balance === "temperature" && r.wb_temp ? `${r.wb_temp}K` : (r.white_balance || "auto"),
     wbShift: `R ${fmtSigned(r.wb_shift_r)}  B ${fmtSigned(r.wb_shift_b)}`,
+    wbR: fmtSigned(r.wb_shift_r), wbB: fmtSigned(r.wb_shift_b),
     highlight: fmtSigned(r.highlight), shadow: fmtSigned(r.shadow), color: fmtSigned(r.color),
     sharpness: fmtSigned(r.sharpness), nr: fmtSigned(r.noise_reduction), clarity: fmtSigned(r.clarity),
   };
@@ -585,6 +669,7 @@ function shotProfile() {
   return {
     film: simLabel(m["Film Simulation"]), dr: m["Dynamic Range"], grain: m["Grain"],
     chrome: ce[1], blue: ce[2], wb: wb[1], wbShift: wb[1] ? `R ${wb[2]}  B ${wb[3]}` : undefined,
+    wbR: wb[2], wbB: wb[3],
     highlight: tone[1], shadow: tone[2], color: m["Color"], sharpness: m["Sharpness"],
     nr: m["NR"], clarity: m["Clarity"], iso: m["ISO"], ev: m["Exposure"],
   };
@@ -596,62 +681,279 @@ const closeBtn = `<button class="icon close" data-close title="Close (Esc)">✕<
 function renderDetail() {
   const box = $("detail");
   renderActionbar();
-  $("infoBtn").classList.toggle("on", !!S.panel);
+  $("infoBtn").classList.toggle("on", S.panel === "shot" || S.panel === "recipe");
   const sc = $("shotCard");
   if (sc) sc.classList.toggle("on", S.panel === "shot");
+  $("matchBtn").classList.toggle("on", S.panel === "match");
   if (S.panel === "shot" && S.cur) return renderShotDetail(box);
+  if (S.panel === "match" && S.cur) return renderMatchDetail(box);
   const r = S.panel === "recipe" && S.bySlug[S.selected];
   if (!r) { box.hidden = true; return; }
   box.hidden = false;
 
-  const rp = recipeProfile(r);
+  const cur = curRecipe(r.slug);
+  const edited = !!S.edits[r.slug];
+  const rp = recipeProfile(cur);
   const sp = shotProfile();
   let anyDiff = false;
-  const rows = FIELDS.map(([k, label]) => {
-    const changed = sp && sp[k] !== undefined && norm(sp[k]) !== norm(rp[k]);
+  const rows = EDIT_ROWS.map((row) => {
+    const changed = sp && sp[row.shot] !== undefined && norm(sp[row.shot]) !== norm(rp[row.shot]);
     if (changed) anyDiff = true;
-    return `<tr><td>${label}</td>${sp ? `<td class="v orig" title="${esc(sp[k])}">${esc(sp[k] ?? "–")}</td>` : ""}<td class="v ${changed ? "diff" : ""}" title="${esc(rp[k])}">${esc(rp[k])}</td></tr>`;
+    const mine = rowEdited(r.slug, row);
+    const was = esc(recipeProfile(r)[row.shot]);
+    return `<tr class="${mine ? "edited" : ""}"><td title="${mine ? `Changed by you (${esc(r.name)}: ${was})` : ""}">${mine ? `<button class="rst" data-reset="${row.k}" title="Back to ${was}">↺</button>` : ""}${row.label}</td>${sp ? `<td class="v orig" title="${esc(sp[row.shot])}">${esc(sp[row.shot] ?? "–")}</td>` : ""}<td class="v ctl ${changed ? "diff" : ""}">${editCell(cur, row)}</td></tr>`;
   }).join("");
   const extra = [r.iso && `ISO ${r.iso}`, r.exposure_comp && `EV ${r.exposure_comp}`].filter(Boolean).join(" · ");
+  const rendered = edited && S.cur && editRenderKey(r.slug);
+  const btns = edited
+    ? `<div class="ebtns">
+        <button class="btn primary" data-edit="convert" title="Render ${S.cur ? esc(S.cur.name) : "the image"} with these settings on the camera">${rendered ? (S.view === rendered ? "Rendered ✓" : "Show edited") : "Convert edits ↵"}</button>
+        ${r.mine ? `<button class="btn" data-edit="update" title="Overwrite ${esc(r.name)} with these settings">Save changes</button>` : ""}
+        <button class="btn" data-edit="save" title="Save these settings as a recipe of your own">Save as recipe…</button>
+        <button class="btn" data-edit="reset" title="Back to ${esc(r.name)}">Reset</button>
+      </div>`
+    : r.mine ? `<div class="ebtns"><button class="btn danger" data-edit="delete">Delete recipe</button></div>` : "";
   box.innerHTML = `
     <div class="dhead">
-      <div class="t"><div class="kicker">Recipe</div><h3>${esc(r.name)}</h3><div class="slug">${esc(r.slug)}</div>${sourceLine(r)}</div>
+      <div class="t"><div class="kicker">${r.mine ? "Your recipe" : "Recipe"}${edited ? " · edited" : ""}</div><h3>${esc(r.name)}</h3><div class="slug">${esc(r.slug)}</div>${sourceLine(r)}</div>
+      ${edited ? `<button class="icon reset" data-edit="reset" title="Undo all changes: back to ${esc(r.name)}">↺</button>` : ""}
       <button class="icon star ${S.favs.has(r.slug) ? "on" : ""}" data-fav title="Favorite (F)">${S.favs.has(r.slug) ? "★" : "☆"}</button>
       ${closeBtn}
     </div>
     <div class="dbody">
       <table class="cmp">
-        <colgroup><col style="width:${sp ? 34 : 44}%">${sp ? `<col style="width:33%">` : ""}<col></colgroup>
+        <colgroup><col style="width:${sp ? 33 : 44}%">${sp ? `<col style="width:22%">` : ""}<col></colgroup>
         <thead><tr><th></th>${sp ? `<th>As shot</th>` : ""}<th>${sp ? "This recipe" : ""}</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
-      ${anyDiff ? `<div class="legend"><b>Highlighted</b> = what this recipe changes vs. the original</div>` : ""}
+      ${btns}
+      ${edited ? `<div class="legend"><b>●</b> = changed by you${anyDiff ? " · <b>orange values</b> differ from the original" : ""}</div>`
+        : anyDiff ? `<div class="legend"><b>Highlighted</b> = what this recipe changes vs. the original</div>`
+        : ""}
+      ${!edited ? `<div class="note">Change any setting to render your own version${r.mine ? "" : " and save it as a recipe"}.</div>` : ""}
       ${extra ? `<div class="note">Suggested when shooting (not applied by conversion): ${esc(extra)}</div>` : ""}
     </div>
 `;
 }
 
+/* ---------------- editing a recipe ---------------- */
+/** Settings the camera applies (everything else is metadata). */
+const EDIT_KEYS = ["film_sim", "dynamic_range", "grain", "grain_size", "chrome_effect", "chrome_blue", "white_balance", "wb_temp",
+  "wb_shift_r", "wb_shift_b", "highlight", "shadow", "color", "sharpness", "noise_reduction", "clarity"];
+const OWS = [["off", "off"], ["weak", "weak"], ["strong", "strong"]];
+const WB_OPTS = [["auto", "auto"], ["auto-white", "auto white"], ["auto-ambience", "auto ambience"], ["daylight", "daylight"],
+  ["shade", "shade"], ["incandescent", "incandescent"], ["fluorescent-1", "fluor. 1"], ["fluorescent-2", "fluor. 2"],
+  ["fluorescent-3", "fluor. 3"], ["temperature", "Kelvin"]];
+/** Editable rows: `shot` is the key in recipeProfile()/shotProfile(); numeric rows have min/max (and step). */
+const EDIT_ROWS = [
+  { k: "film_sim", label: "Film simulation", shot: "film", opts: Object.entries(SIM_LABEL) },
+  { k: "dynamic_range", label: "Dynamic range", shot: "dr", opts: [["", "auto"], ["100", "DR100"], ["200", "DR200"], ["400", "DR400"]] },
+  { k: "grain", label: "Grain", shot: "grain" },
+  { k: "chrome_effect", label: "Color chrome", shot: "chrome", opts: OWS },
+  { k: "chrome_blue", label: "Chrome FX blue", shot: "blue", opts: OWS },
+  { k: "white_balance", label: "White balance", shot: "wb" },
+  { k: "wb_shift_r", label: "WB shift R", shot: "wbR", min: -9, max: 9 },
+  { k: "wb_shift_b", label: "WB shift B", shot: "wbB", min: -9, max: 9 },
+  { k: "highlight", label: "Highlight", shot: "highlight", min: -2, max: 4, step: 0.5 },
+  { k: "shadow", label: "Shadow", shot: "shadow", min: -2, max: 4, step: 0.5 },
+  { k: "color", label: "Color", shot: "color", min: -4, max: 4 },
+  { k: "sharpness", label: "Sharpness", shot: "sharpness", min: -4, max: 4 },
+  { k: "noise_reduction", label: "High ISO NR", shot: "nr", min: -4, max: 4 },
+  { k: "clarity", label: "Clarity", shot: "clarity", min: -5, max: 5 },
+];
+/** Rows that edit more than one key. */
+const ROW_KEYS = { grain: ["grain", "grain_size"], white_balance: ["white_balance", "wb_temp"] };
+
+/** A setting as the camera sees it: unset values read as their default. */
+function canon(r, k) {
+  const v = r[k];
+  switch (k) {
+    case "grain": case "chrome_effect": case "chrome_blue": return v || "off";
+    case "grain_size": return (r.grain || "off") === "off" ? null : (v || "small");
+    case "dynamic_range": return v ? String(v) : "";
+    case "white_balance": return v || "auto";
+    case "wb_temp": return r.white_balance === "temperature" ? (v ?? null) : null;
+    case "film_sim": return v;
+    default: return v == null ? 0 : Number(v);
+  }
+}
+const sigOf = (r) => JSON.stringify(EDIT_KEYS.map((k) => canon(r, k)));
+const cleanRecipe = (r) => Object.fromEntries(Object.entries(r).filter(([k]) => !k.startsWith("_") && k !== "mine"));
+/** The recipe as shown in the panel: your edits, else the saved one. */
+const curRecipe = (slug) => S.edits[slug] || S.bySlug[slug];
+const isCustom = (v) => /^custom-[0-9a-f]{16}$/.test(v);
+
+function rowEdited(slug, row) {
+  const e = S.edits[slug], b = S.bySlug[slug];
+  return !!(e && b) && (ROW_KEYS[row.k] || [row.k]).some((k) => canon(e, k) !== canon(b, k));
+}
+
+/** "Grain strong / large, Color +2": what an edited recipe changes vs. its base. */
+function editSummary(r) {
+  const b = S.bySlug[r.slug];
+  if (!b) return "edited";
+  const p = recipeProfile(r);
+  const parts = EDIT_ROWS.filter((row) => (ROW_KEYS[row.k] || [row.k]).some((k) => canon(r, k) !== canon(b, k)))
+    .map((row) => `${row.label} ${p[row.shot]}`);
+  return parts.join(", ") || "edited";
+}
+const editLabel = (r) => `${r.name} · ${editSummary(r)}`;
+
+function editCell(r, row) {
+  const k = row.k;
+  const sel = (key, opts, val, off) => `<select data-k="${key}" ${off ? "disabled" : ""}>${opts.map(([v, l]) =>
+    `<option value="${esc(v)}" ${String(v) === String(val) ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+  if (row.opts) return sel(k, row.opts, canon(r, k));
+  if (k === "grain") {
+    const g = canon(r, "grain");
+    return `<div class="pair">${sel("grain", OWS, g)}${sel("grain_size", [["small", "small"], ["large", "large"]], canon(r, "grain_size") || "small", g === "off")}</div>`;
+  }
+  if (k === "white_balance") {
+    const wb = canon(r, "white_balance");
+    const modes = sel("white_balance", WB_OPTS.some(([v]) => v === wb) ? WB_OPTS : [...WB_OPTS, [wb, wb]], wb);
+    return wb === "temperature"
+      ? `<div class="pair">${modes}<input type="number" data-k="wb_temp" min="2500" max="10000" step="10" value="${esc(r.wb_temp ?? 5500)}" title="Kelvin (2500–10000)"></div>`
+      : modes;
+  }
+  const v = canon(r, k);
+  return `<span class="stp"><button data-nudge="${k}" data-d="-1" ${v <= row.min ? "disabled" : ""} title="Less">−</button><output>${esc(fmtSigned(v))}</output><button data-nudge="${k}" data-d="1" ${v >= row.max ? "disabled" : ""} title="More">+</button></span>`;
+}
+
+/** Change one setting of the selected recipe (starting an edit if needed). */
+function setField(k, v) {
+  const slug = S.selected, base = S.bySlug[slug];
+  if (!base) return;
+  const e = S.edits[slug] || (S.edits[slug] = cleanRecipe(base));
+  if (v === "" || v == null) delete e[k]; else e[k] = v;
+  if (k === "white_balance") {
+    if (v === "temperature") e.wb_temp = e.wb_temp || base.wb_temp || 5500;
+    else delete e.wb_temp;
+  }
+  if (k === "grain" && v !== "off" && !e.grain_size) e.grain_size = "small";
+  if (sigOf(e) === sigOf(base)) delete S.edits[slug];
+  renderDetail();
+  renderRecipes();
+}
+
+/** Put one row's setting(s) back to the saved recipe's value. */
+function resetField(rowKey) {
+  const slug = S.selected, e = S.edits[slug], base = S.bySlug[slug];
+  if (!e || !base) return;
+  for (const k of ROW_KEYS[rowKey] || [rowKey]) {
+    if (base[k] == null) delete e[k]; else e[k] = base[k];
+  }
+  if (sigOf(e) === sigOf(base)) delete S.edits[slug];
+  renderDetail();
+  renderRecipes();
+}
+
+function stepField(k, d) {
+  const row = EDIT_ROWS.find((x) => x.k === k);
+  const step = row.step || 1;
+  const n = Math.round((canon(curRecipe(S.selected), k) + d * step) / step) * step;
+  setField(k, Math.min(row.max, Math.max(row.min, n)));
+}
+
+/** The render already made (on the current image) with the selected recipe's edits. */
+function editRenderKey(slug) {
+  const e = S.edits[slug];
+  if (!e || !S.cur) return null;
+  const sig = sigOf(e);
+  return Object.entries(S.cur.custom || {}).find(([k, m]) => S.cur.renders.includes(k) && sigOf(m.recipe) === sig)?.[0] || null;
+}
+
+async function postJson(path, body) {
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  return { ok: r.ok, status: r.status, body: await r.json().catch(() => ({})) };
+}
+
+/** Save the panel's settings as a recipe of your own (`update`: overwrite the one being edited). */
+async function saveRecipe(slug, update) {
+  const base = S.bySlug[slug];
+  if (!base) return;
+  let name = base.name;
+  if (!update) {
+    name = prompt("Name for your recipe:", base.mine ? base.name : `${base.name} (mine)`);
+    if (!name || !name.trim()) return;
+  }
+  const recipe = cleanRecipe(curRecipe(slug));
+  recipe.name = name.trim();
+  recipe.source = base.mine ? base.source : { name: "Mine", author: `based on ${base.name}` };
+  const payload = { recipe, overwrite: update, image: S.cur ? S.cur.id : null, from: editRenderKey(slug) || (S.edits[slug] ? null : slug) };
+  let res = await postJson("/api/my-recipes", payload);
+  if (res.status === 409 && res.body.exists) {
+    if (!confirm(`${res.body.error}. Replace it?`)) return;
+    res = await postJson("/api/my-recipes", { ...payload, overwrite: true });
+  }
+  if (!res.ok) return toast(res.body.error || `HTTP ${res.status}`, true);
+  const saved = res.body.recipe;
+  delete S.edits[slug];
+  addRecipe(saved);
+  // The server dropped renders of an older recipe with this name.
+  for (const im of S.images) im.renders = im.renders.filter((k) => k !== saved.slug);
+  if (res.body.linked && S.cur) S.cur.renders.push(saved.slug);
+  toast(`Saved “${saved.name}” to your recipes`);
+  selectRecipe(saved.slug, true);
+  refreshJobs();
+}
+
+async function deleteRecipe(slug) {
+  const r = S.bySlug[slug];
+  if (!r || !r.mine || !confirm(`Delete your recipe “${r.name}”?`)) return;
+  try { await api(`/api/my-recipes/${encodeURIComponent(slug)}`, { method: "DELETE" }); }
+  catch (err) { return toast(err.message, true); }
+  S.recipes = S.recipes.filter((x) => x.slug !== slug);
+  delete S.bySlug[slug];
+  delete S.edits[slug];
+  for (const im of S.images) im.renders = im.renders.filter((k) => k !== slug);
+  if (S.selected === slug) { S.selected = null; S.panel = null; }
+  if (S.view === slug) setView("original");
+  renderChips();
+  refreshJobs();
+  toast(`Deleted “${r.name}”`);
+}
+
+function editAction(act) {
+  const slug = S.selected;
+  if (!S.bySlug[slug]) return;
+  if (act === "convert") return enqueue(slug);
+  if (act === "reset") { delete S.edits[slug]; return refreshJobs(); }
+  if (act === "save") return saveRecipe(slug, false);
+  if (act === "update") return saveRecipe(slug, true);
+  if (act === "delete") return deleteRecipe(slug);
+}
+
+$("detail").addEventListener("change", (e) => {
+  const k = e.target.dataset && e.target.dataset.k;
+  if (!k || S.panel !== "recipe") return;
+  let v = e.target.value;
+  if (k === "dynamic_range") v = v ? +v : null;
+  if (k === "wb_temp") v = Math.round(Math.min(10000, Math.max(2500, +v || 5500)) / 10) * 10;
+  setField(k, v);
+});
+
 /** Always-visible footer: the selected recipe and its convert button. */
 function renderActionbar() {
   const r = S.bySlug[S.selected];
   const btn = $("abConvert");
-  $("abName").textContent = r ? r.name : "None selected";
+  const edited = r && !!S.edits[r.slug];
+  $("abName").textContent = r ? r.name + (edited ? " (edited)" : "") : "None selected";
   $("abName").classList.toggle("none", !r);
   $("abInfo").disabled = !r;
   $("abKicker").textContent = r ? (S.panel === "recipe" ? "Recipe · hide details" : "Recipe · show details") : "Recipe";
   if (!r) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Pick a recipe first"; return; }
   if (!S.cur) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Select or drop a RAF first"; return; }
-  const job = S.jobs[`${S.cur.id}:${r.slug}`];
+  const key = edited ? editRenderKey(r.slug) : r.slug;
+  const job = edited ? editJob(r.slug) : S.jobs[`${S.cur.id}:${r.slug}`];
   const pending = job && (job.status === "queued" || job.status === "running");
-  const isDone = S.cur.renders.includes(r.slug);
+  const isDone = !!key && S.cur.renders.includes(key);
   btn.disabled = !!pending;
-  btn.textContent = pending ? (job.status === "running" ? "Converting…" : "Queued…") : isDone ? (S.view === r.slug ? "Rendered ✓" : "Show render") : "Convert ↵";
-  btn.title = isDone ? "Already rendered — show it" : `Render ${S.cur.name} with ${r.name} on the camera`;
+  btn.textContent = pending ? (job.status === "running" ? "Converting…" : "Queued…") : isDone ? (S.view === key ? "Rendered ✓" : "Show render") : edited ? "Convert edits ↵" : "Convert ↵";
+  btn.title = isDone ? "Already rendered — show it" : `Render ${S.cur.name} with ${r.name}${edited ? " (your edits)" : ""} on the camera`;
 }
 $("abConvert").onclick = () => {
   const r = S.bySlug[S.selected];
-  if (!r || !S.cur) return;
-  if (S.cur.renders.includes(r.slug)) setView(r.slug); else enqueue(r.slug);
+  if (r && S.cur) enqueue(r.slug);
 };
 $("abInfo").onclick = () => { if (S.selected) togglePanel("recipe"); };
 
@@ -679,6 +981,12 @@ function renderShotDetail(box) {
 
 $("detail").addEventListener("click", (e) => {
   if (e.target.closest("[data-close]")) return closePanel();
+  const rs = e.target.closest("[data-reset]");
+  if (rs) return resetField(rs.dataset.reset);
+  const st = e.target.closest("[data-nudge]");
+  if (st) return stepField(st.dataset.nudge, +st.dataset.d);
+  const ed = e.target.closest("[data-edit]");
+  if (ed) return editAction(ed.dataset.edit);
   if (e.target.closest("[data-fav]") && S.selected) return toggleFav(S.selected);
   const m = e.target.closest(".mrow");
   if (m) selectRecipe(m.dataset.slug, true);
@@ -687,12 +995,39 @@ $("detail").addEventListener("click", (e) => {
 /* ---------------- conversion queue ---------------- */
 function enqueue(slug) {
   if (!S.cur) return toast("Select an image first", true);
+  if (S.edits[slug]) return enqueueEdit(slug);
   const im = S.cur;
   if (im.renders.includes(slug)) return setView(slug);
   const key = `${im.id}:${slug}`;
   const j = S.jobs[key];
   if (j && (j.status === "queued" || j.status === "running")) return;
   S.jobs[key] = { status: "queued", image: im.id, slug };
+  S.queue.push(key);
+  S.wantView = key;
+  refreshJobs();
+  runQueue();
+}
+
+/** Pending conversion of the selected recipe's current edits, if any. */
+function editJob(slug) {
+  const e = S.edits[slug];
+  if (!e || !S.cur) return null;
+  const sig = sigOf(e);
+  return Object.values(S.jobs).find((j) => j.recipe && j.image === S.cur.id && j.sig === sig) || null;
+}
+
+/** Render the selected recipe with your edits. Edited versions get a temporary
+ *  id ("edit-N") until the server returns their key ("custom-…"). */
+function enqueueEdit(slug) {
+  const done = editRenderKey(slug);
+  if (done) return setView(done);
+  const job = editJob(slug);
+  if (job && (job.status === "queued" || job.status === "running")) return;
+  if (job) delete S.jobs[`${job.image}:${job.slug}`];
+  const recipe = cleanRecipe(S.edits[slug]);
+  const tmp = `edit-${++S.editSeq}`;
+  const key = `${S.cur.id}:${tmp}`;
+  S.jobs[key] = { status: "queued", image: S.cur.id, slug: tmp, base: slug, recipe, sig: sigOf(recipe), label: editLabel(recipe) };
   S.queue.push(key);
   S.wantView = key;
   refreshJobs();
@@ -709,16 +1044,22 @@ async function runQueue() {
     job.started = Date.now();
     refreshJobs();
     try {
-      const res = await api(`/api/images/${job.image}/convert/${encodeURIComponent(job.slug)}`, { method: "POST" });
-      job.status = "done";
+      const res = job.recipe
+        ? await api(`/api/images/${job.image}/convert-custom`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(job.recipe) })
+        : await api(`/api/images/${job.image}/convert/${encodeURIComponent(job.slug)}`, { method: "POST" });
+      const out = res.key || job.slug;
       const im = S.images.find((x) => x.id === job.image);
-      if (im && !im.renders.includes(job.slug)) im.renders.push(job.slug);
+      if (job.recipe) {
+        delete S.jobs[key];
+        if (im) im.custom = { ...(im.custom || {}), [out]: { label: job.label, recipe: job.recipe } };
+      } else job.status = "done";
+      if (im && !im.renders.includes(out)) im.renders.push(out);
       if (res.warnings && res.warnings.length) toast(res.warnings.join(" "));
-      if (S.cur && S.cur.id === job.image && (S.wantView === key || S.view === "original")) setView(job.slug);
+      if (S.cur && S.cur.id === job.image && (S.wantView === key || S.view === "original")) setView(out);
     } catch (err) {
       job.status = "error";
       job.error = err.message;
-      toast(`${S.bySlug[job.slug]?.name || job.slug}: ${err.message}`, true);
+      toast(`${job.label || S.bySlug[job.slug]?.name || job.slug}: ${err.message}`, true);
     }
     refreshJobs();
   }
@@ -742,7 +1083,7 @@ function updateWorking() {
   const tick = () => {
     const secs = Math.round((Date.now() - running.started) / 1000);
     const im = S.images.find((x) => x.id === running.image);
-    $("workingText").textContent = `Rendering ${S.bySlug[running.slug]?.name || running.slug}${S.cur && S.cur.id !== running.image ? ` (${im?.name})` : ""} on camera · ${secs}s${queued ? ` · ${queued} queued` : ""}`;
+    $("workingText").textContent = `Rendering ${running.label || S.bySlug[running.slug]?.name || running.slug}${S.cur && S.cur.id !== running.image ? ` (${im?.name})` : ""} on camera · ${secs}s${queued ? ` · ${queued} queued` : ""}`;
   };
   tick();
   $("working").hidden = false;
@@ -755,7 +1096,7 @@ function versions() {
   const id = S.cur.id;
   const slugs = [...S.cur.renders];
   for (const j of Object.values(S.jobs)) if (j.image === id && !slugs.includes(j.slug)) slugs.push(j.slug);
-  return ["original", ...slugs];
+  return ["original", ...slugs, ...(S.match && S.match.image === id ? ["match"] : [])];
 }
 
 function renderStrip() {
@@ -766,8 +1107,14 @@ function renderStrip() {
     if (v === "original") {
       return `<button class="ver ${S.view === v ? "active" : ""}" data-v="original"><div class="th"><img src="/api/images/${id}/thumb" alt=""></div><div class="nm">As shot</div></button>`;
     }
+    if (v === "match") {
+      const m = S.match, b = m.best;
+      const th = b ? `<img src="${matchUrl(`step-${b.n}.jpg`)}" loading="lazy" decoding="async" alt="">`
+        : m.state === "error" ? `<span class="err" title="${esc(m.error)}">!</span>` : `<span class="spinner"></span>`;
+      return `<button class="ver ${S.view === v ? "active" : ""}" data-v="match" title="Match: ${esc(m.reference)}"><div class="th">${th}</div><div class="nm">Match${b ? ` · ΔE ${b.loss.toFixed(1)}` : "…"}</div></button>`;
+    }
     const job = S.jobs[`${id}:${v}`];
-    const name = S.bySlug[v]?.name || v;
+    const name = verName(v);
     let th;
     if (S.cur.renders.includes(v)) th = `<img src="${renderUrl(id, v)}" loading="lazy" decoding="async" alt="">`;
     else if (job?.status === "running") th = `<span class="spinner"></span>`;
@@ -780,14 +1127,47 @@ $("strip").addEventListener("click", (e) => {
   const b = e.target.closest(".ver");
   if (!b) return;
   const v = b.dataset.v;
+  if (v === "match") { S.matchStep = null; S.panel = "match"; S.matchNew = false; renderDetail(); return setView("match"); }
   const job = S.cur && S.jobs[`${S.cur.id}:${v}`];
-  if (job && job.status === "error") { delete S.jobs[`${S.cur.id}:${v}`]; selectRecipe(v); return enqueue(v); }
-  if (v !== "original") selectRecipe(v, false, S.panel !== null);
+  if (job && job.status === "error") {
+    delete S.jobs[`${S.cur.id}:${v}`];
+    if (job.recipe) { S.edits[job.base] = job.recipe; selectRecipe(job.base); return enqueueEdit(job.base); }
+    selectRecipe(v);
+    return enqueue(v);
+  }
+  if (v !== "original") selectForVersion(v);
   else if (S.view === "original" || S.panel) { S.panel = "shot"; renderDetail(); }
   setView(v);
 });
 
 const renderUrl = (id, slug) => `/api/images/${id}/renders/${encodeURIComponent(slug)}.jpg`;
+
+/** Display name of a version of the current image (recipe, edited render, pending edit). */
+function verName(v) {
+  if (v === "original") return "As shot";
+  if (!S.cur) return v;
+  if (isCustom(v)) {
+    const m = S.cur.custom && S.cur.custom[v];
+    return m ? editLabel(m.recipe) : "Edited";
+  }
+  const job = S.jobs[`${S.cur.id}:${v}`];
+  return job?.label || S.bySlug[v]?.name || v;
+}
+
+/** Show in the recipe panel what made version `v`; for an edited render, its settings become the edits. */
+function selectForVersion(v, scroll = false, open = S.panel !== null) {
+  if (isCustom(v)) {
+    const m = S.cur && S.cur.custom && S.cur.custom[v];
+    const base = m && S.bySlug[m.recipe.slug];
+    if (!base) return;
+    S.edits[base.slug] = cleanRecipe(m.recipe);
+    if (sigOf(S.edits[base.slug]) === sigOf(base)) delete S.edits[base.slug];
+    return selectRecipe(base.slug, scroll, open);
+  }
+  const job = S.cur && S.jobs[`${S.cur.id}:${v}`];
+  if (job && job.recipe) return selectRecipe(job.base, scroll, open);
+  selectRecipe(v, scroll, open);
+}
 
 /* ---------------- viewer ---------------- */
 const V = { natW: 0, natH: 0, s: 1, tx: 0, ty: 0, fit: true, split: 0.5 };
@@ -801,34 +1181,35 @@ function setView(v) {
     updateButtons();
     return;
   }
-  const ready = v === "original" || S.cur.renders.includes(v);
+  const ready = v === "original" || S.cur.renders.includes(v) || (v === "match" && S.match && S.match.image === S.cur.id);
   S.view = ready ? v : S.view;
   const id = S.cur.id;
   const base = $("imgBase"), top = $("imgTop");
-  const origSrc = `/api/images/${id}/preview`;
-  if (base.getAttribute("src") !== origSrc) {
-    base.src = origSrc;
+  // In match view the aligned reference sits under the renders.
+  const baseSrc = S.view === "match" && S.match.alignment ? matchUrl("reference.jpg") : `/api/images/${id}/preview`;
+  if (base.getAttribute("src") !== baseSrc) {
+    base.src = baseSrc;
     V.fit = true;
   }
-  if (S.view !== "original") {
-    const src = renderUrl(id, S.view);
-    if (top.getAttribute("src") !== src) top.src = src;
-  }
+  const topSrc = S.view === "match" ? (matchShownStep() ? matchUrl(`step-${matchShownStep().n}.jpg`) : null)
+    : S.view !== "original" ? renderUrl(id, S.view) : null;
+  if (topSrc && top.getAttribute("src") !== topSrc) top.src = topSrc;
   $("overlay").hidden = true;
   $("layer").hidden = false;
-  const r = S.bySlug[S.view];
-  $("title").innerHTML = `<b>${esc(S.cur.name)}</b>${r ? `→ ${esc(r.name)}` : "as shot"}`;
+  $("title").innerHTML = `<b>${esc(S.cur.name)}</b>${S.view === "match" ? `→ match ${esc(S.match.reference)}` : S.view !== "original" ? `→ ${esc(verName(S.view))}` : "as shot"}`;
   renderStrip();
   applyView();
   updateButtons();
 }
 
 function updateButtons() {
-  const has = S.cur && S.view !== "original";
+  const has = S.cur && S.view !== "original" && (S.view !== "match" || !!(S.match && S.match.best));
   $("dlBtn").disabled = !has;
   $("infoBtn").disabled = !S.cur;
+  $("matchBtn").disabled = !S.cur;
   renderActionbar();
   $("saveBtn").disabled = !has;
+  $("dlBtn").textContent = S.view === "match" ? "Download best" : "Download";
   for (const b of $("modeSeg").children) b.classList.toggle("on", b.dataset.mode === S.mode);
 }
 
@@ -839,7 +1220,7 @@ $("imgBase").addEventListener("load", (e) => {
   applyView();
 });
 $("imgBase").addEventListener("error", () => {
-  if (!S.cur) return;
+  if (!S.cur || S.view === "match") return;
   $("overlay").hidden = false;
   $("overlay").innerHTML = `<div><div class="big">No embedded preview</div>Convert with a recipe to see this image.</div>`;
 });
@@ -866,17 +1247,18 @@ function applyView() {
   layer.style.height = V.natH + "px";
   layer.style.transform = `translate(${V.tx}px, ${V.ty}px) scale(${V.s})`;
   const st = $("stage").getBoundingClientRect();
-  const showTop = S.view !== "original";
+  const showTop = S.view !== "original" && (S.view !== "match" || !!matchShownStep());
   const compare = showTop && S.mode === "compare";
   const top = $("imgTop");
   top.hidden = !showTop || S.peek;
   const handle = $("handle");
   handle.hidden = !compare || S.peek;
-  const r = S.bySlug[S.view];
-  $("labelL").hidden = !(compare && !S.peek) && !S.peek;
-  $("labelL").textContent = "As shot";
+  const inMatch = S.view === "match";
+  const shown = inMatch && matchShownStep();
+  $("labelL").hidden = !(compare && !S.peek) && !S.peek && !(inMatch && !showTop);
+  $("labelL").textContent = inMatch ? `Reference · ${S.match.reference}` : "As shot";
   $("labelR").hidden = !showTop || S.peek;
-  $("labelR").textContent = r ? r.name : "";
+  $("labelR").textContent = shown ? `${shown.n === S.match.best?.n ? "Best" : "Render"} #${shown.n} · ΔE ${shown.loss.toFixed(2)}` : showTop ? verName(S.view) : "";
   if (compare) {
     const x = V.split * st.width;
     handle.style.left = x + "px";
@@ -975,30 +1357,278 @@ $("modeSeg").addEventListener("click", (e) => {
 function toggleInfo() {
   if (!S.cur) return;
   if (S.view === "original") return togglePanel("shot");
-  if (S.panel === "recipe" && S.selected === S.view) return closePanel();
-  selectRecipe(S.view, true);
+  if (S.view === "match") return togglePanel("match");
+  const base = isCustom(S.view) ? S.cur.custom?.[S.view]?.recipe.slug : S.view;
+  if (S.panel === "recipe" && S.selected === base) return closePanel();
+  selectForVersion(S.view, true, true);
 }
 $("infoBtn").onclick = toggleInfo;
 
 $("dlBtn").onclick = () => {
   if (!S.cur || S.view === "original") return;
   const a = document.createElement("a");
-  a.href = renderUrl(S.cur.id, S.view) + "?download=1";
+  a.href = S.view === "match" ? matchUrl("best.jpg") + "?download=1" : renderUrl(S.cur.id, S.view) + "?download=1";
   a.click();
 };
 $("saveBtn").onclick = async () => {
   if (!S.cur || S.view === "original") return;
+  if (S.view === "match") return saveMatch();
   try {
     const r = await api(`/api/images/${S.cur.id}/renders/${encodeURIComponent(S.view)}/save`, { method: "POST" });
     toast(`Saved ${r.path}`);
   } catch (err) { toast(err.message, true); }
 };
 
+/* ---------------- match a reference ---------------- */
+const IMAGE_RE = /\.(jpe?g|png|tiff?)$/i;
+const matchUrl = (file) => `/api/match/${S.match.id}/${file}`;
+const matchRunning = (m = S.match) => !!m && (m.state === "aligning" || m.state === "running");
+
+/** The step shown on the right of the viewer: the one picked in the list, else the best. */
+function matchShownStep() {
+  const m = S.match;
+  if (!m || !m.steps.length) return null;
+  return (S.matchStep != null && m.steps.find((s) => s.n === S.matchStep)) || m.steps.find((s) => s.n === m.best?.n) || null;
+}
+
+function openMatch() {
+  if (!S.cur) return;
+  if (S.panel === "match") return closePanel();
+  S.panel = "match";
+  if (!S.match) S.matchNew = true;
+  renderDetail();
+  if (S.match && S.match.steps.length) { S.matchStep = null; setView("match"); }
+}
+$("matchBtn").onclick = openMatch;
+
+function setMatchFile(f) {
+  if (!IMAGE_RE.test(f.name)) return toast(`${f.name}: use a JPEG, PNG or TIFF`, true);
+  S.matchFile = f;
+  S.matchNew = true;
+  S.panel = "match";
+  renderDetail();
+}
+
+async function loadMatch(id) {
+  try {
+    const m = await api(`/api/images/${id}/match`);
+    if (!S.cur || S.cur.id !== id) return;
+    S.match = m;
+    renderStrip();
+    if (S.panel === "match") renderDetail();
+    if (matchRunning()) pollMatch();
+  } catch {}
+}
+
+let matchTimer;
+function pollMatch() {
+  clearTimeout(matchTimer);
+  const tick = async () => {
+    const cur = S.match;
+    if (!cur) return;
+    try {
+      const m = await api(`/api/match/${cur.id}`);
+      if (!S.match || S.match.id !== m.id) return;
+      const bestChanged = m.best?.n !== cur.best?.n;
+      const aligned = !cur.alignment && m.alignment;
+      S.match = m;
+      if (S.panel === "match") renderDetail();
+      renderStrip();
+      if (S.view === "match" && (bestChanged || aligned || S.matchStep == null)) setView("match");
+      else updateButtons();
+      if (matchRunning(m)) matchTimer = setTimeout(tick, 1000);
+      else if (m.state === "error") toast(`Match failed: ${m.error}`, true);
+      else if (m.best) toast(`Match ${m.state === "stopped" ? "stopped" : "finished"} · best ΔE ${m.best.loss.toFixed(2)} after ${m.renders} renders`);
+    } catch { matchTimer = setTimeout(tick, 2000); }
+  };
+  matchTimer = setTimeout(tick, 700);
+}
+
+async function startMatch() {
+  const f = S.matchFile;
+  const prev = S.match && S.match.image === S.cur?.id ? S.match : null;
+  if ((!f && !prev) || !S.cur) return;
+  const start = $("mStart").value === "__sweep" ? "" : $("mStart").value;
+  const q = new URLSearchParams({ max: $("mMax").value, start });
+  if (!f) q.set("reference", prev.id);
+  const go = $("mGo");
+  go.disabled = true;
+  go.textContent = "Uploading…";
+  try {
+    const m = await api(`/api/images/${S.cur.id}/match?${q}`, f
+      ? { method: "POST", headers: { "X-Filename": encodeURIComponent(f.name) }, body: f }
+      : { method: "POST" });
+    S.match = m;
+    S.matchFile = null;
+    S.matchNew = false;
+    S.matchStep = null;
+    renderDetail();
+    setView("match");
+    pollMatch();
+  } catch (err) {
+    toast(err.message, true);
+    renderDetail();
+  }
+}
+
+async function saveMatch() {
+  try {
+    const r = await api(`/api/match/${S.match.id}/save`, { method: "POST" });
+    toast(`Saved ${r.jpg.split("/").pop()} and ${r.json.split("/").pop()}`);
+  } catch (err) { toast(err.message, true); }
+}
+
+function deQuality(d) {
+  return d < 1 ? "indistinguishable" : d < 2 ? "very close" : d < 3.5 ? "close" : d < 6 ? "noticeably different" : "far off";
+}
+const fmtTime = (s) => s == null ? "" : s >= 90 ? `${Math.round(s / 60)} min` : `${Math.round(s)} s`;
+
+/** Error per render (dots) and best-so-far (line). */
+function sparkline(steps) {
+  if (steps.length < 2) return "";
+  const W = 300, H = 44, P = 3;
+  const max = Math.max(...steps.map((s) => s.loss)), min = Math.min(...steps.map((s) => s.loss));
+  const x = (i) => P + (i / (steps.length - 1)) * (W - 2 * P);
+  const y = (v) => P + (1 - (v - min) / (max - min || 1)) * (H - 2 * P);
+  let best = Infinity;
+  const line = steps.map((s, i) => { best = Math.min(best, s.loss); return `${x(i).toFixed(1)},${y(best).toFixed(1)}`; }).join(" ");
+  const dots = steps.map((s, i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(s.loss).toFixed(1)}" r="1.6" fill="var(--faint)"/>`).join("");
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Error per render">${dots}<polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+function renderMatchDetail(box) {
+  box.hidden = false;
+  const m = S.match;
+  const setup = !m || (S.matchNew && !matchRunning());
+  const head = `<div class="dhead"><div class="t"><div class="kicker">Match a reference</div><h3>${setup ? "Film scan → settings" : esc(m.reference)}</h3>${setup ? "" : `<div class="slug">${esc(S.cur.name)}</div>`}</div>${closeBtn}</div>`;
+  if (setup) {
+    const f = S.matchFile;
+    const sel = S.bySlug[S.selected];
+    const camOk = S.camera;
+    // A previous run on this image: its scan can be reused, its result continued.
+    const prev = m && m.image === S.cur.id && m.best ? m : null;
+    const useOld = !f && prev;
+    const contKey = prev ? `match:${prev.id}` : null;
+    box.innerHTML = `${head}<div class="dbody mpanel">
+      <p class="lead">Give it a picture of the same scene with the look you're after, e.g. a scan of the same shot on Kodak Gold 200. fxraw re-renders <b>${esc(S.cur.name)}</b> on the camera again and again, measures the colour difference (ΔE) each time, and keeps whatever gets closer.</p>
+      <label class="drop2 ${f ? "has" : ""}" id="mDrop">
+        <input type="file" id="mFile" accept=".jpg,.jpeg,.png,.tif,.tiff,image/jpeg,image/png,image/tiff" hidden>
+        ${f ? `<strong>${esc(f.name)}</strong><br>${(f.size / 1048576).toFixed(1)} MB · click to change`
+          : useOld ? `<strong>${esc(prev.reference)}</strong><br>same reference as last time · click to change`
+          : `<strong>Drop the reference image</strong><br>JPEG, PNG or TIFF · or click to browse`}
+      </label>
+      <div class="opt"><span>Start from</span><select id="mStart">
+        ${prev ? `<option value="${contKey}" ${S.matchOpts.mStart === contKey || S.matchOpts.mStart === "" ? "selected" : ""}>Last result (ΔE ${prev.best.loss.toFixed(1)})</option>` : ""}
+        <option value="__sweep" ${S.matchOpts.mStart === "__sweep" || (!prev && S.matchOpts.mStart === "") ? "selected" : ""}>Every film simulation</option>
+        ${sel ? `<option value="${esc(sel.slug)}" ${S.matchOpts.mStart === sel.slug ? "selected" : ""}>${esc(sel.name)}</option>` : ""}
+      </select></div>
+      <div class="opt"><span>Max renders</span><select id="mMax">
+        ${[["30", "about 3 min"], ["60", "about 5 min"], ["100", "about 8 min"]].map(([v, t]) =>
+          `<option value="${v}" ${S.matchOpts.mMax === v ? "selected" : ""}>${v} · ${t}</option>`).join("")}
+      </select></div>
+      <div class="mbtns">
+        <button class="btn primary" id="mGo" ${(f || useOld) && camOk ? "" : "disabled"}>Start matching</button>
+        ${m ? `<button class="btn" id="mBack">Last result</button>` : ""}
+      </div>
+      ${!camOk ? `<div class="note">Connect the camera (USB RAW CONV mode) to start.</div>` : ""}
+      <div class="note">Works best when both pictures show the same scene from about the same spot. Framing doesn't need to match: the reference is located automatically (crop, rotation, film borders).</div>
+    </div>`;
+    return;
+  }
+
+  const running = matchRunning(m);
+  const a = m.alignment;
+  const alignLine = !a ? `<div class="align">Locating the reference in the photo…</div>`
+    : a.confident ? `<div class="align">Aligned${a.rot90 ? `, turned ${a.rot90 * 90}°` : ""} · ${Math.round(a.scale * 100)}% of the frame · ${m.cells} patches compared${m.dropped ? `, ${m.dropped} skipped (different in the two shots)` : ""}${m.monochrome ? " · black & white" : ""}</div>`
+    : `<div class="align warn">Couldn't line the two pictures up with confidence — comparing them frame to frame. Results may be off if the framing differs a lot.</div>`;
+  const pct = Math.min(100, (m.renders / m.max_renders) * 100);
+  const b = m.best;
+  const status = running
+    ? `<div class="mstat"><span>${esc(m.phase)}</span><span>${m.renders}/${m.max_renders}${m.eta != null ? ` · ≤ ${fmtTime(m.eta)}` : ""}</span></div><div class="progress"><i style="width:${pct}%"></i></div>`
+    : `<div class="mstat"><span>${m.state === "done" ? (m.budget_exhausted ? "Used every render allowed" : "Finished") : m.state === "stopped" ? "Stopped" : "Failed"}</span><span>${m.renders} renders · ${fmtTime(m.elapsed)}</span></div><div class="progress"><i style="width:100%"></i></div>`;
+  const err = m.waiting_camera
+    ? `<div class="align warn">The camera stopped answering (${esc(m.waiting_camera)}). Waiting for it to come back: check it's on, the battery, and the USB cable. The run resumes on its own.</div>`
+    : m.error ? `<div class="merr">${esc(m.error)}</div>` : "";
+  const score = b ? `
+    <div class="mstat"><span>Best difference (ΔE2000)</span><span>${m.start_loss != null ? `first ${Number(m.start_loss).toFixed(1)}` : ""}</span></div>
+    <div class="de"><b>${b.loss.toFixed(2)}</b><span>${deQuality(b.loss)}</span></div>
+    ${sparkline(m.steps)}` : "";
+  const btns = running
+    ? `<div class="mbtns"><button class="btn" id="mStop">Stop · keep best</button></div>`
+    : `<div class="mbtns">${b ? `<button class="btn primary" id="mSave" title="Write the best JPEG and its recipe (.json) into the folder">Save JPEG + recipe</button><button class="btn" id="mCopy" title="Recipe in fxraw's recipes.json format">Copy recipe</button>` : ""}<button class="btn" id="mNew">New match</button></div>`;
+  const shown = matchShownStep();
+  let table = "";
+  if (shown) {
+    const rp = recipeProfile(shown.recipe);
+    const rows = [...FIELDS, ["ev", "Exposure (push/pull)"]].map(([k, label]) => {
+      const v = k === "ev" ? shown.recipe.exposure_comp : rp[k];
+      return `<tr><td>${label}</td><td class="v" title="${esc(v)}">${esc(v)}</td></tr>`;
+    }).join("");
+    table = `<div class="steps"><div class="k">${shown.n === b?.n ? "Best settings" : `Render #${shown.n}`} · ΔE ${shown.loss.toFixed(2)}</div>
+      <table class="cmp"><colgroup><col style="width:46%"><col></colgroup><tbody>${rows}</tbody></table>
+      <div class="note">Grain, sharpness, noise reduction and clarity don't show up in colour, so they stay at film-like defaults; adjust them to taste.</div></div>`;
+  }
+  const steps = [...m.steps].reverse().map((s) => `
+    <button class="step ${s.n === b?.n ? "best" : ""} ${shown && s.n === shown.n ? "on" : ""}" data-step="${s.n}" title="${esc(s.phase)}: ${esc(s.label)}">
+      <span class="sn">${s.n}</span><span class="sl">${esc(s.label)} <i>· ${esc(s.phase)}</i></span><span class="sd">${s.loss.toFixed(2)}</span>
+    </button>`).join("");
+  box.innerHTML = `${head}<div class="dbody mpanel">
+    ${alignLine}${status}${err}${score}${btns}${table}
+    ${steps ? `<div class="steps"><div class="k">Renders · click to view</div>${steps}</div>` : ""}
+  </div>`;
+}
+
+$("detail").addEventListener("change", (e) => {
+  if (e.target.id === "mFile" && e.target.files[0]) setMatchFile(e.target.files[0]);
+  if (e.target.id in S.matchOpts) S.matchOpts[e.target.id] = e.target.value;
+});
+for (const [ev, fn] of [
+  ["dragover", (e, d) => d.classList.add("over")],
+  ["dragleave", (e, d) => d.classList.remove("over")],
+  ["drop", (e, d) => { d.classList.remove("over"); if (e.dataTransfer.files[0]) setMatchFile(e.dataTransfer.files[0]); }],
+]) {
+  $("detail").addEventListener(ev, (e) => {
+    const d = e.target.closest("#mDrop");
+    if (!d) return;
+    e.preventDefault();
+    e.stopPropagation();
+    fn(e, d);
+  });
+}
+$("detail").addEventListener("click", async (e) => {
+  const t = e.target.closest("button");
+  if (!t || !S.cur) return;
+  if (t.id === "mGo") return startMatch();
+  if (t.id === "mBack") { S.matchNew = false; renderDetail(); return; }
+  if (t.id === "mNew") { S.matchNew = true; renderDetail(); return; }
+  if (t.id === "mSave") return saveMatch();
+  if (t.id === "mStop") {
+    t.disabled = true;
+    t.textContent = "Stopping after this render…";
+    try { await api(`/api/match/${S.match.id}/stop`, { method: "POST" }); } catch (err) { toast(err.message, true); }
+    return;
+  }
+  if (t.id === "mCopy") {
+    const shown = matchShownStep();
+    try { await navigator.clipboard.writeText(JSON.stringify(shown.recipe, null, 2)); toast("Recipe copied as JSON"); }
+    catch { toast("Clipboard not available", true); }
+    return;
+  }
+  if (t.dataset.step) {
+    const n = +t.dataset.step;
+    S.matchStep = n === S.match.best?.n ? null : n;
+    renderDetail();
+    setView("match");
+  }
+});
+
 /* ---------------- keyboard ---------------- */
 document.addEventListener("keydown", (e) => {
-  const inInput = e.target.tagName === "INPUT";
+  const inInput = e.target.tagName === "INPUT" || e.target.tagName === "SELECT";
   if (e.key === "/" && !inInput) { e.preventDefault(); $("q").focus(); $("q").select(); return; }
   if (e.key === "Escape" && inInput) { e.target.blur(); return; }
+  // Editing a recipe setting: arrows and Enter belong to the control.
+  if (inInput && e.target.closest("#detail")) { if (e.key === "Enter") e.target.blur(); return; }
   if (e.key === "Escape" && S.panel) { closePanel(); return; }
   if (e.key === "ArrowDown" || e.key === "ArrowUp") {
     if (!S.visible.length) return;
@@ -1011,10 +1641,11 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && S.selected) { e.preventDefault(); enqueue(S.selected); return; }
   if (inInput) return;
   if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-    const vs = versions().filter((v) => v === "original" || (S.cur && S.cur.renders.includes(v)));
+    const vs = versions().filter((v) => v === "original" || v === "match" || (S.cur && S.cur.renders.includes(v)));
     const i = vs.indexOf(S.view);
     const n = vs[(i + (e.key === "ArrowRight" ? 1 : -1) + vs.length) % vs.length];
-    if (n) { if (n !== "original") selectRecipe(n, false, S.panel !== null); else if (S.panel) { S.panel = "shot"; renderDetail(); } setView(n); }
+    if (n === "match") { S.matchStep = null; setView(n); }
+    else if (n) { if (n !== "original") selectForVersion(n); else if (S.panel) { S.panel = "shot"; renderDetail(); } setView(n); }
     e.preventDefault();
   } else if (e.key.toLowerCase() === "c") {
     S.mode = S.mode === "compare" ? "single" : "compare";
@@ -1024,6 +1655,8 @@ document.addEventListener("keydown", (e) => {
     S.peek = true; applyView();
   } else if (e.key.toLowerCase() === "i") {
     toggleInfo();
+  } else if (e.key.toLowerCase() === "m" && S.cur) {
+    openMatch();
   } else if (e.key.toLowerCase() === "f" && S.selected) {
     toggleFav(S.selected);
   }

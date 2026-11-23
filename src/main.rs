@@ -122,7 +122,7 @@ fn main() {
         Commands::Recipes { slug } => {
             if let Some(query) = slug {
                 match recipes::find(&query) {
-                    Some(r) => recipes::show_recipe(r),
+                    Some(r) => recipes::show_recipe(&r),
                     None => {
                         eprintln!("Recipe '{}' not found.", query);
                         eprintln!("Run `fxraw recipes` to list available presets.");

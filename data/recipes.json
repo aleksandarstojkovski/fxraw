@@ -572,6 +572,32 @@
     }
   },
   {
+    "name": "Alpine Negative",
+    "slug": "alpine-negative",
+    "film_sim": "classic-neg",
+    "dynamic_range": 200,
+    "highlight": 2,
+    "shadow": 2,
+    "color": 2,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": 0,
+    "grain": "weak",
+    "grain_size": "small",
+    "chrome_effect": "strong",
+    "chrome_blue": "weak",
+    "white_balance": "auto",
+    "wb_shift_r": 2,
+    "wb_shift_b": -3,
+    "iso": "ISO 400 up to ISO 1600",
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/alpine-negative-2/",
+      "author": "@emadeluca89"
+    }
+  },
+  {
     "name": "Amanda's Classic Negative",
     "slug": "amandas-classic-negative",
     "film_sim": "classic-neg",
@@ -1525,6 +1551,32 @@
     }
   },
   {
+    "name": "Classic Continental",
+    "slug": "classic-continental",
+    "film_sim": "classic-neg",
+    "highlight": -1,
+    "shadow": -0.5,
+    "color": 1,
+    "noise_reduction": -4,
+    "sharpness": -1,
+    "clarity": 0,
+    "grain": "weak",
+    "grain_size": "small",
+    "chrome_effect": "weak",
+    "chrome_blue": "weak",
+    "white_balance": "temperature",
+    "wb_temp": 6500,
+    "wb_shift_r": 3,
+    "wb_shift_b": -2,
+    "iso": "Auto up to ISO 1600",
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/classic-continental/",
+      "author": "@richardgphotos"
+    }
+  },
+  {
     "name": "Classic Cuban Neg",
     "slug": "classic-cuban-neg",
     "film_sim": "classic-neg",
@@ -1896,6 +1948,30 @@
     }
   },
   {
+    "name": "Eddy's Point and Shoot",
+    "slug": "eddys-point-and-shoot",
+    "film_sim": "classic-neg",
+    "dynamic_range": 200,
+    "highlight": 1,
+    "shadow": 0,
+    "color": 3,
+    "noise_reduction": -4,
+    "sharpness": -4,
+    "clarity": -3,
+    "grain": "strong",
+    "grain_size": "large",
+    "chrome_effect": "off",
+    "chrome_blue": "weak",
+    "white_balance": "auto",
+    "wb_shift_r": 4,
+    "wb_shift_b": -4,
+    "source": {
+      "name": "YouTube",
+      "url": "https://www.youtube.com/watch?v=QTJcrOjCKv8",
+      "author": "@eddymaynard"
+    }
+  },
+  {
     "name": "Ektachrome 320T",
     "slug": "ektachrome-320t",
     "film_sim": "eterna-bleach-bypass",
@@ -2064,6 +2140,30 @@
     "source": {
       "name": "Fuji X Weekly",
       "url": "https://fujixweekly.com/recipes/"
+    }
+  },
+  {
+    "name": "Essenza",
+    "slug": "essenza",
+    "film_sim": "pro-neg-hi",
+    "dynamic_range": 400,
+    "highlight": -2,
+    "shadow": 1,
+    "color": 3,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": 0,
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto-white",
+    "wb_shift_r": 3,
+    "wb_shift_b": -5,
+    "iso": "ISO 640 up to ISO 1600",
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/essenza/",
+      "author": "@emadeluca89"
     }
   },
   {
@@ -3546,6 +3646,29 @@
     "source": {
       "name": "Fuji X Weekly",
       "url": "https://fujixweekly.com/recipes/"
+    }
+  },
+  {
+    "name": "Greg's Recipe",
+    "slug": "gregs-recipe",
+    "film_sim": "classic-neg",
+    "dynamic_range": 200,
+    "highlight": -2,
+    "shadow": -2,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": -3,
+    "clarity": 0,
+    "chrome_effect": "strong",
+    "white_balance": "auto-white",
+    "wb_shift_r": 4,
+    "wb_shift_b": -4,
+    "iso": "ISO 400 up to ISO 1600",
+    "exposure_comp": "0",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/gregs-recipe/",
+      "author": "@gregselby_"
     }
   },
   {
@@ -5586,6 +5709,32 @@
     }
   },
   {
+    "name": "Last Summer Roll",
+    "slug": "last-summer-roll",
+    "film_sim": "classic-neg",
+    "dynamic_range": 400,
+    "highlight": -2,
+    "shadow": 0.5,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": 0,
+    "grain": "weak",
+    "grain_size": "small",
+    "chrome_effect": "strong",
+    "chrome_blue": "weak",
+    "white_balance": "auto",
+    "wb_shift_r": 3,
+    "wb_shift_b": -5,
+    "iso": "ISO 640 up to ISO 1600",
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/last-summer-roll/",
+      "author": "@emadeluca89"
+    }
+  },
+  {
     "name": "Leica X",
     "slug": "leica-x",
     "film_sim": "classic-chrome",
@@ -7223,6 +7372,32 @@
     "source": {
       "name": "Fuji X Weekly",
       "url": "https://fujixweekly.com/recipes/"
+    }
+  },
+  {
+    "name": "Summer Chrome",
+    "slug": "summer-chrome",
+    "film_sim": "classic-chrome",
+    "dynamic_range": 400,
+    "highlight": -2,
+    "shadow": -2,
+    "color": 4,
+    "noise_reduction": -4,
+    "sharpness": 0,
+    "clarity": -4,
+    "grain": "strong",
+    "grain_size": "large",
+    "chrome_effect": "strong",
+    "chrome_blue": "strong",
+    "white_balance": "auto",
+    "wb_shift_r": 5,
+    "wb_shift_b": -6,
+    "iso": "Auto, ISO 500 up to ISO 6400",
+    "exposure_comp": "0 to +1",
+    "source": {
+      "name": "Fujifilm Simulations",
+      "url": "https://filmsimrecipes.com/project/summer-chrome/",
+      "author": "@osanbilgi"
     }
   },
   {

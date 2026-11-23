@@ -165,8 +165,43 @@ fxraw serve --port 8080 --no-open
   and flip between them with <kbd>←</kbd>/<kbd>→</kbd>. Compare with the slider,
   hold <kbd>Space</kbd> to peek at the original, double-click or scroll to zoom 1:1.
 - **Download** a render, or **Save to folder** as `<stem>-<recipe>.jpg`.
+- **Match film** (<kbd>M</kbd>): give it a picture of the same scene with the
+  look you want, e.g. a scan of the same shot on Kodak Gold 200, and it
+  searches for the settings that reproduce it.
 
 Like `convert`, it needs `sudo` unless you ran `sudo fxraw setup`.
+
+#### Matching a reference (film scan → recipe)
+
+The camera is the renderer, so the search is a loop of real conversions
+(about 5 s each; a run takes 30–100 renders):
+
+1. **Align.** The reference is located on the RAF's frame automatically:
+   90° turns, crop/zoom, a small tilt, film borders. It works by correlating
+   edges, which don't care about colour.
+2. **Measure.** Both pictures are cut into ~1000 blurred patches and compared in
+   CIE Lab. The score is ΔE2000, a robust average where busy patches count less
+   and the worst 10% (things that moved) are ignored. Signed differences say
+   *which way* to turn each knob: lighter/darker mid-tones, highlights and
+   shadows, warmer/cooler and green/magenta cast on neutral areas, more/less
+   saturation.
+3. **Search.**
+   - Every film simulation is tried, ranked by the error left once tone, cast
+     and saturation are factored out.
+   - White balance R/B is solved from a measured 2×2 sensitivity, then
+     Daylight vs Auto, then Kelvin if the shifts run out of range.
+   - Exposure (push/pull), Highlight, Shadow and Color use a secant step:
+     measure one step, jump to where the difference should vanish.
+   - Color Chrome, FX Blue and DR are tried.
+   - Finally a ±1 polish on every knob.
+
+   A change is kept only if the total error drops.
+
+ΔE below about 2 is hard to tell apart side by side. Grain, sharpness, NR and
+clarity aren't visible at patch scale, so they stay at film-like defaults.
+**Save JPEG + recipe** writes `<stem>-match.jpg` and `<stem>-match.json` (in
+`recipes.json` format) into the folder. With `FXRAW_STUB_CAMERA=1` the
+camera is replaced by a rough simulator, which is handy for trying the UI.
 
 ### `fxraw detect`
 
