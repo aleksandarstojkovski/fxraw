@@ -158,6 +158,26 @@ body.dragging.split, body.dragging.split * { cursor: ew-resize !important; }
 .cmp td.v.orig { color: var(--muted); }
 .cmp td.v.diff { color: var(--accent); }
 .cmp tr.sep td { border-top: 1px solid var(--line-2); }
+.cmp td.ctl { padding: 2px 0; overflow: visible; }
+.cmp select, .cmp input[type=number] { width: 100%; min-width: 0; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 4px; padding: 1px 3px; font: 11.5px var(--mono); }
+.cmp select:hover:not(:disabled), .cmp input[type=number]:hover { border-color: var(--muted); }
+.cmp select:disabled { opacity: .35; }
+.cmp .pair { display: flex; gap: 4px; }
+.cmp .pair > * { flex: 1 1 0; }
+.stp { display: inline-flex; align-items: center; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+.stp button { width: 22px; height: 20px; color: var(--muted); font-size: 13px; line-height: 1; }
+.stp button:hover:not(:disabled) { background: var(--line); color: var(--text); }
+.stp button:disabled { opacity: .3; cursor: default; }
+.stp output { min-width: 36px; text-align: center; font: 11.5px var(--mono); }
+.cmp td.diff select, .cmp td.diff output, .cmp td.diff input { color: var(--accent); }
+.cmp tr.edited td:first-child { color: var(--accent); }
+.cmp tr.edited td:first-child::before { content: "●"; font-size: 8px; margin-right: 4px; vertical-align: 2px; }
+.cmp td .rst { float: right; color: var(--faint); font-size: 12px; line-height: 1; padding: 2px 4px; margin-right: 2px; border-radius: 4px; }
+.cmp td .rst:hover { color: var(--accent); background: var(--line); }
+.icon.reset { color: var(--accent); font-size: 15px; }
+.ebtns { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 12px; }
+.btn.danger:hover:not(:disabled) { border-color: var(--err); color: var(--err); }
+.srcb.mine { border-color: rgba(240,180,60,.5); color: var(--accent); }
 .legend { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
 .legend b { color: var(--accent); font-weight: 500; }
 .note { font-size: 11px; color: var(--faint); margin: 0 0 12px; }
@@ -337,6 +357,7 @@ const S = {
   jobs: {}, queue: [], running: false,
   q: "", sim: null, favOnly: false, favs: new Set(), visible: [],
   match: null, matchFile: null, matchNew: false, matchStep: null, camera: false,
+  edits: {}, editSeq: 0, mineOnly: false,
   matchOpts: { mStart: "", mMax: "60" },
 };
 try { S.favs = new Set(JSON.parse(localStorage.getItem("fxraw.favs") || "[]")); } catch {}
@@ -476,27 +497,43 @@ $("shot").addEventListener("click", (e) => {
 /* ---------------- recipes ---------------- */
 async function loadRecipes() {
   S.recipes = await api("/api/recipes");
-  S.recipes.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-  for (const r of S.recipes) {
-    S.bySlug[r.slug] = r;
-    r._hay = `${r.name} ${r.slug} ${r.film_sim} ${simLabel(r.film_sim)} ${r.source?.name || ""} ${r.source?.author || ""}`.toLowerCase();
-  }
+  sortRecipes();
+  for (const r of S.recipes) indexRecipe(r);
   renderChips();
   renderRecipes();
+}
+
+function indexRecipe(r) {
+  S.bySlug[r.slug] = r;
+  r._hay = `${r.name} ${r.slug} ${r.film_sim} ${simLabel(r.film_sim)} ${r.source?.name || ""} ${r.source?.author || ""}${r.mine ? " mine" : ""}`.toLowerCase();
+}
+const sortRecipes = () => S.recipes.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+/** Add or replace a recipe in the list (after saving one of your own). */
+function addRecipe(r) {
+  S.recipes = S.recipes.filter((x) => x.slug !== r.slug);
+  S.recipes.push(r);
+  sortRecipes();
+  indexRecipe(r);
+  renderChips();
 }
 
 function renderChips() {
   const counts = {};
   for (const r of S.recipes) counts[r.film_sim] = (counts[r.film_sim] || 0) + 1;
   const sims = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  const mine = S.recipes.filter((r) => r.mine).length;
+  if (!mine) S.mineOnly = false;
   $("chips").innerHTML =
     `<button class="chip ${S.favOnly ? "on" : ""}" data-fav="1">★ Favorites</button>` +
+    (mine ? `<button class="chip ${S.mineOnly ? "on" : ""}" data-mine="1" title="Recipes you saved">✎ Mine <span style="opacity:.6">${mine}</span></button>` : "") +
     sims.map((s) => `<button class="chip ${S.sim === s ? "on" : ""}" data-sim="${s}">${esc(simLabel(s))} <span style="opacity:.6">${counts[s]}</span></button>`).join("");
 }
 $("chips").addEventListener("click", (e) => {
   const c = e.target.closest(".chip");
   if (!c) return;
   if (c.dataset.fav) S.favOnly = !S.favOnly;
+  else if (c.dataset.mine) S.mineOnly = !S.mineOnly;
   else S.sim = S.sim === c.dataset.sim ? null : c.dataset.sim;
   renderChips();
   renderRecipes();
@@ -506,6 +543,7 @@ $("q").addEventListener("input", (e) => { S.q = e.target.value.trim().toLowerCas
 const FXW = "Fuji X Weekly";
 /** Small tag for recipes that don't come from Fuji X Weekly (the bulk of the list). */
 function srcBadge(r) {
+  if (r.mine) return ` <span class="srcb mine" title="Your recipe${r.source?.author ? " · " + esc(r.source.author) : ""}">mine</span>`;
   const src = r.source;
   if (!src || src.name === FXW) return "";
   const short = src.author || src.name;
@@ -513,6 +551,7 @@ function srcBadge(r) {
 }
 
 function sourceLine(r) {
+  if (r.mine) return `<div class="src">Your recipe${r.source?.author ? ` · ${esc(r.source.author)}` : ""}</div>`;
   const src = r.source;
   if (!src) return `<div class="src">Source unknown</div>`;
   const name = src.url
@@ -533,12 +572,14 @@ function renderRecipes() {
   S.visible = S.recipes.filter((r) =>
     (!S.sim || r.film_sim === S.sim) &&
     (!S.favOnly || S.favs.has(r.slug)) &&
+    (!S.mineOnly || r.mine) &&
     terms.every((t) => r._hay.includes(t)));
   const done = new Set(S.cur ? S.cur.renders : []);
   $("count").textContent = `${S.visible.length} of ${S.recipes.length} recipes`;
   $("recipes").innerHTML = S.visible.map((r) => {
     const job = S.cur && S.jobs[`${S.cur.id}:${r.slug}`];
-    const mark = done.has(r.slug) ? `<span class="done" title="Rendered">●</span>`
+    const mark = S.edits[r.slug] ? `<span class="done" style="color:var(--accent)" title="Edited, not saved">✎</span>`
+      : done.has(r.slug) ? `<span class="done" title="Rendered">●</span>`
       : job && (job.status === "running" || job.status === "queued") ? `<span class="done" style="color:var(--accent)" title="${job.status}">◌</span>` : "";
     return `<div class="row ${S.selected === r.slug ? "sel" : ""}" data-slug="${esc(r.slug)}">
       <div style="min-width:0"><div class="rn">${mark}${esc(r.name)}${srcBadge(r)}</div><div class="rs">${esc(summary(r))}</div></div>
@@ -611,6 +652,7 @@ function recipeProfile(r) {
     blue: r.chrome_blue || "off",
     wb: r.white_balance === "temperature" && r.wb_temp ? `${r.wb_temp}K` : (r.white_balance || "auto"),
     wbShift: `R ${fmtSigned(r.wb_shift_r)}  B ${fmtSigned(r.wb_shift_b)}`,
+    wbR: fmtSigned(r.wb_shift_r), wbB: fmtSigned(r.wb_shift_b),
     highlight: fmtSigned(r.highlight), shadow: fmtSigned(r.shadow), color: fmtSigned(r.color),
     sharpness: fmtSigned(r.sharpness), nr: fmtSigned(r.noise_reduction), clarity: fmtSigned(r.clarity),
   };
@@ -627,6 +669,7 @@ function shotProfile() {
   return {
     film: simLabel(m["Film Simulation"]), dr: m["Dynamic Range"], grain: m["Grain"],
     chrome: ce[1], blue: ce[2], wb: wb[1], wbShift: wb[1] ? `R ${wb[2]}  B ${wb[3]}` : undefined,
+    wbR: wb[2], wbB: wb[3],
     highlight: tone[1], shadow: tone[2], color: m["Color"], sharpness: m["Sharpness"],
     nr: m["NR"], clarity: m["Clarity"], iso: m["ISO"], ev: m["Exposure"],
   };
@@ -648,54 +691,269 @@ function renderDetail() {
   if (!r) { box.hidden = true; return; }
   box.hidden = false;
 
-  const rp = recipeProfile(r);
+  const cur = curRecipe(r.slug);
+  const edited = !!S.edits[r.slug];
+  const rp = recipeProfile(cur);
   const sp = shotProfile();
   let anyDiff = false;
-  const rows = FIELDS.map(([k, label]) => {
-    const changed = sp && sp[k] !== undefined && norm(sp[k]) !== norm(rp[k]);
+  const rows = EDIT_ROWS.map((row) => {
+    const changed = sp && sp[row.shot] !== undefined && norm(sp[row.shot]) !== norm(rp[row.shot]);
     if (changed) anyDiff = true;
-    return `<tr><td>${label}</td>${sp ? `<td class="v orig" title="${esc(sp[k])}">${esc(sp[k] ?? "–")}</td>` : ""}<td class="v ${changed ? "diff" : ""}" title="${esc(rp[k])}">${esc(rp[k])}</td></tr>`;
+    const mine = rowEdited(r.slug, row);
+    const was = esc(recipeProfile(r)[row.shot]);
+    return `<tr class="${mine ? "edited" : ""}"><td title="${mine ? `Changed by you (${esc(r.name)}: ${was})` : ""}">${mine ? `<button class="rst" data-reset="${row.k}" title="Back to ${was}">↺</button>` : ""}${row.label}</td>${sp ? `<td class="v orig" title="${esc(sp[row.shot])}">${esc(sp[row.shot] ?? "–")}</td>` : ""}<td class="v ctl ${changed ? "diff" : ""}">${editCell(cur, row)}</td></tr>`;
   }).join("");
   const extra = [r.iso && `ISO ${r.iso}`, r.exposure_comp && `EV ${r.exposure_comp}`].filter(Boolean).join(" · ");
+  const rendered = edited && S.cur && editRenderKey(r.slug);
+  const btns = edited
+    ? `<div class="ebtns">
+        <button class="btn primary" data-edit="convert" title="Render ${S.cur ? esc(S.cur.name) : "the image"} with these settings on the camera">${rendered ? (S.view === rendered ? "Rendered ✓" : "Show edited") : "Convert edits ↵"}</button>
+        ${r.mine ? `<button class="btn" data-edit="update" title="Overwrite ${esc(r.name)} with these settings">Save changes</button>` : ""}
+        <button class="btn" data-edit="save" title="Save these settings as a recipe of your own">Save as recipe…</button>
+        <button class="btn" data-edit="reset" title="Back to ${esc(r.name)}">Reset</button>
+      </div>`
+    : r.mine ? `<div class="ebtns"><button class="btn danger" data-edit="delete">Delete recipe</button></div>` : "";
   box.innerHTML = `
     <div class="dhead">
-      <div class="t"><div class="kicker">Recipe</div><h3>${esc(r.name)}</h3><div class="slug">${esc(r.slug)}</div>${sourceLine(r)}</div>
+      <div class="t"><div class="kicker">${r.mine ? "Your recipe" : "Recipe"}${edited ? " · edited" : ""}</div><h3>${esc(r.name)}</h3><div class="slug">${esc(r.slug)}</div>${sourceLine(r)}</div>
+      ${edited ? `<button class="icon reset" data-edit="reset" title="Undo all changes: back to ${esc(r.name)}">↺</button>` : ""}
       <button class="icon star ${S.favs.has(r.slug) ? "on" : ""}" data-fav title="Favorite (F)">${S.favs.has(r.slug) ? "★" : "☆"}</button>
       ${closeBtn}
     </div>
     <div class="dbody">
       <table class="cmp">
-        <colgroup><col style="width:${sp ? 34 : 44}%">${sp ? `<col style="width:33%">` : ""}<col></colgroup>
+        <colgroup><col style="width:${sp ? 33 : 44}%">${sp ? `<col style="width:22%">` : ""}<col></colgroup>
         <thead><tr><th></th>${sp ? `<th>As shot</th>` : ""}<th>${sp ? "This recipe" : ""}</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
-      ${anyDiff ? `<div class="legend"><b>Highlighted</b> = what this recipe changes vs. the original</div>` : ""}
+      ${btns}
+      ${edited ? `<div class="legend"><b>●</b> = changed by you${anyDiff ? " · <b>orange values</b> differ from the original" : ""}</div>`
+        : anyDiff ? `<div class="legend"><b>Highlighted</b> = what this recipe changes vs. the original</div>`
+        : ""}
+      ${!edited ? `<div class="note">Change any setting to render your own version${r.mine ? "" : " and save it as a recipe"}.</div>` : ""}
       ${extra ? `<div class="note">Suggested when shooting (not applied by conversion): ${esc(extra)}</div>` : ""}
     </div>
 `;
 }
 
+/* ---------------- editing a recipe ---------------- */
+/** Settings the camera applies (everything else is metadata). */
+const EDIT_KEYS = ["film_sim", "dynamic_range", "grain", "grain_size", "chrome_effect", "chrome_blue", "white_balance", "wb_temp",
+  "wb_shift_r", "wb_shift_b", "highlight", "shadow", "color", "sharpness", "noise_reduction", "clarity"];
+const OWS = [["off", "off"], ["weak", "weak"], ["strong", "strong"]];
+const WB_OPTS = [["auto", "auto"], ["auto-white", "auto white"], ["auto-ambience", "auto ambience"], ["daylight", "daylight"],
+  ["shade", "shade"], ["incandescent", "incandescent"], ["fluorescent-1", "fluor. 1"], ["fluorescent-2", "fluor. 2"],
+  ["fluorescent-3", "fluor. 3"], ["temperature", "Kelvin"]];
+/** Editable rows: `shot` is the key in recipeProfile()/shotProfile(); numeric rows have min/max (and step). */
+const EDIT_ROWS = [
+  { k: "film_sim", label: "Film simulation", shot: "film", opts: Object.entries(SIM_LABEL) },
+  { k: "dynamic_range", label: "Dynamic range", shot: "dr", opts: [["", "auto"], ["100", "DR100"], ["200", "DR200"], ["400", "DR400"]] },
+  { k: "grain", label: "Grain", shot: "grain" },
+  { k: "chrome_effect", label: "Color chrome", shot: "chrome", opts: OWS },
+  { k: "chrome_blue", label: "Chrome FX blue", shot: "blue", opts: OWS },
+  { k: "white_balance", label: "White balance", shot: "wb" },
+  { k: "wb_shift_r", label: "WB shift R", shot: "wbR", min: -9, max: 9 },
+  { k: "wb_shift_b", label: "WB shift B", shot: "wbB", min: -9, max: 9 },
+  { k: "highlight", label: "Highlight", shot: "highlight", min: -2, max: 4, step: 0.5 },
+  { k: "shadow", label: "Shadow", shot: "shadow", min: -2, max: 4, step: 0.5 },
+  { k: "color", label: "Color", shot: "color", min: -4, max: 4 },
+  { k: "sharpness", label: "Sharpness", shot: "sharpness", min: -4, max: 4 },
+  { k: "noise_reduction", label: "High ISO NR", shot: "nr", min: -4, max: 4 },
+  { k: "clarity", label: "Clarity", shot: "clarity", min: -5, max: 5 },
+];
+/** Rows that edit more than one key. */
+const ROW_KEYS = { grain: ["grain", "grain_size"], white_balance: ["white_balance", "wb_temp"] };
+
+/** A setting as the camera sees it: unset values read as their default. */
+function canon(r, k) {
+  const v = r[k];
+  switch (k) {
+    case "grain": case "chrome_effect": case "chrome_blue": return v || "off";
+    case "grain_size": return (r.grain || "off") === "off" ? null : (v || "small");
+    case "dynamic_range": return v ? String(v) : "";
+    case "white_balance": return v || "auto";
+    case "wb_temp": return r.white_balance === "temperature" ? (v ?? null) : null;
+    case "film_sim": return v;
+    default: return v == null ? 0 : Number(v);
+  }
+}
+const sigOf = (r) => JSON.stringify(EDIT_KEYS.map((k) => canon(r, k)));
+const cleanRecipe = (r) => Object.fromEntries(Object.entries(r).filter(([k]) => !k.startsWith("_") && k !== "mine"));
+/** The recipe as shown in the panel: your edits, else the saved one. */
+const curRecipe = (slug) => S.edits[slug] || S.bySlug[slug];
+const isCustom = (v) => /^custom-[0-9a-f]{16}$/.test(v);
+
+function rowEdited(slug, row) {
+  const e = S.edits[slug], b = S.bySlug[slug];
+  return !!(e && b) && (ROW_KEYS[row.k] || [row.k]).some((k) => canon(e, k) !== canon(b, k));
+}
+
+/** "Grain strong / large, Color +2": what an edited recipe changes vs. its base. */
+function editSummary(r) {
+  const b = S.bySlug[r.slug];
+  if (!b) return "edited";
+  const p = recipeProfile(r);
+  const parts = EDIT_ROWS.filter((row) => (ROW_KEYS[row.k] || [row.k]).some((k) => canon(r, k) !== canon(b, k)))
+    .map((row) => `${row.label} ${p[row.shot]}`);
+  return parts.join(", ") || "edited";
+}
+const editLabel = (r) => `${r.name} · ${editSummary(r)}`;
+
+function editCell(r, row) {
+  const k = row.k;
+  const sel = (key, opts, val, off) => `<select data-k="${key}" ${off ? "disabled" : ""}>${opts.map(([v, l]) =>
+    `<option value="${esc(v)}" ${String(v) === String(val) ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+  if (row.opts) return sel(k, row.opts, canon(r, k));
+  if (k === "grain") {
+    const g = canon(r, "grain");
+    return `<div class="pair">${sel("grain", OWS, g)}${sel("grain_size", [["small", "small"], ["large", "large"]], canon(r, "grain_size") || "small", g === "off")}</div>`;
+  }
+  if (k === "white_balance") {
+    const wb = canon(r, "white_balance");
+    const modes = sel("white_balance", WB_OPTS.some(([v]) => v === wb) ? WB_OPTS : [...WB_OPTS, [wb, wb]], wb);
+    return wb === "temperature"
+      ? `<div class="pair">${modes}<input type="number" data-k="wb_temp" min="2500" max="10000" step="10" value="${esc(r.wb_temp ?? 5500)}" title="Kelvin (2500–10000)"></div>`
+      : modes;
+  }
+  const v = canon(r, k);
+  return `<span class="stp"><button data-nudge="${k}" data-d="-1" ${v <= row.min ? "disabled" : ""} title="Less">−</button><output>${esc(fmtSigned(v))}</output><button data-nudge="${k}" data-d="1" ${v >= row.max ? "disabled" : ""} title="More">+</button></span>`;
+}
+
+/** Change one setting of the selected recipe (starting an edit if needed). */
+function setField(k, v) {
+  const slug = S.selected, base = S.bySlug[slug];
+  if (!base) return;
+  const e = S.edits[slug] || (S.edits[slug] = cleanRecipe(base));
+  if (v === "" || v == null) delete e[k]; else e[k] = v;
+  if (k === "white_balance") {
+    if (v === "temperature") e.wb_temp = e.wb_temp || base.wb_temp || 5500;
+    else delete e.wb_temp;
+  }
+  if (k === "grain" && v !== "off" && !e.grain_size) e.grain_size = "small";
+  if (sigOf(e) === sigOf(base)) delete S.edits[slug];
+  renderDetail();
+  renderRecipes();
+}
+
+/** Put one row's setting(s) back to the saved recipe's value. */
+function resetField(rowKey) {
+  const slug = S.selected, e = S.edits[slug], base = S.bySlug[slug];
+  if (!e || !base) return;
+  for (const k of ROW_KEYS[rowKey] || [rowKey]) {
+    if (base[k] == null) delete e[k]; else e[k] = base[k];
+  }
+  if (sigOf(e) === sigOf(base)) delete S.edits[slug];
+  renderDetail();
+  renderRecipes();
+}
+
+function stepField(k, d) {
+  const row = EDIT_ROWS.find((x) => x.k === k);
+  const step = row.step || 1;
+  const n = Math.round((canon(curRecipe(S.selected), k) + d * step) / step) * step;
+  setField(k, Math.min(row.max, Math.max(row.min, n)));
+}
+
+/** The render already made (on the current image) with the selected recipe's edits. */
+function editRenderKey(slug) {
+  const e = S.edits[slug];
+  if (!e || !S.cur) return null;
+  const sig = sigOf(e);
+  return Object.entries(S.cur.custom || {}).find(([k, m]) => S.cur.renders.includes(k) && sigOf(m.recipe) === sig)?.[0] || null;
+}
+
+async function postJson(path, body) {
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  return { ok: r.ok, status: r.status, body: await r.json().catch(() => ({})) };
+}
+
+/** Save the panel's settings as a recipe of your own (`update`: overwrite the one being edited). */
+async function saveRecipe(slug, update) {
+  const base = S.bySlug[slug];
+  if (!base) return;
+  let name = base.name;
+  if (!update) {
+    name = prompt("Name for your recipe:", base.mine ? base.name : `${base.name} (mine)`);
+    if (!name || !name.trim()) return;
+  }
+  const recipe = cleanRecipe(curRecipe(slug));
+  recipe.name = name.trim();
+  recipe.source = base.mine ? base.source : { name: "Mine", author: `based on ${base.name}` };
+  const payload = { recipe, overwrite: update, image: S.cur ? S.cur.id : null, from: editRenderKey(slug) || (S.edits[slug] ? null : slug) };
+  let res = await postJson("/api/my-recipes", payload);
+  if (res.status === 409 && res.body.exists) {
+    if (!confirm(`${res.body.error}. Replace it?`)) return;
+    res = await postJson("/api/my-recipes", { ...payload, overwrite: true });
+  }
+  if (!res.ok) return toast(res.body.error || `HTTP ${res.status}`, true);
+  const saved = res.body.recipe;
+  delete S.edits[slug];
+  addRecipe(saved);
+  // The server dropped renders of an older recipe with this name.
+  for (const im of S.images) im.renders = im.renders.filter((k) => k !== saved.slug);
+  if (res.body.linked && S.cur) S.cur.renders.push(saved.slug);
+  toast(`Saved “${saved.name}” to your recipes`);
+  selectRecipe(saved.slug, true);
+  refreshJobs();
+}
+
+async function deleteRecipe(slug) {
+  const r = S.bySlug[slug];
+  if (!r || !r.mine || !confirm(`Delete your recipe “${r.name}”?`)) return;
+  try { await api(`/api/my-recipes/${encodeURIComponent(slug)}`, { method: "DELETE" }); }
+  catch (err) { return toast(err.message, true); }
+  S.recipes = S.recipes.filter((x) => x.slug !== slug);
+  delete S.bySlug[slug];
+  delete S.edits[slug];
+  for (const im of S.images) im.renders = im.renders.filter((k) => k !== slug);
+  if (S.selected === slug) { S.selected = null; S.panel = null; }
+  if (S.view === slug) setView("original");
+  renderChips();
+  refreshJobs();
+  toast(`Deleted “${r.name}”`);
+}
+
+function editAction(act) {
+  const slug = S.selected;
+  if (!S.bySlug[slug]) return;
+  if (act === "convert") return enqueue(slug);
+  if (act === "reset") { delete S.edits[slug]; return refreshJobs(); }
+  if (act === "save") return saveRecipe(slug, false);
+  if (act === "update") return saveRecipe(slug, true);
+  if (act === "delete") return deleteRecipe(slug);
+}
+
+$("detail").addEventListener("change", (e) => {
+  const k = e.target.dataset && e.target.dataset.k;
+  if (!k || S.panel !== "recipe") return;
+  let v = e.target.value;
+  if (k === "dynamic_range") v = v ? +v : null;
+  if (k === "wb_temp") v = Math.round(Math.min(10000, Math.max(2500, +v || 5500)) / 10) * 10;
+  setField(k, v);
+});
+
 /** Always-visible footer: the selected recipe and its convert button. */
 function renderActionbar() {
   const r = S.bySlug[S.selected];
   const btn = $("abConvert");
-  $("abName").textContent = r ? r.name : "None selected";
+  const edited = r && !!S.edits[r.slug];
+  $("abName").textContent = r ? r.name + (edited ? " (edited)" : "") : "None selected";
   $("abName").classList.toggle("none", !r);
   $("abInfo").disabled = !r;
   $("abKicker").textContent = r ? (S.panel === "recipe" ? "Recipe · hide details" : "Recipe · show details") : "Recipe";
   if (!r) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Pick a recipe first"; return; }
   if (!S.cur) { btn.disabled = true; btn.textContent = "Convert ↵"; btn.title = "Select or drop a RAF first"; return; }
-  const job = S.jobs[`${S.cur.id}:${r.slug}`];
+  const key = edited ? editRenderKey(r.slug) : r.slug;
+  const job = edited ? editJob(r.slug) : S.jobs[`${S.cur.id}:${r.slug}`];
   const pending = job && (job.status === "queued" || job.status === "running");
-  const isDone = S.cur.renders.includes(r.slug);
+  const isDone = !!key && S.cur.renders.includes(key);
   btn.disabled = !!pending;
-  btn.textContent = pending ? (job.status === "running" ? "Converting…" : "Queued…") : isDone ? (S.view === r.slug ? "Rendered ✓" : "Show render") : "Convert ↵";
-  btn.title = isDone ? "Already rendered — show it" : `Render ${S.cur.name} with ${r.name} on the camera`;
+  btn.textContent = pending ? (job.status === "running" ? "Converting…" : "Queued…") : isDone ? (S.view === key ? "Rendered ✓" : "Show render") : edited ? "Convert edits ↵" : "Convert ↵";
+  btn.title = isDone ? "Already rendered — show it" : `Render ${S.cur.name} with ${r.name}${edited ? " (your edits)" : ""} on the camera`;
 }
 $("abConvert").onclick = () => {
   const r = S.bySlug[S.selected];
-  if (!r || !S.cur) return;
-  if (S.cur.renders.includes(r.slug)) setView(r.slug); else enqueue(r.slug);
+  if (r && S.cur) enqueue(r.slug);
 };
 $("abInfo").onclick = () => { if (S.selected) togglePanel("recipe"); };
 
@@ -723,6 +981,12 @@ function renderShotDetail(box) {
 
 $("detail").addEventListener("click", (e) => {
   if (e.target.closest("[data-close]")) return closePanel();
+  const rs = e.target.closest("[data-reset]");
+  if (rs) return resetField(rs.dataset.reset);
+  const st = e.target.closest("[data-nudge]");
+  if (st) return stepField(st.dataset.nudge, +st.dataset.d);
+  const ed = e.target.closest("[data-edit]");
+  if (ed) return editAction(ed.dataset.edit);
   if (e.target.closest("[data-fav]") && S.selected) return toggleFav(S.selected);
   const m = e.target.closest(".mrow");
   if (m) selectRecipe(m.dataset.slug, true);
@@ -731,12 +995,39 @@ $("detail").addEventListener("click", (e) => {
 /* ---------------- conversion queue ---------------- */
 function enqueue(slug) {
   if (!S.cur) return toast("Select an image first", true);
+  if (S.edits[slug]) return enqueueEdit(slug);
   const im = S.cur;
   if (im.renders.includes(slug)) return setView(slug);
   const key = `${im.id}:${slug}`;
   const j = S.jobs[key];
   if (j && (j.status === "queued" || j.status === "running")) return;
   S.jobs[key] = { status: "queued", image: im.id, slug };
+  S.queue.push(key);
+  S.wantView = key;
+  refreshJobs();
+  runQueue();
+}
+
+/** Pending conversion of the selected recipe's current edits, if any. */
+function editJob(slug) {
+  const e = S.edits[slug];
+  if (!e || !S.cur) return null;
+  const sig = sigOf(e);
+  return Object.values(S.jobs).find((j) => j.recipe && j.image === S.cur.id && j.sig === sig) || null;
+}
+
+/** Render the selected recipe with your edits. Edited versions get a temporary
+ *  id ("edit-N") until the server returns their key ("custom-…"). */
+function enqueueEdit(slug) {
+  const done = editRenderKey(slug);
+  if (done) return setView(done);
+  const job = editJob(slug);
+  if (job && (job.status === "queued" || job.status === "running")) return;
+  if (job) delete S.jobs[`${job.image}:${job.slug}`];
+  const recipe = cleanRecipe(S.edits[slug]);
+  const tmp = `edit-${++S.editSeq}`;
+  const key = `${S.cur.id}:${tmp}`;
+  S.jobs[key] = { status: "queued", image: S.cur.id, slug: tmp, base: slug, recipe, sig: sigOf(recipe), label: editLabel(recipe) };
   S.queue.push(key);
   S.wantView = key;
   refreshJobs();
@@ -753,16 +1044,22 @@ async function runQueue() {
     job.started = Date.now();
     refreshJobs();
     try {
-      const res = await api(`/api/images/${job.image}/convert/${encodeURIComponent(job.slug)}`, { method: "POST" });
-      job.status = "done";
+      const res = job.recipe
+        ? await api(`/api/images/${job.image}/convert-custom`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(job.recipe) })
+        : await api(`/api/images/${job.image}/convert/${encodeURIComponent(job.slug)}`, { method: "POST" });
+      const out = res.key || job.slug;
       const im = S.images.find((x) => x.id === job.image);
-      if (im && !im.renders.includes(job.slug)) im.renders.push(job.slug);
+      if (job.recipe) {
+        delete S.jobs[key];
+        if (im) im.custom = { ...(im.custom || {}), [out]: { label: job.label, recipe: job.recipe } };
+      } else job.status = "done";
+      if (im && !im.renders.includes(out)) im.renders.push(out);
       if (res.warnings && res.warnings.length) toast(res.warnings.join(" "));
-      if (S.cur && S.cur.id === job.image && (S.wantView === key || S.view === "original")) setView(job.slug);
+      if (S.cur && S.cur.id === job.image && (S.wantView === key || S.view === "original")) setView(out);
     } catch (err) {
       job.status = "error";
       job.error = err.message;
-      toast(`${S.bySlug[job.slug]?.name || job.slug}: ${err.message}`, true);
+      toast(`${job.label || S.bySlug[job.slug]?.name || job.slug}: ${err.message}`, true);
     }
     refreshJobs();
   }
@@ -786,7 +1083,7 @@ function updateWorking() {
   const tick = () => {
     const secs = Math.round((Date.now() - running.started) / 1000);
     const im = S.images.find((x) => x.id === running.image);
-    $("workingText").textContent = `Rendering ${S.bySlug[running.slug]?.name || running.slug}${S.cur && S.cur.id !== running.image ? ` (${im?.name})` : ""} on camera · ${secs}s${queued ? ` · ${queued} queued` : ""}`;
+    $("workingText").textContent = `Rendering ${running.label || S.bySlug[running.slug]?.name || running.slug}${S.cur && S.cur.id !== running.image ? ` (${im?.name})` : ""} on camera · ${secs}s${queued ? ` · ${queued} queued` : ""}`;
   };
   tick();
   $("working").hidden = false;
@@ -817,7 +1114,7 @@ function renderStrip() {
       return `<button class="ver ${S.view === v ? "active" : ""}" data-v="match" title="Match: ${esc(m.reference)}"><div class="th">${th}</div><div class="nm">Match${b ? ` · ΔE ${b.loss.toFixed(1)}` : "…"}</div></button>`;
     }
     const job = S.jobs[`${id}:${v}`];
-    const name = S.bySlug[v]?.name || v;
+    const name = verName(v);
     let th;
     if (S.cur.renders.includes(v)) th = `<img src="${renderUrl(id, v)}" loading="lazy" decoding="async" alt="">`;
     else if (job?.status === "running") th = `<span class="spinner"></span>`;
@@ -832,13 +1129,45 @@ $("strip").addEventListener("click", (e) => {
   const v = b.dataset.v;
   if (v === "match") { S.matchStep = null; S.panel = "match"; S.matchNew = false; renderDetail(); return setView("match"); }
   const job = S.cur && S.jobs[`${S.cur.id}:${v}`];
-  if (job && job.status === "error") { delete S.jobs[`${S.cur.id}:${v}`]; selectRecipe(v); return enqueue(v); }
-  if (v !== "original") selectRecipe(v, false, S.panel !== null);
+  if (job && job.status === "error") {
+    delete S.jobs[`${S.cur.id}:${v}`];
+    if (job.recipe) { S.edits[job.base] = job.recipe; selectRecipe(job.base); return enqueueEdit(job.base); }
+    selectRecipe(v);
+    return enqueue(v);
+  }
+  if (v !== "original") selectForVersion(v);
   else if (S.view === "original" || S.panel) { S.panel = "shot"; renderDetail(); }
   setView(v);
 });
 
 const renderUrl = (id, slug) => `/api/images/${id}/renders/${encodeURIComponent(slug)}.jpg`;
+
+/** Display name of a version of the current image (recipe, edited render, pending edit). */
+function verName(v) {
+  if (v === "original") return "As shot";
+  if (!S.cur) return v;
+  if (isCustom(v)) {
+    const m = S.cur.custom && S.cur.custom[v];
+    return m ? editLabel(m.recipe) : "Edited";
+  }
+  const job = S.jobs[`${S.cur.id}:${v}`];
+  return job?.label || S.bySlug[v]?.name || v;
+}
+
+/** Show in the recipe panel what made version `v`; for an edited render, its settings become the edits. */
+function selectForVersion(v, scroll = false, open = S.panel !== null) {
+  if (isCustom(v)) {
+    const m = S.cur && S.cur.custom && S.cur.custom[v];
+    const base = m && S.bySlug[m.recipe.slug];
+    if (!base) return;
+    S.edits[base.slug] = cleanRecipe(m.recipe);
+    if (sigOf(S.edits[base.slug]) === sigOf(base)) delete S.edits[base.slug];
+    return selectRecipe(base.slug, scroll, open);
+  }
+  const job = S.cur && S.jobs[`${S.cur.id}:${v}`];
+  if (job && job.recipe) return selectRecipe(job.base, scroll, open);
+  selectRecipe(v, scroll, open);
+}
 
 /* ---------------- viewer ---------------- */
 const V = { natW: 0, natH: 0, s: 1, tx: 0, ty: 0, fit: true, split: 0.5 };
@@ -867,8 +1196,7 @@ function setView(v) {
   if (topSrc && top.getAttribute("src") !== topSrc) top.src = topSrc;
   $("overlay").hidden = true;
   $("layer").hidden = false;
-  const r = S.bySlug[S.view];
-  $("title").innerHTML = `<b>${esc(S.cur.name)}</b>${S.view === "match" ? `→ match ${esc(S.match.reference)}` : r ? `→ ${esc(r.name)}` : "as shot"}`;
+  $("title").innerHTML = `<b>${esc(S.cur.name)}</b>${S.view === "match" ? `→ match ${esc(S.match.reference)}` : S.view !== "original" ? `→ ${esc(verName(S.view))}` : "as shot"}`;
   renderStrip();
   applyView();
   updateButtons();
@@ -925,13 +1253,12 @@ function applyView() {
   top.hidden = !showTop || S.peek;
   const handle = $("handle");
   handle.hidden = !compare || S.peek;
-  const r = S.bySlug[S.view];
   const inMatch = S.view === "match";
   const shown = inMatch && matchShownStep();
   $("labelL").hidden = !(compare && !S.peek) && !S.peek && !(inMatch && !showTop);
   $("labelL").textContent = inMatch ? `Reference · ${S.match.reference}` : "As shot";
   $("labelR").hidden = !showTop || S.peek;
-  $("labelR").textContent = shown ? `${shown.n === S.match.best?.n ? "Best" : "Render"} #${shown.n} · ΔE ${shown.loss.toFixed(2)}` : r ? r.name : "";
+  $("labelR").textContent = shown ? `${shown.n === S.match.best?.n ? "Best" : "Render"} #${shown.n} · ΔE ${shown.loss.toFixed(2)}` : showTop ? verName(S.view) : "";
   if (compare) {
     const x = V.split * st.width;
     handle.style.left = x + "px";
@@ -1031,8 +1358,9 @@ function toggleInfo() {
   if (!S.cur) return;
   if (S.view === "original") return togglePanel("shot");
   if (S.view === "match") return togglePanel("match");
-  if (S.panel === "recipe" && S.selected === S.view) return closePanel();
-  selectRecipe(S.view, true);
+  const base = isCustom(S.view) ? S.cur.custom?.[S.view]?.recipe.slug : S.view;
+  if (S.panel === "recipe" && S.selected === base) return closePanel();
+  selectForVersion(S.view, true, true);
 }
 $("infoBtn").onclick = toggleInfo;
 
@@ -1299,6 +1627,8 @@ document.addEventListener("keydown", (e) => {
   const inInput = e.target.tagName === "INPUT" || e.target.tagName === "SELECT";
   if (e.key === "/" && !inInput) { e.preventDefault(); $("q").focus(); $("q").select(); return; }
   if (e.key === "Escape" && inInput) { e.target.blur(); return; }
+  // Editing a recipe setting: arrows and Enter belong to the control.
+  if (inInput && e.target.closest("#detail")) { if (e.key === "Enter") e.target.blur(); return; }
   if (e.key === "Escape" && S.panel) { closePanel(); return; }
   if (e.key === "ArrowDown" || e.key === "ArrowUp") {
     if (!S.visible.length) return;
@@ -1315,7 +1645,7 @@ document.addEventListener("keydown", (e) => {
     const i = vs.indexOf(S.view);
     const n = vs[(i + (e.key === "ArrowRight" ? 1 : -1) + vs.length) % vs.length];
     if (n === "match") { S.matchStep = null; setView(n); }
-    else if (n) { if (n !== "original") selectRecipe(n, false, S.panel !== null); else if (S.panel) { S.panel = "shot"; renderDetail(); } setView(n); }
+    else if (n) { if (n !== "original") selectForVersion(n); else if (S.panel) { S.panel = "shot"; renderDetail(); } setView(n); }
     e.preventDefault();
   } else if (e.key.toLowerCase() === "c") {
     S.mode = S.mode === "compare" ? "single" : "compare";

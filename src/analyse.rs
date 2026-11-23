@@ -267,7 +267,7 @@ pub struct Analysis {
 }
 
 pub struct RecipeMatch {
-    pub recipe: &'static recipes::Recipe,
+    pub recipe: recipes::Recipe,
     pub percent: f64,
 }
 
@@ -286,7 +286,7 @@ fn rank_recipes(exif: &ExifData) -> Vec<RecipeMatch> {
         .map(|r| {
             let m = score_recipe(exif, r);
             let percent = if m.max_score > 0.0 { m.score / m.max_score * 100.0 } else { 0.0 };
-            RecipeMatch { recipe: r, percent }
+            RecipeMatch { recipe: r.clone(), percent }
         })
         .collect();
     scored.sort_by(|a, b| b.percent.partial_cmp(&a.percent).unwrap());

@@ -18,6 +18,9 @@ static INDEX_HTML: &str = include_str!("web/index.html");
 /// Uploads larger than this are rejected (X100VI RAFs are ~30–60 MB).
 const MAX_UPLOAD_BYTES: u64 = 512 * 1024 * 1024;
 
+/// JSON bodies (edited recipes) larger than this are rejected.
+const MAX_JSON_BYTES: u64 = 64 * 1024;
+
 struct Image {
     name: String,
     path: PathBuf,
@@ -167,7 +170,9 @@ fn handle(state: &Arc<State>, mut req: Request) {
             Response::from_data(INDEX_HTML.as_bytes().to_vec()).with_header(content_type("text/html; charset=utf-8"))
         }
         (Method::Get, ["api", "status"]) => json_ok(status(state)),
-        (Method::Get, ["api", "recipes"]) => json_ok(json!(recipes::all())),
+        (Method::Get, ["api", "recipes"]) => json_ok(recipes_json()),
+        (Method::Post, ["api", "my-recipes"]) => save_my_recipe(state, &mut req),
+        (Method::Delete, ["api", "my-recipes", slug]) => delete_my_recipe(state, slug),
         (Method::Get, ["api", "files"]) => json_ok(list_folder(state)),
         (Method::Post, ["api", "upload"]) => upload(state, &mut req),
         (Method::Get, ["api", "images", id]) => with_image(state, id, |id| image_json(state, id)),
@@ -182,6 +187,9 @@ fn handle(state: &Arc<State>, mut req: Request) {
         }
         (Method::Post, ["api", "images", id, "convert", slug]) => {
             with_image_resp(state, id, |id| convert(state, id, slug))
+        }
+        (Method::Post, ["api", "images", id, "convert-custom"]) => {
+            with_image_resp(state, id, |id| convert_custom(state, id, &mut req))
         }
         (Method::Get, ["api", "images", id, "renders", file]) => {
             let download = query.split('&').any(|kv| kv == "download=1");
@@ -294,7 +302,16 @@ fn image_json(state: &State, id: usize) -> Value {
         })
         .unwrap_or_default();
     renders.sort();
-    json!({ "id": id, "name": name, "path": rel, "uploaded": uploaded, "renders": renders })
+    // Edited versions: what they were made from, so a reload can label them.
+    let custom: serde_json::Map<String, Value> = renders
+        .iter()
+        .filter(|k| is_custom_key(k))
+        .filter_map(|k| {
+            let meta = std::fs::read(render_path(state, id, &format!("{k}.json"))).ok()?;
+            Some((k.clone(), serde_json::from_slice(&meta).ok()?))
+        })
+        .collect();
+    json!({ "id": id, "name": name, "path": rel, "uploaded": uploaded, "renders": renders, "custom": custom })
 }
 
 fn upload(state: &State, req: &mut Request) -> Resp {
@@ -387,13 +404,67 @@ fn analysis(state: &State, id: usize) -> Resp {
 }
 
 fn convert(state: &State, id: usize, slug: &str) -> Resp {
-    let Some(recipe) = recipes::all().iter().find(|r| r.slug == slug) else {
+    let Some(recipe) = recipes::all().iter().find(|r| r.slug == slug).cloned() else {
         return json_err(404, "unknown recipe");
     };
-    let out_dir = state.cache.join("renders").join(id.to_string());
-    let out = out_dir.join(format!("{slug}.jpg"));
+    render(state, id, slug, &recipe.name, &recipe.to_settings())
+}
+
+/// Render an edited recipe (sent as JSON in the body). The result is cached
+/// under a key derived from the settings, so the same edit isn't rendered twice.
+fn convert_custom(state: &State, id: usize, req: &mut Request) -> Resp {
+    let recipe = match read_json::<recipes::Recipe>(req) {
+        Ok(r) => r,
+        Err(e) => return json_err(400, &e),
+    };
+    if let Err(e) = recipe.validate() {
+        return json_err(400, &e);
+    }
+    let key = custom_key(&recipe);
+    let label = format!("{} (edited)", recipe.name);
+    let meta = render_path(state, id, &format!("{key}.json"));
+    if !meta.exists() {
+        let doc = json!({ "label": label, "recipe": recipe });
+        if let Err(e) = std::fs::create_dir_all(meta.parent().unwrap()).and_then(|_| std::fs::write(&meta, doc.to_string())) {
+            return json_err(500, &format!("could not store render: {e}"));
+        }
+    }
+    render(state, id, &key, &label, &recipe.to_settings())
+}
+
+/// "custom-<16 hex>": a stable hash of everything that affects the render.
+fn custom_key(recipe: &recipes::Recipe) -> String {
+    use std::hash::{Hash, Hasher};
+    let mut r = recipe.clone();
+    // Name, source and shooting hints don't change the picture.
+    r.name.clear();
+    r.slug.clear();
+    r.source = None;
+    r.iso = None;
+    r.exposure_comp = None;
+    let mut h = std::hash::DefaultHasher::new();
+    serde_json::to_string(&r).unwrap_or_default().hash(&mut h);
+    format!("custom-{:016x}", h.finish())
+}
+
+fn is_custom_key(key: &str) -> bool {
+    key.strip_prefix("custom-").is_some_and(|h| h.len() == 16 && h.bytes().all(|b| b.is_ascii_hexdigit()))
+}
+
+/// A render the server knows: a recipe slug or an edited version's key.
+fn is_render_key(key: &str) -> bool {
+    is_known_slug(key) || is_custom_key(key)
+}
+
+fn render_path(state: &State, id: usize, file: &str) -> PathBuf {
+    state.cache.join("renders").join(id.to_string()).join(file)
+}
+
+/// Convert image `id` with `settings` on the camera into `renders/<id>/<key>.jpg`.
+fn render(state: &State, id: usize, key: &str, label: &str, settings: &crate::profile::RecipeSettings) -> Resp {
+    let out = render_path(state, id, &format!("{key}.jpg"));
     if out.exists() {
-        return json_ok(json!({ "slug": slug, "cached": true, "warnings": [] }));
+        return json_ok(json!({ "key": key, "cached": true, "warnings": [] }));
     }
     let (name, path) = {
         let images = state.images.lock().unwrap();
@@ -403,33 +474,28 @@ fn convert(state: &State, id: usize, slug: &str) -> Resp {
     let _guard = state.camera.lock().unwrap();
     // A queued duplicate request may have produced it while we waited.
     if out.exists() {
-        return json_ok(json!({ "slug": slug, "cached": true, "warnings": [] }));
+        return json_ok(json!({ "key": key, "cached": true, "warnings": [] }));
     }
-    *state.busy.lock().unwrap() = Some(format!("{name} → {}", recipe.name));
-    println!("converting {name} → {} …", recipe.slug);
+    *state.busy.lock().unwrap() = Some(format!("{name} → {label}"));
+    println!("converting {name} → {label} …");
     let started = Instant::now();
 
     let result = fuji::try_open_camera().and_then(|mut camera| {
-        fuji::convert_raf_to_jpeg(
-            &mut *camera,
-            &path.to_string_lossy(),
-            &recipe.to_settings(),
-            &ui::ConvertProgress::quiet(),
-        )
+        fuji::convert_raf_to_jpeg(&mut *camera, &path.to_string_lossy(), settings, &ui::ConvertProgress::quiet())
     });
     *state.busy.lock().unwrap() = None;
     let secs = started.elapsed().as_secs_f64();
 
     match result {
         Ok((jpeg, warnings)) => {
-            if let Err(e) = std::fs::create_dir_all(&out_dir).and_then(|_| std::fs::write(&out, &jpeg)) {
+            if let Err(e) = std::fs::create_dir_all(out.parent().unwrap()).and_then(|_| std::fs::write(&out, &jpeg)) {
                 return json_err(500, &format!("could not store render: {e}"));
             }
             println!("  done in {secs:.1}s ({:.1} MB)", jpeg.len() as f64 / 1_048_576.0);
             for w in &warnings {
                 println!("  {w}");
             }
-            json_ok(json!({ "slug": slug, "cached": false, "seconds": secs, "warnings": warnings }))
+            json_ok(json!({ "key": key, "cached": false, "seconds": secs, "warnings": warnings }))
         }
         Err(e) => {
             println!("  failed: {e}");
@@ -438,27 +504,126 @@ fn convert(state: &State, id: usize, slug: &str) -> Resp {
     }
 }
 
+/// File name stem for a downloaded or saved render: `<raf stem>-<recipe>`.
+fn render_file_stem(state: &State, id: usize, key: &str) -> String {
+    let what = if is_custom_key(key) {
+        std::fs::read(render_path(state, id, &format!("{key}.json")))
+            .ok()
+            .and_then(|m| serde_json::from_slice::<Value>(&m).ok())
+            .and_then(|m| m["label"].as_str().map(recipes::slugify))
+            .unwrap_or_else(|| key.to_string())
+    } else {
+        key.to_string()
+    };
+    format!("{}-{what}", image_stem(state, id))
+}
+
+/// All recipes, the user's own flagged with `"mine": true`.
+fn recipes_json() -> Value {
+    let all = recipes::all();
+    Value::Array(
+        all.iter()
+            .map(|r| {
+                let mut v = json!(r);
+                if r.mine {
+                    v["mine"] = json!(true);
+                }
+                v
+            })
+            .collect(),
+    )
+}
+
+/// Save the posted recipe as one of the user's own.
+/// Body: `{ recipe, overwrite?, image?, from? }`. When `image` and `from` (a
+/// render key of that image) are given, that render becomes the new recipe's
+/// render so it doesn't have to be converted again.
+fn save_my_recipe(state: &State, req: &mut Request) -> Resp {
+    let body = match read_json::<Value>(req) {
+        Ok(b) => b,
+        Err(e) => return json_err(400, &e),
+    };
+    let recipe: recipes::Recipe = match serde_json::from_value(body["recipe"].clone()) {
+        Ok(r) => r,
+        Err(e) => return json_err(400, &format!("invalid recipe: {e}")),
+    };
+    let overwrite = body["overwrite"].as_bool().unwrap_or(false);
+    let saved = match recipes::save_mine(recipe, overwrite) {
+        Ok(r) => r,
+        Err(e @ recipes::SaveError::Exists(_)) => {
+            return Response::from_data(json!({ "error": e.to_string(), "exists": true }).to_string().into_bytes())
+                .with_header(content_type("application/json"))
+                .with_status_code(409);
+        }
+        Err(e @ (recipes::SaveError::Invalid(_) | recipes::SaveError::Builtin(_))) => return json_err(400, &e.to_string()),
+        Err(e @ recipes::SaveError::Io(_)) => return json_err(500, &e.to_string()),
+    };
+    println!("saved recipe {} to {}", saved.slug, recipes::my_recipes_path().unwrap_or_default().display());
+    // Renders made with an older version of this recipe no longer match it.
+    remove_renders(state, &saved.slug);
+    let n = state.images.lock().unwrap().len();
+    let image = body["image"].as_u64().map(|i| i as usize).filter(|&i| i < n);
+    let from = body["from"].as_str().filter(|k| is_render_key(k));
+    let mut linked = false;
+    if let (Some(id), Some(from)) = (image, from) {
+        let src = render_path(state, id, &format!("{from}.jpg"));
+        linked = src.exists() && std::fs::copy(&src, render_path(state, id, &format!("{}.jpg", saved.slug))).is_ok();
+    }
+    let mut v = json!(saved);
+    v["mine"] = json!(true);
+    json_ok(json!({ "recipe": v, "linked": linked }))
+}
+
+fn delete_my_recipe(state: &State, slug: &str) -> Resp {
+    match recipes::delete_mine(slug) {
+        Ok(true) => {
+            println!("deleted recipe {slug}");
+            remove_renders(state, slug);
+            json_ok(json!({ "ok": true }))
+        }
+        Ok(false) => json_err(404, "not one of your recipes"),
+        Err(e) => json_err(500, &e.to_string()),
+    }
+}
+
+/// Drop `<slug>.jpg` from every image's renders.
+fn remove_renders(state: &State, slug: &str) {
+    let n = state.images.lock().unwrap().len();
+    for id in 0..n {
+        let _ = std::fs::remove_file(render_path(state, id, &format!("{slug}.jpg")));
+    }
+}
+
+fn read_json<T: serde::de::DeserializeOwned>(req: &mut Request) -> Result<T, String> {
+    let mut data = Vec::new();
+    req.as_reader()
+        .take(MAX_JSON_BYTES + 1)
+        .read_to_end(&mut data)
+        .map_err(|e| format!("could not read request: {e}"))?;
+    if data.len() as u64 > MAX_JSON_BYTES {
+        return Err("request too large".into());
+    }
+    serde_json::from_slice(&data).map_err(|e| format!("invalid JSON: {e}"))
+}
+
 fn render_file(state: &State, id: usize, file: &str, download: bool) -> Resp {
-    let Some(slug) = file.strip_suffix(".jpg").filter(|s| is_known_slug(s)) else {
+    let Some(key) = file.strip_suffix(".jpg").filter(|s| is_render_key(s)) else {
         return json_err(404, "unknown render");
     };
-    let path = state.cache.join("renders").join(id.to_string()).join(format!("{slug}.jpg"));
-    let disposition = download.then(|| {
-        let stem = image_stem(state, id);
-        format!("attachment; filename=\"{stem}-{slug}.jpg\"")
-    });
+    let path = render_path(state, id, &format!("{key}.jpg"));
+    let disposition = download.then(|| format!("attachment; filename=\"{}.jpg\"", render_file_stem(state, id, key)));
     file_response(&path, "image/jpeg", disposition)
 }
 
-fn save_render(state: &State, id: usize, slug: &str) -> Resp {
-    if !is_known_slug(slug) {
+fn save_render(state: &State, id: usize, key: &str) -> Resp {
+    if !is_render_key(key) {
         return json_err(404, "unknown recipe");
     }
-    let src = state.cache.join("renders").join(id.to_string()).join(format!("{slug}.jpg"));
+    let src = render_path(state, id, &format!("{key}.jpg"));
     if !src.exists() {
         return json_err(404, "not converted yet");
     }
-    let dest = state.root.join(format!("{}-{slug}.jpg", image_stem(state, id)));
+    let dest = state.root.join(format!("{}.jpg", render_file_stem(state, id, key)));
     match std::fs::copy(&src, &dest) {
         Ok(_) => {
             fuji::chown_to_sudo_user(&dest.to_string_lossy());
